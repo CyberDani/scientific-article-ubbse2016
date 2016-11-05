@@ -19,18 +19,27 @@ public class Main {
 	}
 	
 	public static float numberOfWords(String[] rows){
-		
-		int wordsInARow[]=new int[rows.length];
-		for (int i = 0; i< rows.length; i++) {
-			wordsInARow[i]=rows[i].length();
-		}
-		
+		char c;
+		int count=1;
 		float sum=(float) 0.0;
-		for(int i=0;i< wordsInARow.length;i++){
-			sum+=wordsInARow[i];
+
+		for (int i = 0; i< rows.length; i++) {
+			//number of words=number of spaces+1
+			count=1;
+			for(int j=0;j<rows[i].length();j++){
+				c = rows[i].charAt(j);
+				if(c ==' '){
+					count++;
+				}
+			}
+			
+			sum+=count;
 		}
+		//Every page has a number at the end, that don't counts as a row
+		sum=sum-pageNumber;
+		int rowNumber=rows.length-pageNumber;
 		
-		return sum/rows.length;
+		return sum/rowNumber;
 	}
 	
 	public static void processText(){
