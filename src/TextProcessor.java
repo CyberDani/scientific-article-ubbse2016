@@ -2,7 +2,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -19,11 +18,16 @@ public class TextProcessor {
 	private static StringBuilder sb = null;
 	private static String text;
 	private static boolean bibliography;
-	
+	private static String titleFontSize;
+	private static String titleFontFamily;
+		
 	public static void printStatistics(){
 		System.out.println("Page number:" + pageNumber);
 		System.out.println("Average words/row:" + avgWordsInRow);
 		System.out.println("Bibliography available:" + bibliography);
+		System.out.println("Title font-family:"+titleFontFamily);
+		System.out.println("Title font-size:"+titleFontSize);
+
 	}
 	
 	public static boolean bibliographyExistence(String [] rows){
@@ -41,6 +45,25 @@ public class TextProcessor {
 		
 	}
 	
+	/*
+	 * Extracts data between [] and splits it by
+	 * @param row row to be processed
+	 * Output param: string[] with 1st data: result[0]-> font family, result[1] -> font size
+	 */
+	public static String[] extractData(String row){
+		String result = row.substring(row.indexOf("[")+1,row.lastIndexOf("]"));
+		return result.split(",");
+	}
+	
+	/*
+	 * The data is number+fontFamily, we only need the font-family
+	 * @param data data to process
+	 */
+	public static String getFontFamily(String data){
+		String[] fontFamily=data.split("\\+");
+		return fontFamily[1];
+	}
+	
 	public static void printRows(String[] rows){
 		for(int i=0; i<rows.length; i++)
 			System.out.println(rows[i]);
@@ -48,7 +71,10 @@ public class TextProcessor {
 	
 	public static void processTextByRow(){
 		String[] rows = text.split("\n");
-		printRows(rows);
+		//printRows(rows);
+		String[] fontData=extractData(rows[0]);
+		titleFontFamily=getFontFamily(fontData[0]);
+		titleFontSize=fontData[1];
 		avgWordsInRow=numberOfWords(rows);
 		bibliography=bibliographyExistence(rows);
 	}
