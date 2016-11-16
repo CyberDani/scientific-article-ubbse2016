@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JLabel;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
@@ -30,15 +32,17 @@ public class TextProcessor {
 	private static float[][] pdfFontsWithRows;
 	private static String[][] subtitleFontSizeAndRow;
 	
-	
 	private static List<FontAndRow> pdfData = new ArrayList<FontAndRow>();
 	
-	public static void printStatistics(){
+	public TextProcessor(File file,GUI g){
+		processText(file);
+		g.setGUI(pageNumber, avgWordsInRow, bibliography, mostUsedFontSizeInPDF);
+	}
+	
+	private static void printStatistics(){
 		System.out.println("Page number:" + pageNumber);
 		System.out.println("Average words/row:" + avgWordsInRow);
 		System.out.println("Bibliography available:" + bibliography);
-		System.out.println("Title font-family:"+titleFontFamily);
-		System.out.println("Title font-size:"+titleFontSize);
 		System.out.println("Most used font-size:"+mostUsedFontSizeInPDF);
 	}
 	
@@ -272,9 +276,7 @@ public class TextProcessor {
 		String[] rows = text.split("\n");
 		//printRows(rows);
 		String[] fontData=extractData(rows[0]);
-		titleFontFamily=getFontFamily(fontData[0]);
-		titleFontSize=fontData[1];
-		
+
 		getFontSizeWithNumberOfRows(rows);
 		mostUsedFontSizeInPDF = getTheMostUsedFont();
 		mostUsedSubTitleFontSize = getSubtitleFontSize();
@@ -307,10 +309,9 @@ public class TextProcessor {
 		return sum / rowNumber;
 	}
 	
-	public static void processText(){
+	public static void processText(File inputFile){
 	
 		try {
-				File inputFile = new File("E:/enyim/III. EV/2016-2017 I. felev/Csoportos projekt/Canvasrol/CiteSeerX.pdf");
 				pd = PDDocument.load(inputFile);
 				pageNumber=pd.getNumberOfPages();
 				PDFTextStripper stripper = new PDFTextStripper() {
@@ -348,7 +349,7 @@ public class TextProcessor {
 				}
 				
 				processTextByRow();
-			
+				//printStatistics();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
