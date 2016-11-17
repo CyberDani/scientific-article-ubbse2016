@@ -9,8 +9,9 @@ public class Main {
 			DataManager dm = new DataManager(db.getDatabase());
 			//dm.createCollection("LearningData");
 			
-			String[] subtitles = {"aa1", "aa2"};
-			dm.insertDocument("LearningData", "a1", subtitles, "a3", "a4", "a5", true);
+			String[] subtitles = {"Introdution", "Abtsract"};
+			PDF pdf = new PDF("home/LiuLiuCong", subtitles, 10, 10.3, "11", true);
+			dm.insertDocument("LearningData", pdf);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
