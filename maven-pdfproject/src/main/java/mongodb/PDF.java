@@ -1,12 +1,14 @@
 package mongodb;
 
 public class PDF {
+	private Object _id;
 	private String path;
 	private String[] subtitles;
 	private int pagesNr;
 	private double wordsRow;
 	private String fontSize;
 	private Boolean bibliography;
+	
 
 	public PDF(String path, String[] subtitles, int pagesNr, double wordsRow, String fontSize, Boolean bibliography) {
 		setPath(path);
@@ -64,5 +66,14 @@ public class PDF {
 	public void setBibliography(Boolean bibliography) {
 		this.bibliography = bibliography;
 	}
+	
+	public Object getoid() {
+		return _id;
+	}
+
+	public void set_id(Object _id) {
+		this._id = _id;
+	}
+
 
 }

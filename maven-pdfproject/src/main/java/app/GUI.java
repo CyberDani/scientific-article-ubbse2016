@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import common.ConnectionContainer;
 import mongodb.DataManager;
 
 public class GUI extends JFrame{
@@ -69,6 +70,8 @@ public class GUI extends JFrame{
 		openText.setFont(openText.getFont().deriveFont(16f));
 
 		JButton openFile=new JButton("Open File");
+		JButton loadData=new JButton("Load from DB");
+		
 		openFile.addActionListener(new ActionListener() {
 		    
 			public void actionPerformed(ActionEvent e) {
@@ -77,9 +80,19 @@ public class GUI extends JFrame{
 			
 		}); 
 		
+		loadData.addActionListener(new ActionListener() {
+		    
+			public void actionPerformed(ActionEvent e) {
+				 common.ConnectionContainer.dm.findAll();
+		    
+		        
+			}
+		}); 
+		
 		JPanel fileCPanel=new JPanel();
 		fileCPanel.add(openText);
 		fileCPanel.add(openFile);
+		fileCPanel.add(loadData);
 		
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.add(fileCPanel, BorderLayout.NORTH);
