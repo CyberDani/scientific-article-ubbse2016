@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import common.ConnectionContainer;
 import mongodb.DataManager;
+import mongodb.PDF;
 
 public class GUI extends JFrame{
 
@@ -83,9 +84,9 @@ public class GUI extends JFrame{
 		loadData.addActionListener(new ActionListener() {
 		    
 			public void actionPerformed(ActionEvent e) {
-				 common.ConnectionContainer.dm.findAll();
-		    
-		        
+				 @SuppressWarnings("unused")
+				PDF dbData[] = common.ConnectionContainer.dm.findAll(); 
+				 System.out.println("");
 			}
 		}); 
 		

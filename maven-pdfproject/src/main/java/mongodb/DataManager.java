@@ -1,6 +1,8 @@
 package mongodb;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,9 +14,13 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.Converter;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+
+import common.PDFContainer;
+import common.Tools;
 
 public class DataManager {
 	private MongoDatabase db; 
@@ -37,33 +43,85 @@ public class DataManager {
 		coll.insertOne(doc);
 	}
 
-	public void findAll() {
+	public PDF[] findAll() {
 
+		// collection lekerese
 		MongoCollection<Document> coll = db.getCollection("LearningData"); 
-		System.out.println("Collection mycol selected successfully"); 
 
 		MongoCursor<Document> cursor = coll.find().iterator();
-		Set<Entry<String, 
-		Object>> a;
+		//ObjectMapper mapper = new ObjectMapper();
 
-		ObjectMapper mapper = new ObjectMapper();
-
+		
+		// adat hosszusaganak meghatarozasa
+		int length = 0;
+		
+		while (cursor.hasNext()) {
+			cursor.next();
+			++length;
+		}
+		PDF answer[] = new PDF[length];
+		
+		
+		// Iterator ujradefinialasa
+		cursor = coll.find().iterator();
+		
+		
+		// adatok kinyerese es PDF osztalyba valo konvertalasa
+		Field declaredField =  null;
+		int nr = 0;
 		while (cursor.hasNext()) { 
 
+			PDF temp = new PDF();
+			
 			String PDFJson = cursor.next().toJson();
 			Map<String,Object> myMap = new HashMap<String, Object>();
 			ObjectMapper objectMapper = new ObjectMapper();
+			
 			try {
+				
+				
 				myMap = objectMapper.readValue(PDFJson, HashMap.class);
 				
-				for (Entry<String, Object> e : myMap.entrySet()) {
-				    String key = e.getKey();
-				    Object value  = e.getValue();
-				    if (value != null)
-				    {
-				    	System.out.println("Key: " + key + " value: " + value.toString());
-				    }
-				    
+				for(int i = 0;i<PDFContainer.PDFAttrNames.length;++i){
+					try {
+						declaredField = 
+								PDF.class.getDeclaredField(PDFContainer.PDFAttrNames[i]);
+					} catch (NoSuchFieldException e2) {
+						e2.printStackTrace();
+					} catch (SecurityException e2) {
+						e2.printStackTrace();
+					}
+					
+					declaredField.setAccessible(true);
+					
+					try {
+						// Convert ArrayList to Array(String, Integer, Double, Float)
+						if(declaredField.getType() == String[].class){
+							ArrayList<String> data = (ArrayList<String>)myMap.get(PDFContainer.PDFAttrNames[i]);
+							String[] newData = new String[data.size()];
+							newData = data.toArray(newData);
+							declaredField.set(temp, newData);
+						}else if(declaredField.getType() == Integer[].class){
+							ArrayList<Integer> data = (ArrayList<Integer>)myMap.get(PDFContainer.PDFAttrNames[i]);
+							int newData[] = Tools.intArrListToArray(data);
+							declaredField.set(temp, newData);
+						}else if(declaredField.getType() == Double[].class){
+							ArrayList<Double> data = (ArrayList<Double>)myMap.get(PDFContainer.PDFAttrNames[i]);
+							double newData[] = Tools.doubleArrListToArray(data);
+							declaredField.set(temp, newData);
+						}else if(declaredField.getType() == Float[].class){
+							ArrayList<Float> data = (ArrayList<Float>)myMap.get(PDFContainer.PDFAttrNames[i]);
+							float newData[] = Tools.floatArrListToArray(data);
+							declaredField.set(temp, newData);
+						}else{
+							declaredField.set(temp, myMap.get(PDFContainer.PDFAttrNames[i]));
+						}
+						
+					} catch (IllegalArgumentException e1) {
+						e1.printStackTrace();
+					} catch (IllegalAccessException e1) {
+						e1.printStackTrace();
+					}	
 				}
 				
 			} catch (JsonParseException e) {
@@ -73,10 +131,16 @@ public class DataManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Map is: "+myMap);
-			//eturn cursor;
+			
+			answer[nr++] = temp;
 		}
 
+		return answer;
+	}
+
+	private Class<?> Class(Class<String[]> class1) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
