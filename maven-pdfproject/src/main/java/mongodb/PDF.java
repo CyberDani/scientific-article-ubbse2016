@@ -19,6 +19,16 @@ public class PDF {
 		setBibliography(bibliography);
 	}
 
+	public PDF()
+	{
+		setPath("");
+		setSubtitles(null);
+		setPagesNr(0);
+		setWordsRow(0);
+		setFontSize("0.0");
+		setBibliography(false);
+	}
+	
 	public String getPath() {
 		return path;
 	}
