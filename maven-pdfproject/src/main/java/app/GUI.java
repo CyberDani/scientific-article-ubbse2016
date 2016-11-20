@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import common.ConnectionContainer;
 import mongodb.DataManager;
 import mongodb.PDF;
+import weka.LearningDataSet;
 
 public class GUI extends JFrame{
 
@@ -71,7 +72,7 @@ public class GUI extends JFrame{
 		openText.setFont(openText.getFont().deriveFont(16f));
 
 		JButton openFile=new JButton("Open File");
-		JButton loadData=new JButton("Load from DB");
+		JButton loadData=new JButton("Build training set from DB");
 		
 		openFile.addActionListener(new ActionListener() {
 		    
@@ -86,7 +87,11 @@ public class GUI extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				 @SuppressWarnings("unused")
 				PDF dbData[] = common.ConnectionContainer.dm.findAll(); 
-				 System.out.println("");
+				LearningDataSet lds = new LearningDataSet();
+				//lds.addPDF(dbData[0], true);
+				lds.addAllPDF(dbData, true);
+				//lds.addFakeData();
+				lds.write();
 			}
 		}); 
 		

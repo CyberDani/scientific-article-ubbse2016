@@ -7,7 +7,7 @@ public class PDF {
 	private int pagesNr;
 	private double wordsRow;
 	private String fontSize;
-	private Boolean bibliography;
+	private boolean bibliography;
 	
 
 	public PDF(String path, String[] subtitles, int pagesNr, double wordsRow, String fontSize, Boolean bibliography) {

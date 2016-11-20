@@ -101,15 +101,15 @@ public class DataManager {
 							String[] newData = new String[data.size()];
 							newData = data.toArray(newData);
 							declaredField.set(temp, newData);
-						}else if(declaredField.getType() == Integer[].class){
+						}else if(declaredField.getType() == int[].class){
 							ArrayList<Integer> data = (ArrayList<Integer>)myMap.get(PDFContainer.PDFAttrNames[i]);
 							int newData[] = Tools.intArrListToArray(data);
 							declaredField.set(temp, newData);
-						}else if(declaredField.getType() == Double[].class){
+						}else if(declaredField.getType() == double[].class){
 							ArrayList<Double> data = (ArrayList<Double>)myMap.get(PDFContainer.PDFAttrNames[i]);
 							double newData[] = Tools.doubleArrListToArray(data);
 							declaredField.set(temp, newData);
-						}else if(declaredField.getType() == Float[].class){
+						}else if(declaredField.getType() == float[].class){
 							ArrayList<Float> data = (ArrayList<Float>)myMap.get(PDFContainer.PDFAttrNames[i]);
 							float newData[] = Tools.floatArrListToArray(data);
 							declaredField.set(temp, newData);
