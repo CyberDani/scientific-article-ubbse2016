@@ -4,7 +4,10 @@ import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.ArffLoader;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -19,7 +22,7 @@ import weka.clusterers.Cobweb;
 public class LearningDataSet {
 
 	private ArrayList<Attribute> atts = null;
-	private Instances data;
+	private Instances data = null;
 	private ArrayList<String> attVals;
 	DateFormat generalDateFormat;
 	
@@ -85,6 +88,16 @@ public class LearningDataSet {
 	    
 		// create Instances object
 	    data = new Instances("PDFCollection_"+dateFormat.format(date).toString(), atts, 0);
+	}
+	
+	public LearningDataSet(String path){
+		ArffLoader loader = new ArffLoader();
+		try {
+			loader.setSource(new File(path));
+			data = loader.getDataSet();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public LearningDataSet(){
@@ -178,8 +191,7 @@ public class LearningDataSet {
 		
 			    int n = elements.length;
 			    
-			    for(int j = 0;j<n;++j)
-			    {
+			    for(int j = 0;j<n;++j){
 			    	valsRel = new double[1];
 			    	valsRel[0] = elements[j];
 				    dataRel.add(new DenseInstance(1.0, valsRel));
@@ -204,8 +216,7 @@ public class LearningDataSet {
 		
 			    int n = elements.length;
 			    
-			    for(int j = 0;j<n;++j)
-			    {
+			    for(int j = 0;j<n;++j){
 			    	valsRel = new double[1];
 			    	valsRel[0] = dataRel.attribute(0).addStringValue(elements[j]);
 				    dataRel.add(new DenseInstance(1.0, valsRel));
@@ -229,13 +240,17 @@ public class LearningDataSet {
 	
 	public void addAllPDF(PDF[] pdf, boolean scientific){
 		int n = pdf.length;
-		for(int i = 0;i<n;++i)
-		{
+		for(int i = 0;i<n;++i){
 			addPDF(pdf[i], scientific);
 		}
 	}
 	
 	public void write(){
 		System.out.println(data);
+	}
+	
+	@Override
+	public String toString(){
+		return data.toString();
 	}
 }
