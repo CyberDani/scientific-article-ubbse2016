@@ -1,4 +1,3 @@
-package app;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -10,10 +9,6 @@ import java.util.regex.Pattern;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
-
-import common.ConnectionContainer;
-import mongodb.DataManager;
-import mongodb.PDF;
 
 
 public class TextProcessor {
@@ -34,32 +29,31 @@ public class TextProcessor {
 	private static float mostUsedFontSizeInPDF;
 	private static float[][] pdfFontsWithRows;
 	private static String[][] subtitleFontSizeAndRow;
+	private static float numberOfSubtitles;
 	
-	private String subTitles[]; 
-	private File file;
-	private String path;
 	
 	private static List<FontAndRow> pdfData = new ArrayList<FontAndRow>();
-	public TextProcessor(File file,GUI g){
-		processText(file);
-		g.setGUI(pageNumber, avgWordsInRow, bibliography, mostUsedFontSizeInPDF);
-		this.file= file;		
-	}
+	private static String[] rows;
 	
-	private static void printStatistics(){
+	public static void printStatistics(){
 		System.out.println("Page number:" + pageNumber);
 		System.out.println("Average words/row:" + avgWordsInRow);
 		System.out.println("Bibliography available:" + bibliography);
+		System.out.println("Title font-family:"+titleFontFamily);
+		System.out.println("Title font-size:"+titleFontSize);
 		System.out.println("Most used font-size:"+mostUsedFontSizeInPDF);
+		System.out.println("Most used subtitle font-size:"+mostUsedSubTitleFontSize);
 	}
 	
-	public static boolean bibliographyExistence(String [] rows){
+	public static boolean bibliographyExistence(){
 
 		for (int i = 0; i< rows.length; i++) {
-			if(rows[i].contains("References")){
+			if(rows[i].contains("References") || rows[i].contains("Bibliography") || 
+					rows[i].contains("References and notes") || rows[i].contains("Reference and note")){
 				//an extra character is added at the end of the row, we need the text without it
 				String row=rows[i].substring(0,rows[i].length()-1); 
-				if(row.matches("\\[.*\\]References"))
+				if(row.matches("\\[.*\\]References") || row.matches("\\[.*\\]Bibliography") ||
+						row.matches("\\[.*\\]References and notes") || row.matches("\\[.*\\]Reference and note"))
 					return true;
 			}
 		}
@@ -88,20 +82,20 @@ public class TextProcessor {
 		return fontFamily[1];
 	}
 	
-	public static void printRows(String[] rows){
+	public static void printRows(){
 		for(int i=0; i<rows.length; i++)
 			System.out.println(rows[i]);
 	}
 	
-	public static void getFontSizeWithNumberOfRows(String[] allRows){
+	public static void getFontSizeWithNumberOfRows(){
 		int length, iterator, counter, iterHelp, rowCounter;
-		String forSubtitles, replacement, cleanedRow;
+		String forSubtitles, replacement, cleanedRow, rowFontSize;
 		Pattern patternForRegex;
 		Matcher match;
 		
 		forSubtitles = "";
 		replacement = " ";
-		length = allRows.length;
+		length = rows.length;
 		rowCounter = 0;
 		iterator = 0;
 		counter = 0;
@@ -111,21 +105,21 @@ public class TextProcessor {
 		for(int i=0; i<length; i++){										// counting the number of rows till another font data entry
 			iterator = i;
 			counter = 0;
-			match = patternForRegex.matcher(allRows[i].toString());
+			match = patternForRegex.matcher(rows[i].toString());
 			
 			if(match.find())
 			{
 				// checking if the followed row is not starting or containing another font entry => so that row belongs to the previous font entry
-				if((i+1<length) && (patternForRegex.matcher(allRows[i+1].toString()).find() == false)){
+				if((i+1<length) && (patternForRegex.matcher(rows[i+1].toString()).find() == false)){
 
 					iterHelp = i+1;
-					while((patternForRegex.matcher(allRows[iterHelp].toString()).find() == false)){
+					while((iterHelp<length) && (patternForRegex.matcher(rows[iterHelp].toString()).find() == false)){
 						
 						rowCounter++;
 						counter++;
 						if(counter <= 3)	// to store the first 3 row
 						{
-							cleanedRow = allRows[i].replaceAll(patternForRegex.toString(), replacement);	// cleaning the row from font entries
+							cleanedRow = rows[i].replaceAll(patternForRegex.toString(), replacement);	// cleaning the row from font entries
 							forSubtitles += cleanedRow + " ";
 						}
 						
@@ -133,15 +127,15 @@ public class TextProcessor {
 						iterHelp = i;
 					}
 
-					match = patternForRegex.matcher(allRows[iterator].toString());
+					match = patternForRegex.matcher(rows[iterator].toString());
 					if(match.find())
 					{
 						String data = match.group(match.groupCount());
 						String[] fontData = extractData(data);
-						titleFontSize = fontData[1];
+						rowFontSize = fontData[1];
 						
 						FontAndRow fontAndRow = new FontAndRow();
-						fontAndRow.setFontSize(titleFontSize);
+						fontAndRow.setFontSize(rowFontSize);
 						fontAndRow.setSomeRows(forSubtitles);
 						fontAndRow.setNumberOfRows(rowCounter);
 						pdfData.add(fontAndRow);
@@ -153,18 +147,18 @@ public class TextProcessor {
 					forSubtitles = "";
 				}
 				else {	// if the row which contains font entry isn't followed by a row without font entry
-					match = patternForRegex.matcher(allRows[iterator].toString());
+					match = patternForRegex.matcher(rows[iterator].toString());
 					if(match.find())
 					{
 						rowCounter++;
 						String data = match.group(match.groupCount());
 						String[] fontData = extractData(data);
-						titleFontSize = fontData[1];
+						rowFontSize = fontData[1];
 					
 						FontAndRow fontAndRow = new FontAndRow();
-						fontAndRow.setFontSize(titleFontSize);
+						fontAndRow.setFontSize(rowFontSize);
 						
-						cleanedRow = allRows[i].replaceAll(patternForRegex.toString(), replacement);
+						cleanedRow = rows[i].replaceAll(patternForRegex.toString(), replacement);
 						
 						fontAndRow.setSomeRows(cleanedRow);
 						fontAndRow.setNumberOfRows(rowCounter);
@@ -174,11 +168,11 @@ public class TextProcessor {
 				}
 			}
 		}
-		System.out.println("--------------------------------------------------------------------------------------");
+		/*System.out.println("--------------------------------------------------------------------------------------");
 		for(FontAndRow fr : pdfData){
-			System.out.println("Font-meret: " + fr.getFontSize() + "  Elso harom sor: " + fr.getSomeRows() + "  Sorok szama: " + fr.getNumberOfRows());
+			System.out.println("Font-meret: " + fr.getFontSize() + "  Elso/elso harom sor: " + fr.getSomeRows() + "  Sorok szama: " + fr.getNumberOfRows());
 		}
-		System.out.println("--------------------------------------------------------------------------------------");
+		System.out.println("--------------------------------------------------------------------------------------");*/
 	}
 	
 	public static float getTheMostUsedFont(){
@@ -236,17 +230,22 @@ public class TextProcessor {
 		return mostUsedF;
 	}
 	
-	public static float getSubtitleFontSize(){
-		float subFontSize;
-		int numberOfRows, numberOfChars, length, index;
+	public static float getTheMostUsedSubtitleFontSize(){
+		float sum, mostUsedFontForSubtitles;
+		int numberOfRows, numberOfChars, length, index, actualLength;
+		boolean exists;
 		String[][] temp;
+		float[][] subTitleFontSizeData;
 		
 		length = pdfData.size();
-		temp = new String[length][2];
+		temp = new String[length][3];	// [][0] font-size, [][1] number of rows, [][2] rows
 		
+		exists = false;
 		index = 0;
-		subFontSize = 0;
-		numberOfRows = 3;
+		actualLength = 0;
+		mostUsedFontForSubtitles = 0;
+		//numberOfRows = 3;
+		numberOfRows = 1;			// temporary trying to eliminate to much words
 		numberOfChars = 5;
 		
 		for (FontAndRow fData: pdfData){
@@ -255,44 +254,82 @@ public class TextProcessor {
 				if(numberOfRows >= fData.getNumberOfRows()){					// the subtitle's row's number can be maximum 3	
 					if(numberOfChars <= fData.getSomeRows().length()){			// the subtitle must be at least 5 character long
 						temp[index][0] = fData.getFontSize().toString();
-						temp[index][1] = fData.getSomeRows();
+						temp[index][1] = Integer.toString(fData.getNumberOfRows());
+						temp[index][2] = fData.getSomeRows();
 						index++;
 					}
 				}
 			}
 		}
 		
-		subtitleFontSizeAndRow = new String[index][2];
-		
+		subtitleFontSizeAndRow = new String[index][3];
+		subTitleFontSizeData = new float[index][2];
+		sum = Float.parseFloat(temp[0][1]);
 		for(int i=0; i<index; i++){
+			
 			subtitleFontSizeAndRow[i][0] = temp[i][0];
 			subtitleFontSizeAndRow[i][1] = temp[i][1];
+			subtitleFontSizeAndRow[i][2] = temp[i][2];
+			
+			for(int k=0; k<index; k++){						// if the 2D array contains the new font size
+				if(subTitleFontSizeData[k][0] == Float.parseFloat(temp[i][0])){
+					subTitleFontSizeData[k][1] += Float.parseFloat(temp[i][1]);
+					exists = true;
+					break;
+				}
+			}
+			if(!exists){										// if doesn't contains the font size
+				for(int j=0; j<length; j++){
+					if(subTitleFontSizeData[j][0] == 0.0){
+						subTitleFontSizeData[j][0] = Float.parseFloat(temp[i][0]);
+						subTitleFontSizeData[j][1] += Float.parseFloat(temp[i][1]);
+						actualLength++;
+						break;
+					}
+				}
+			}
+			exists = false;
+		}
+		sum = subTitleFontSizeData[0][1];
+		for(int i=0; i<actualLength; i++){
+			if((i+1<actualLength) && (sum < subTitleFontSizeData[i+1][1])){
+				sum = subTitleFontSizeData[i+1][1];
+				mostUsedFontForSubtitles = Float.parseFloat(temp[i+1][0]);
+			}
 		}
 		
-		System.out.println("///////////////////////////////////////////////////////////////////////////////////////////");
+		/*System.out.println("///////////////////////////////////////////////////////////////////////////////////////////");
 		System.out.println("Cimek: ");
 		for(int j=0; j<index; j++){
-			System.out.println("Font-meret: "+subtitleFontSizeAndRow[j][0]+" Tartalom: "+ subtitleFontSizeAndRow[j][1]);
+			System.out.println("Font-meret: "+subtitleFontSizeAndRow[j][0]+" Tartalom: "+ subtitleFontSizeAndRow[j][2]);
 		}
-		System.out.println("///////////////////////////////////////////////////////////////////////////////////////////");
+		System.out.println("///////////////////////////////////////////////////////////////////////////////////////////");*/
 		
-		return subFontSize;
+		return mostUsedFontForSubtitles;
 	}
 	
 	public static void processTextByRow(){
-		String[] rows = text.split("\n");
+		rows = text.split("\n");
 		//printRows(rows);
 		String[] fontData=extractData(rows[0]);
-
-		getFontSizeWithNumberOfRows(rows);
-		mostUsedFontSizeInPDF = getTheMostUsedFont();
-		mostUsedSubTitleFontSize = getSubtitleFontSize();
 		
-		avgWordsInRow=numberOfWords(rows);
-		bibliography=bibliographyExistence(rows);
+		if(fontData[1].equals("0.0")){				// if the first row doesn't have a font-size, which means it's 0.0
+			System.out.println("Az adott PDF nem elemezheto! (A programnak nem lathato.)");
+			System.exit(1);
+		}
+		
+		titleFontFamily=getFontFamily(fontData[0]);
+		titleFontSize=fontData[1];
+		
+		getFontSizeWithNumberOfRows();
+		mostUsedFontSizeInPDF = getTheMostUsedFont();
+		mostUsedSubTitleFontSize = getTheMostUsedSubtitleFontSize();
+		
+		avgWordsInRow=numberOfWords();
+		bibliography=bibliographyExistence();
 	}
 	
-	public static float numberOfWords(String[] rows){
+	public static float numberOfWords(){
 		char c;
 		int count=1;
 		float sum=(float) 0.0;
@@ -316,11 +353,11 @@ public class TextProcessor {
 		return sum / rowNumber;
 	}
 	
-	public void processText(File inputFile){
-		
+	public static void processText(){
+	
 		try {
+				File inputFile = new File("E:/enyim/III. EV/2016-2017 I. felev/Csoportos projekt/Canvasrol/Installation-Instructions_1.pdf");
 				pd = PDDocument.load(inputFile);
-				path = inputFile.getAbsolutePath();
 				pageNumber=pd.getNumberOfPages();
 				PDFTextStripper stripper = new PDFTextStripper() {
 				    String prevBaseFont;
@@ -357,26 +394,7 @@ public class TextProcessor {
 				}
 				
 				processTextByRow();
-				//printStatistics();
-				
-				subTitles = new String[subtitleFontSizeAndRow.length];
-				
-				for(int i = 0; i<subTitles.length;++i){
-					subTitles[i] = subtitleFontSizeAndRow[i][1];
-				}
-
-				try {
-					
-					PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, Float.toString(mostUsedFontSizeInPDF) ,bibliography);
-					System.out.println(ConnectionContainer.dm);
-					ConnectionContainer.dm.insertDocument("LearningData", pdf);
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-				} finally {
-					//
-				}
-				
-				
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
