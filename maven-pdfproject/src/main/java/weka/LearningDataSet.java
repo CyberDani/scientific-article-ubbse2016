@@ -26,8 +26,7 @@ public class LearningDataSet {
 	private ArrayList<String> attVals;
 	DateFormat generalDateFormat;
 	
-	private void init()
-	{
+	private void init() {
 		DateFormat generalDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		attVals = new ArrayList<String>();
@@ -35,7 +34,7 @@ public class LearningDataSet {
 	    attVals.add("false");
 	}
 	
-	private void generateFormat(){
+	private void generateFormat() {
 		atts = new ArrayList<Attribute>();
 		
 		// 1. set up attributes
@@ -90,7 +89,7 @@ public class LearningDataSet {
 	    data = new Instances("PDFCollection_"+dateFormat.format(date).toString(), atts, 0);
 	}
 	
-	public LearningDataSet(String path){
+	public LearningDataSet(String path) {
 		ArffLoader loader = new ArffLoader();
 		try {
 			loader.setSource(new File(path));
@@ -100,17 +99,17 @@ public class LearningDataSet {
 		}
 	}
 	
-	public LearningDataSet(){
+	public LearningDataSet() {
 		init();
 		generateFormat();
 	}
 	
-	public LearningDataSet(PDF[] resource, boolean scientific){
+	public LearningDataSet(PDF[] resource, boolean scientific) {
 		init();
 		generateFormat();
 	}
 	
-	public void addPDF(PDF pdf, Boolean scientific){
+	public void addPDF(PDF pdf, Boolean scientific) {
 		
 		Field[] fields = PDF.class.getDeclaredFields();
 		

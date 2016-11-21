@@ -1,3 +1,5 @@
+package app;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -31,9 +33,19 @@ public class TextProcessor {
 	private static String[][] subtitleFontSizeAndRow;
 	private static float numberOfSubtitles;
 	
+	private String subTitles[]; 
+	private File file;
+	private String path;
+	
 	
 	private static List<FontAndRow> pdfData = new ArrayList<FontAndRow>();
 	private static String[] rows;
+	
+	 	public TextProcessor(File file,GUI g){
+	 		processText(file);
+	 		g.setGUI(pageNumber, avgWordsInRow, bibliography, mostUsedFontSizeInPDF);
+	 		this.file= file;		
+		}
 	
 	public static void printStatistics(){
 		System.out.println("Page number:" + pageNumber);
@@ -61,6 +73,8 @@ public class TextProcessor {
 		return false;
 		
 	}
+	
+	
 	
 	/*
 	 * Extracts data between [] and splits it by
@@ -353,10 +367,10 @@ public class TextProcessor {
 		return sum / rowNumber;
 	}
 	
-	public static void processText(){
+	public static void processText(File file){
 	
 		try {
-				File inputFile = new File("E:/enyim/III. EV/2016-2017 I. felev/Csoportos projekt/Canvasrol/Installation-Instructions_1.pdf");
+				File inputFile = new File(file.getAbsolutePath());
 				pd = PDDocument.load(inputFile);
 				pageNumber=pd.getNumberOfPages();
 				PDFTextStripper stripper = new PDFTextStripper() {
