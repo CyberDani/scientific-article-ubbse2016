@@ -11,6 +11,12 @@ import java.util.regex.Pattern;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
+import org.netlib.arpack.Dmout;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import common.ConnectionContainer;
+import mongodb.PDF;
 
 
 public class TextProcessor {
@@ -44,7 +50,23 @@ public class TextProcessor {
 	 	public TextProcessor(File file,GUI g){
 	 		processText(file);
 	 		g.setGUI(pageNumber, avgWordsInRow, bibliography, mostUsedFontSizeInPDF);
-	 		this.file= file;		
+	 		this.file= file;
+	 		subTitles = new String[subtitleFontSizeAndRow.length];
+	 		 				
+ 				for(int i = 0; i<subTitles.length;++i){
+ 					subTitles[i] = subtitleFontSizeAndRow[i][1];
+ 				}
+ 
+ 				try {
+ 					
+ 					PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, Float.toString(mostUsedFontSizeInPDF) ,bibliography);
+ 					System.out.println(ConnectionContainer.dm);
+ 					ConnectionContainer.dm.insertDocument("LearningData", pdf);
+				} catch (Exception e) {
+						System.out.println(e.getMessage());
+					} finally {
+						//
+					}
 		}
 	
 	public static void printStatistics(){
