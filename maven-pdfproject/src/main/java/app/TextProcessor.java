@@ -11,9 +11,6 @@ import java.util.regex.Pattern;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
-import org.netlib.arpack.Dmout;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import common.ConnectionContainer;
 import mongodb.PDF;
@@ -42,24 +39,32 @@ public class TextProcessor {
 	private String subTitles[]; 
 	private File file;
 	private String path;
-	
+	private PDF pdfObj;
 	
 	private static List<FontAndRow> pdfData = new ArrayList<FontAndRow>();
 	private static String[] rows;
 	
-	 	public TextProcessor(File file,GUI g){
+		public void setPDF(PDF pdf){
+			this.pdfObj=pdf;
+		}
+		
+		public PDF getPDF(){
+			return pdfObj;
+		}
+		
+	 	public TextProcessor(File file){
 	 		processText(file);
-	 		g.setGUI(pageNumber, avgWordsInRow, bibliography, mostUsedFontSizeInPDF);
 	 		this.file= file;
 	 		subTitles = new String[subtitleFontSizeAndRow.length];
 	 		 				
  				for(int i = 0; i<subTitles.length;++i){
  					subTitles[i] = subtitleFontSizeAndRow[i][1];
  				}
- 
+ 				
  				try {
  					
- 					PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, Float.toString(mostUsedFontSizeInPDF) ,bibliography);
+ 					PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, Float.toString(mostUsedFontSizeInPDF) ,Float.toString(mostUsedSubTitleFontSize),bibliography);
+ 					setPDF(pdf);
  					System.out.println(ConnectionContainer.dm);
  					ConnectionContainer.dm.insertDocument("LearningData", pdf);
 				} catch (Exception e) {
@@ -67,8 +72,10 @@ public class TextProcessor {
 					} finally {
 						//
 					}
-		}
+ 	}
 	
+	
+	 	
 	public static void printStatistics(){
 		System.out.println("Page number:" + pageNumber);
 		System.out.println("Average words/row:" + avgWordsInRow);

@@ -1,12 +1,19 @@
-package mongodb;
+package app;
 
 import java.lang.reflect.Field;
 
-import app.GUI;
 import common.ConnectionContainer;
 import common.PDFContainer;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import mongodb.DataManager;
+import mongodb.MongoDBJDBC;
+import mongodb.PDF;
 
-public class Main {
+public class Main extends Application {
 
 	public static void main(String[] args) {
 		
@@ -37,9 +44,18 @@ public class Main {
 			}        
 		});
 		
-		
-		//GUI
-		new GUI();
+		launch(args);
+	}
 
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource("../gui/ScientificArticleApp.fxml"));
+		AnchorPane myApp = (AnchorPane) loader.load();
+		Scene scene = new Scene(myApp);
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		scene.getStylesheets().add(getClass().getResource("../gui/styles.css").toExternalForm());
+		
 	}
 }
