@@ -8,15 +8,17 @@ public class PDF {
 	private double wordsRow;
 	private String fontSize;
 	private boolean bibliography;
+	private String mostUsedTitleFont;
 	
 
-	public PDF(String path, String[] subtitles, int pagesNr, double wordsRow, String fontSize, Boolean bibliography) {
+	public PDF(String path, String[] subtitles, int pagesNr, double wordsRow, String fontSize, String mostUsedTitleFont, Boolean bibliography) {
 		setPath(path);
 		setSubtitles(subtitles);
 		setPagesNr(pagesNr);
 		setWordsRow(wordsRow);
 		setFontSize(fontSize);
 		setBibliography(bibliography);
+		setMostUsedTitleFont(mostUsedTitleFont);
 	}
 
 	public PDF()
@@ -29,6 +31,18 @@ public class PDF {
 		setBibliography(false);
 	}
 	
+	public String getMostUsedTitleFont() {
+		return mostUsedTitleFont;
+	}
+
+	public void setMostUsedTitleFont(String mostUsedTitleFont) {
+		this.mostUsedTitleFont = mostUsedTitleFont;
+	}
+
+	public void setBibliography(boolean bibliography) {
+		this.bibliography = bibliography;
+	}
+
 	public String getPath() {
 		return path;
 	}

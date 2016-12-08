@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import javax.sql.CommonDataSource;
 
 import org.bson.Document;
 
@@ -82,7 +85,7 @@ public class DataManager {
 				
 				myMap = objectMapper.readValue(PDFJson, HashMap.class);
 				
-				for(int i = 0;i<PDFContainer.PDFAttrNames.length;++i){
+				for(int i = 1;i<PDFContainer.PDFAttrNames.length;++i){
 					try {
 						declaredField = 
 								PDF.class.getDeclaredField(PDFContainer.PDFAttrNames[i]);
@@ -97,7 +100,13 @@ public class DataManager {
 					try {
 						// Convert ArrayList to Array(String, Integer, Double, Float)
 						if(declaredField.getType() == String[].class){
+							@SuppressWarnings("unchecked")
 							ArrayList<String> data = (ArrayList<String>)myMap.get(PDFContainer.PDFAttrNames[i]);
+							if(data == null)
+							{
+								data = new ArrayList<String>();
+								data.add(common.PDFContainer.nullString);
+							}
 							String[] newData = new String[data.size()];
 							newData = data.toArray(newData);
 							declaredField.set(temp, newData);
@@ -132,6 +141,13 @@ public class DataManager {
 				e.printStackTrace();
 			}
 			
+			//System.out.println("");
+			@SuppressWarnings("rawtypes")
+			LinkedHashMap id = (LinkedHashMap) myMap.get("_id");
+			Object key = id.keySet().iterator().next();
+
+			Object value = id.get(key);
+			temp.set_id(value);
 			answer[nr++] = temp;
 		}
 

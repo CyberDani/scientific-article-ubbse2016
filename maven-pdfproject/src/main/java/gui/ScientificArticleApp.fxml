@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="577.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MyFXController">
+   <children>
+      <Button fx:id="loadFromDbButton" layoutX="22.0" layoutY="373.0" mnemonicParsing="false" onAction="#loadDataFromDB" prefHeight="30.0" prefWidth="165.0" text="Build training set from DB" />
+      <Button fx:id="loadFromFileButton" layoutX="206.0" layoutY="373.0" mnemonicParsing="false" onAction="#loadDataFromFile" prefHeight="30.0" prefWidth="165.0" text="Build training set from file" />
+      <Button fx:id="saveTrainingSetButton" layoutX="390.0" layoutY="373.0" mnemonicParsing="false" onAction="#saveTrainingSet" prefHeight="30.0" prefWidth="165.0" text="Save training set" />
+      <Text layoutX="34.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Scientific Article recognizer" wrappingWidth="508.578125">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Text>
+      <Text layoutX="74.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please select a PDF file:">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Button fx:id="loadPdfButton" layoutX="311.0" layoutY="134.0" mnemonicParsing="false" onAction="#loadPdf" prefHeight="30.0" prefWidth="100.0" text="Load PDF" />
+      <Label fx:id="avgWords" layoutX="187.0" layoutY="225.0" text="Avg words/row:" visible="false">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="avgWordsValue" layoutX="322.0" layoutY="225.0" text="Label" visible="false">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+      <Label fx:id="pageNumber" layoutX="198.0" layoutY="191.0" text="Page number:" visible="false">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="pageNumberValue" layoutX="322.0" layoutY="191.0" text="Label" visible="false">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="mostUsedFont" layoutX="187.0" layoutY="264.0" prefHeight="21.0" prefWidth="104.0" text="Most used font:" visible="false">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="mostUsedFontValue" layoutX="322.0" layoutY="264.0" text="Label" visible="false">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="mostUsedTitleFont" layoutX="157.0" layoutY="297.0" text="Most used title font:" visible="false">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="mostUsedTitleFontValue" layoutX="322.0" layoutY="297.0" text="Label" visible="false">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="bibliography" layoutX="142.0" layoutY="330.0" text="Bibliography available:" visible="false">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="bibliographyValue" layoutX="322.0" layoutY="330.0" text="Label" visible="false">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

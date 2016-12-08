@@ -163,7 +163,8 @@ public class LearningDataSet {
 			}else if(PDFContainer.PDFAttrTypes[i] == String.class){
 				// - string
 				try {
-					vals[i-1] = data.attribute(i-1).addStringValue(fields[i].get(pdf).toString());
+					String strData = fields[i].get(pdf).toString();
+					vals[i-1] = data.attribute(i-1).addStringValue(strData);
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
