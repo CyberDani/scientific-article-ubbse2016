@@ -1,5 +1,6 @@
 package app;
 
+import java.awt.image.RenderedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +9,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDResources;
+import org.apache.pdfbox.pdmodel.graphics.PDXObject;
+import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
 
@@ -397,11 +404,44 @@ public class TextProcessor {
 		return sum / rowNumber;
 	}
 	
+	private static int getImagesFromResources(PDResources resources){
+
+		int num=0;
+	    for (COSName xObjectName : resources.getXObjectNames()) {
+	        PDXObject xObject;
+			try {
+				xObject = resources.getXObject(xObjectName);
+				  if (xObject instanceof PDFormXObject || xObject instanceof PDImageXObject ) {
+			        	num++;
+			      }
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    }
+	    
+	    return num;
+	}
+	
+	public static int getImageNumberFromPDF(PDDocument doc) {
+
+		int overallNum=0;
+		
+        for (PDPage page : doc.getPages()) {
+				overallNum+=getImagesFromResources(page.getResources());	
+        }
+
+        return overallNum;
+	}
+	
 	public static void processText(File file){
 	
 		try {
 				File inputFile = new File(file.getAbsolutePath());
 				pd = PDDocument.load(inputFile);
+				
+				int imgNum=getImageNumberFromPDF(pd);
+				System.out.println("Number of images:"+imgNum);
+				
 				pageNumber=pd.getNumberOfPages();
 				PDFTextStripper stripper = new PDFTextStripper() {
 				    String prevBaseFont;
@@ -438,6 +478,8 @@ public class TextProcessor {
 				}
 				
 				processTextByRow();
+				
+				
 			
 		} catch (Exception e) {
 			e.printStackTrace();
