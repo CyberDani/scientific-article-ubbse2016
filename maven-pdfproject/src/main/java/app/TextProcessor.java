@@ -60,13 +60,10 @@ public class TextProcessor {
  				try {
  					
  					PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, Float.toString(mostUsedFontSizeInPDF) ,bibliography);
- 					System.out.println(ConnectionContainer.dm);
  					ConnectionContainer.dm.insertDocument("LearningData", pdf);
 				} catch (Exception e) {
 						System.out.println(e.getMessage());
-					} finally {
-						//
-					}
+				}
 		}
 	
 	public static void printStatistics(){
