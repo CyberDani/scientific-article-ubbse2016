@@ -42,6 +42,7 @@ public class TextProcessor {
 	private static float[][] pdfFontsWithRows;
 	private static String[][] subtitleFontSizeAndRow;
 	private static float numberOfSubtitles;
+	private static int averageNumberOfRowsInParagraph;
 	
 	private String subTitles[]; 
 	private File file;
@@ -92,6 +93,7 @@ public class TextProcessor {
 		System.out.println("Title font-size:"+titleFontSize);
 		System.out.println("Most used font-size:"+mostUsedFontSizeInPDF);
 		System.out.println("Most used subtitle font-size:"+mostUsedSubTitleFontSize);
+		System.out.println("Average number of rows:"+averageNumberOfRowsInParagraph);
 	}
 	
 	public static boolean bibliographyExistence(){
@@ -359,10 +361,29 @@ public class TextProcessor {
 		return mostUsedFontForSubtitles;
 	}
 	
+	public static int getTheAverageRowFromParagraphs(){
+		
+		int avgRowByParagraph;
+		int numberOfRowsInPDF = rows.length;
+		int numberOfSubtitles = subtitleFontSizeAndRow.length-1;// one of the subTitle is the title so we don't need to count that in
+		int sum = 0;
+		
+		sum = numberOfRowsInPDF - subtitleFontSizeAndRow.length;
+		avgRowByParagraph = sum / numberOfSubtitles;
+		
+		return avgRowByParagraph;
+	}
+	
 	public static void processTextByRow(){
 		rows = text.split("\n");
 		//printRows(rows);
-		String[] fontData=extractData(rows[0]);
+		String[] fontData = {};
+		try{
+			fontData=extractData(rows[0]);
+		}catch(Exception ex){
+			System.out.println("Az adott PDF nem elemezheto! (A programnak nem lathato.)");
+			System.exit(1);
+		}
 		
 		if(fontData[1].equals("0.0")){				// if the first row doesn't have a font-size, which means it's 0.0
 			System.out.println("Az adott PDF nem elemezheto! (A programnak nem lathato.)");
@@ -375,6 +396,7 @@ public class TextProcessor {
 		getFontSizeWithNumberOfRows();
 		mostUsedFontSizeInPDF = getTheMostUsedFont();
 		mostUsedSubTitleFontSize = getTheMostUsedSubtitleFontSize();
+		averageNumberOfRowsInParagraph = getTheAverageRowFromParagraphs();
 		
 		avgWordsInRow=numberOfWords();
 		bibliography=bibliographyExistence();
