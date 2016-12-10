@@ -7,10 +7,12 @@ import java.io.IOException;
 import app.Main;
 import app.TextProcessor;
 import common.PDFContainer;
+import common.Scientific;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -21,6 +23,9 @@ public class LearningFXController {
 
 	@FXML
 	private Button loadFromDbButton;
+	
+	@FXML
+	private CheckBox scientificCheck;
 	
 	@FXML
 	private Button loadFromFileButton;
@@ -113,7 +118,14 @@ public class LearningFXController {
 		fileChooser.setTitle("Open File");
 		File selectedFile= fileChooser.showOpenDialog(stage);
 		if (selectedFile != null) {
-			TextProcessor tp=new TextProcessor(selectedFile);
+			Scientific sc;
+			if(scientificCheck.isSelected()){
+				sc = Scientific.SCIENTIFIC;
+			}else{
+				sc = Scientific.NONSCIENTIFIC;
+			}
+			
+			TextProcessor tp=new TextProcessor(selectedFile, sc);
 		}		
 	}
 	

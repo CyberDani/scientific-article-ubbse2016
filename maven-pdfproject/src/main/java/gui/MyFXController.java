@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import app.TextProcessor;
 import common.PDFContainer;
+import common.Scientific;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -100,7 +101,7 @@ public class MyFXController {
 		fileChooser.setTitle("Open File");
 		File selectedFile= fileChooser.showOpenDialog(stage);
 		if (selectedFile != null) {
-			TextProcessor tp=new TextProcessor(selectedFile);
+			TextProcessor tp=new TextProcessor(selectedFile,Scientific.UNKNOWN);
 			setLabels(tp);
 		}		
 	}
@@ -109,7 +110,7 @@ public class MyFXController {
 	public void testWeightes() {
 		@SuppressWarnings("unused")
 		ArrayList<ArrayList<String>> subTitles = 
-				common.PDFContainer.lds.getSubTitles();	
+				common.PDFContainer.lds.getAllSubtitles();	
 		
 	}
 	

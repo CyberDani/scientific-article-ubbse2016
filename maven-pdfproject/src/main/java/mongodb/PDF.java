@@ -1,5 +1,7 @@
 package mongodb;
 
+import common.Scientific;
+
 public class PDF {
 	private Object _id;
 	private String path;
@@ -10,8 +12,11 @@ public class PDF {
 	private boolean bibliography;
 	private int avgRowInParagraph;
 	private int imgNum;
+	private Boolean scientific;
 
-	public PDF(String path, String[] subtitles, int pagesNr, double wordsRow, String fontSize,  int imgNum, int averageRowInParagraph, Boolean bibliography) {
+	public PDF(String path, String[] subtitles, int pagesNr, double wordsRow, 
+			String fontSize,  int imgNum, int averageRowInParagraph, 
+			Boolean bibliography, Scientific sc) {
 		setPath(path);
 		setSubtitles(subtitles);
 		setPagesNr(pagesNr);
@@ -20,6 +25,16 @@ public class PDF {
 		setBibliography(bibliography);
 		setImgNum(imgNum);
 		setAvgRowInParagraph(averageRowInParagraph);
+		
+		scientific = null;
+		
+		if(sc == Scientific.SCIENTIFIC){
+			setScientific(true);
+		}else if(sc == Scientific.NONSCIENTIFIC){
+			setScientific(false);
+		}
+		
+		
 	}
 
 	public PDF()
@@ -33,6 +48,14 @@ public class PDF {
 	}
 	
 	
+	public boolean isScientific() {
+		return scientific;
+	}
+
+	public void setScientific(boolean scientific) {
+		this.scientific = scientific;
+	}
+
 	public int getImgNum() {
 		return imgNum;
 	}

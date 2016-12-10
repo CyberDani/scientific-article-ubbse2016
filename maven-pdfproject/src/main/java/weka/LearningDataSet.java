@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import common.PDFContainer;
+import common.Scientific;
 import mongodb.PDF;
 import weka.clusterers.Cobweb;
 
@@ -78,9 +79,6 @@ public class LearningDataSet {
 			    atts.add(new Attribute(PDFContainer.PDFAttrNames[i], dataRel, 0));
 			}	  
 		}
-		
-		// - nominal
-	    atts.add(new Attribute("scientific", attVals));
 		
 	    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 	    Date date = new Date();
@@ -150,11 +148,25 @@ public class LearningDataSet {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-			}else if(PDFContainer.PDFAttrTypes[i] == boolean.class ||
-					PDFContainer.PDFAttrTypes[i] == Boolean.class ){
+			}else if(PDFContainer.PDFAttrTypes[i] == boolean.class){
 				// - nominal
 				try {
 					vals[i-1] = attVals.indexOf(fields[i].get(pdf).toString());
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}else if(PDFContainer.PDFAttrTypes[i] == Boolean.class){
+				// - nominal
+				try {
+					Boolean boolVal = (Boolean)fields[i].get(pdf);
+					if(boolVal != null){
+						vals[i-1] = attVals.indexOf(boolVal.toString());
+					}else{
+						//...
+					}
+					
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
@@ -224,14 +236,9 @@ public class LearningDataSet {
 			    
 			    vals[i-1] = data.attribute(i-1).addRelation(dataRel);
 			    
+			}else if(PDFContainer.PDFAttrTypes[i] == Scientific.class){
+				///
 			}
-		}
-		
-		// - nominal
-		try {
-			vals[PDFContainer.attrNo-1] = attVals.indexOf(scientific.toString());
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
 		}
 		
 		// add
@@ -254,25 +261,38 @@ public class LearningDataSet {
 		return data.toString();
 	}
 	
-	public ArrayList<ArrayList<String>> getSubTitles() {
-	    ArrayList<ArrayList<String>> answer = new ArrayList<ArrayList<String>>();
+	public ArrayList<String> getSubtitles(int i) {
+	    ArrayList<String> answer = new ArrayList<String>();
 	    
 	    int subTitleAttrInd = 0;
 	    while(common.PDFContainer.PDFAttrNames[++subTitleAttrInd].equals("subtitles")){}
 	    
 	    long l = data.size();
-	    
-	    for(long i = 0;i<l;++i)
+
+	    if(i<l && l >= 0)
 	    {
-	    	Instance inst = data.instance((int)i);
+	    	Instance inst = data.instance(i);
 	    	Attribute attr = inst.attribute(subTitleAttrInd);
 	    	String subtitles = inst.stringValue(attr);
 	    	
 	    	ArrayList<String> arrList = common.Tools.stringToArrList(subtitles);
+	    	answer = arrList;
+	    }
+
+	    return answer;
+	}
+	
+	public ArrayList<ArrayList<String>> getAllSubtitles() {
+		
+	    ArrayList<ArrayList<String>> answer = new ArrayList<ArrayList<String>>();
+	    long l = data.size();
+	    
+	    for(long i = 0;i<l;++i)
+	    {	    	
+	    	ArrayList<String> arrList = getSubtitles((int)i);
 	    	answer.add(arrList);
 	    }
 
 	    return answer;
-
 	}
 }

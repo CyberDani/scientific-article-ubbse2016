@@ -20,6 +20,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
 
 import common.ConnectionContainer;
+import common.Scientific;
 import mongodb.PDF;
 
 
@@ -61,7 +62,7 @@ public class TextProcessor {
 			return pdfObj;
 		}
 		
-	 	public TextProcessor(File file){
+	 	public TextProcessor(File file, Scientific scientific){
 	 		processText(file);
 	 		this.file= file;
 	 		subTitles = new String[subtitleFontSizeAndRow.length];
@@ -73,7 +74,7 @@ public class TextProcessor {
 			try {
 				
 				path = file.getAbsolutePath();
-				PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, Float.toString(mostUsedFontSizeInPDF) ,numOfImages,averageNumberOfRowsInParagraph,bibliography);
+				PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, Float.toString(mostUsedFontSizeInPDF) ,numOfImages,averageNumberOfRowsInParagraph,bibliography, scientific);
 				setPDF(pdf);
 				System.out.println(ConnectionContainer.dm);
 				ConnectionContainer.dm.insertDocument("LearningData", pdf);
