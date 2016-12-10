@@ -54,7 +54,7 @@ public class LearningFXController {
 	public void loadDataFromFile(){
 		Stage stage = (Stage) loadFromFileButton.getScene().getWindow();
 		FileChooser fileChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Attribute Relational File Format", "arff");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Attribute Relational File Format", "*.arff");
         fileChooser.getExtensionFilters().add(extFilter);
 		fileChooser.setTitle("Open Training Set File");
 		File selectedFile= fileChooser.showOpenDialog(stage);
