@@ -22,7 +22,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button layoutX="102.0" layoutY="168.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="165.0" text="Load PDF to training set" />
+      <Button fx:id="loadPdfToDbButton" layoutX="102.0" layoutY="168.0" mnemonicParsing="false" onAction="#loadPdf" prefHeight="31.0" prefWidth="165.0" text="Load PDF to DB" />
       <Button layoutX="336.0" layoutY="168.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="165.0" text="Load a directory of PDF s" />
    </children>
 </AnchorPane>

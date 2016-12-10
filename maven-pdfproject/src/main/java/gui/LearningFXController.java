@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import app.Main;
+import app.TextProcessor;
 import common.PDFContainer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +30,9 @@ public class LearningFXController {
 	
 	@FXML
 	private Button loadOtherSceneButton;
+	
+	@FXML 
+	private Button loadPdfToDbButton;
 	
 	private boolean isDataSetLoaded=false;
 	
@@ -100,6 +104,17 @@ public class LearningFXController {
 		}else{
 			System.out.println("Data set is not loaded");
 		}
+	}
+	
+	@FXML
+	public void loadPdf() {
+		Stage stage = (Stage) loadPdfToDbButton.getScene().getWindow();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open File");
+		File selectedFile= fileChooser.showOpenDialog(stage);
+		if (selectedFile != null) {
+			TextProcessor tp=new TextProcessor(selectedFile);
+		}		
 	}
 	
 }

@@ -88,8 +88,9 @@ public class MyFXController {
 		bibliographyValue.setText(Boolean.toString(myPDF.getBibliography()));
 		bibliographyValue.setVisible(true);
 	}
-	
-	private void openFile(){
+		
+	@FXML
+	public void loadPdf() {
 		Stage stage = (Stage) loadPdfButton.getScene().getWindow();
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open File");
@@ -98,11 +99,6 @@ public class MyFXController {
 			TextProcessor tp=new TextProcessor(selectedFile);
 			setLabels(tp);
 		}		
-	}
-	
-	@FXML
-	public void loadPdf() {
-		openFile();
 	}
 	
 }
