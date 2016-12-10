@@ -50,7 +50,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(Main.class.getResource("../gui/ScientificArticleApp.fxml"));
+		loader.setLocation(Main.class.getResource("../gui/ScientificArticleApp2.fxml"));
 		AnchorPane myApp = (AnchorPane) loader.load();
 		Scene scene = new Scene(myApp);
 		primaryStage.setScene(scene);

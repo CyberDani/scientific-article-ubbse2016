@@ -8,17 +8,18 @@ public class PDF {
 	private double wordsRow;
 	private String fontSize;
 	private boolean bibliography;
-	private String mostUsedTitleFont;
-	
+	private int avgRowInParagraph;
+	private int imgNum;
 
-	public PDF(String path, String[] subtitles, int pagesNr, double wordsRow, String fontSize, String mostUsedTitleFont, Boolean bibliography) {
+	public PDF(String path, String[] subtitles, int pagesNr, double wordsRow, String fontSize,  int imgNum, int averageRowInParagraph, Boolean bibliography) {
 		setPath(path);
 		setSubtitles(subtitles);
 		setPagesNr(pagesNr);
 		setWordsRow(wordsRow);
 		setFontSize(fontSize);
 		setBibliography(bibliography);
-		setMostUsedTitleFont(mostUsedTitleFont);
+		setImgNum(imgNum);
+		setAvgRowInParagraph(averageRowInParagraph);
 	}
 
 	public PDF()
@@ -31,14 +32,23 @@ public class PDF {
 		setBibliography(false);
 	}
 	
-	public String getMostUsedTitleFont() {
-		return mostUsedTitleFont;
+	
+	public int getImgNum() {
+		return imgNum;
 	}
 
-	public void setMostUsedTitleFont(String mostUsedTitleFont) {
-		this.mostUsedTitleFont = mostUsedTitleFont;
+	public void setImgNum(int imgNum) {
+		this.imgNum = imgNum;
 	}
 
+	public int getAvgRowInParagraph() {
+		return avgRowInParagraph;
+	}
+
+	public void setAvgRowInParagraph(int avgRowInParagraph) {
+		this.avgRowInParagraph = avgRowInParagraph;
+	}
+	
 	public void setBibliography(boolean bibliography) {
 		this.bibliography = bibliography;
 	}

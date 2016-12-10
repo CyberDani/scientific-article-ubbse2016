@@ -3,13 +3,13 @@ package gui;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import app.TextProcessor;
 import common.PDFContainer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import mongodb.PDF;
@@ -18,16 +18,10 @@ import weka.LearningDataSet;
 public class MyFXController {
 	
 	@FXML
+	private Text result;
+	
+	@FXML
 	private Button loadPdfButton;
-
-	@FXML
-	private Button loadFromDbButton;
-	
-	@FXML
-	private Button loadFromFileButton;
-	
-	@FXML
-	private Button saveTrainingSetButton;
 	
 	@FXML 
 	private Label pageNumber;
@@ -42,16 +36,22 @@ public class MyFXController {
 	private Label avgWordsValue;
 	
 	@FXML 
+	private Label avgRowParagraph;
+	
+	@FXML
+	private Label avgRowParagraphValue;
+	
+	@FXML 
 	private Label mostUsedFont;
 
 	@FXML
 	private Label mostUsedFontValue;
 	
-	@FXML 
-	private Label mostUsedTitleFont;
-
 	@FXML
-	private Label mostUsedTitleFontValue;
+	private Label numOfImg;
+	
+	@FXML
+	private Label numOfImgValue;
 	
 	@FXML 
 	private Label bibliography;
@@ -62,6 +62,8 @@ public class MyFXController {
 	private void setLabels(TextProcessor tp){
 		PDF myPDF=tp.getPDF();
 		
+		result.setVisible(true);
+		
 		pageNumber.setVisible(true);
 		pageNumberValue.setText(Integer.toString(myPDF.getPagesNr()));
 		pageNumberValue.setVisible(true);
@@ -70,13 +72,17 @@ public class MyFXController {
 		avgWordsValue.setText(Double.toString(myPDF.getWordsRow()));
 		avgWordsValue.setVisible(true);
 		
+		avgRowParagraph.setVisible(true);
+		avgRowParagraphValue.setText(Integer.toString(myPDF.getAvgRowInParagraph()));
+		avgRowParagraphValue.setVisible(true);
+		
 		mostUsedFont.setVisible(true);
 		mostUsedFontValue.setText(myPDF.getFontSize());
 		mostUsedFontValue.setVisible(true);
 		
-		mostUsedTitleFont.setVisible(true);
-		mostUsedTitleFontValue.setText(myPDF.getMostUsedTitleFont());
-		mostUsedTitleFontValue.setVisible(true);
+		numOfImg.setVisible(true);
+		numOfImgValue.setText(Integer.toString(myPDF.getImgNum()));
+		numOfImgValue.setVisible(true);
 		
 		bibliography.setVisible(true);
 		bibliographyValue.setText(Boolean.toString(myPDF.getBibliography()));
@@ -99,56 +105,4 @@ public class MyFXController {
 		openFile();
 	}
 	
-	@FXML
-	public void loadDataFromDB(){
-			PDF dbData[] = common.ConnectionContainer.dm.findAll(); 
-			PDFContainer.lds = new LearningDataSet();
-			PDFContainer.lds.addAllPDF(dbData, true);
-			PDFContainer.lds.write();
-	}
-	
-	@FXML
-	public void loadDataFromFile(){
-		Stage stage = (Stage) loadFromFileButton.getScene().getWindow();
-		FileChooser fileChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Attribute Relational File Format", "arff");
-        fileChooser.getExtensionFilters().add(extFilter);
-		fileChooser.setTitle("Open Training Set File");
-		File selectedFile= fileChooser.showOpenDialog(stage);
-		if (selectedFile != null) {
-			PDFContainer.lds = new LearningDataSet(selectedFile.getAbsolutePath());
-			PDFContainer.lds.write();
-		}			
-	}
-	
-	public void saveFile(File file){
-		FileWriter fileWriter = null;
-        try {
-        	 fileWriter = new FileWriter(file);
-			 fileWriter.write(PDFContainer.lds.toString());
-			 fileWriter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}     
-	}
-	
-	@FXML
-	public void saveTrainingSet(){
-		Stage stage = (Stage) saveTrainingSetButton.getScene().getWindow();
-		FileChooser fileChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Attribute Relational File Format", "arff");
-        fileChooser.getExtensionFilters().add(extFilter);
-        fileChooser.setTitle("Save training set");
-		File file = fileChooser.showSaveDialog(stage);
-		
-		
-		if(file!=null){
-			saveFile(file);
-		}
-	}
-	
-	
-	
-	
-
 }

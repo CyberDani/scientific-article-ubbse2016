@@ -43,6 +43,7 @@ public class TextProcessor {
 	private static String[][] subtitleFontSizeAndRow;
 	private static float numberOfSubtitles;
 	private static int averageNumberOfRowsInParagraph;
+	private static int numOfImages;
 	
 	private String subTitles[]; 
 	private File file;
@@ -72,7 +73,7 @@ public class TextProcessor {
 			try {
 				
 				path = file.getAbsolutePath();
-				PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, Float.toString(mostUsedFontSizeInPDF) ,Float.toString(mostUsedSubTitleFontSize),bibliography);
+				PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, Float.toString(mostUsedFontSizeInPDF) ,numOfImages,averageNumberOfRowsInParagraph,bibliography);
 				setPDF(pdf);
 				System.out.println(ConnectionContainer.dm);
 				ConnectionContainer.dm.insertDocument("LearningData", pdf);
@@ -390,8 +391,6 @@ public class TextProcessor {
 			System.exit(1);
 		}
 		
-		titleFontFamily=getFontFamily(fontData[0]);
-		titleFontSize=fontData[1];
 		
 		getFontSizeWithNumberOfRows();
 		mostUsedFontSizeInPDF = getTheMostUsedFont();
@@ -461,8 +460,7 @@ public class TextProcessor {
 				File inputFile = new File(file.getAbsolutePath());
 				pd = PDDocument.load(inputFile);
 				
-				int imgNum=getImageNumberFromPDF(pd);
-				System.out.println("Number of images:"+imgNum);
+				numOfImages=getImageNumberFromPDF(pd);
 				
 				pageNumber=pd.getNumberOfPages();
 				PDFTextStripper stripper = new PDFTextStripper() {
@@ -500,7 +498,6 @@ public class TextProcessor {
 				}
 				
 				processTextByRow();
-				
 				
 			
 		} catch (Exception e) {

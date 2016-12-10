@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="424.0" minWidth="-Infinity" prefHeight="424.0" prefWidth="577.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LearningFXController">
+   <children>
+      <Text layoutX="169.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Learning Set Page">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Text>
+      <Button fx:id="loadFromDbButton" layoutX="33.0" layoutY="354.0" mnemonicParsing="false" onAction="#loadDataFromDB" prefHeight="31.0" prefWidth="165.0" text="Build training set from DB" />
+      <Button fx:id="loadFromFileButton" layoutX="242.0" layoutY="354.0" mnemonicParsing="false" onAction="#loadDataFromFile" prefHeight="31.0" prefWidth="165.0" text="Build training set from file" />
+      <Button fx:id="saveTrainingSetButton" layoutX="430.0" layoutY="354.0" mnemonicParsing="false" onAction="#saveTrainingSet" prefHeight="31.0" prefWidth="133.0" text="Save training set" />
+      <Button fx:id="loadOtherSceneButton" layoutX="356.0" layoutY="107.0" mnemonicParsing="false" onAction="#changeScene" prefHeight="31.0" prefWidth="165.0" text="Load PDF to decide type" />
+      <Label layoutX="33.0" layoutY="112.0" text="You can use this function after data set is loaded:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button layoutX="102.0" layoutY="168.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="165.0" text="Load PDF to training set" />
+      <Button layoutX="336.0" layoutY="168.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="165.0" text="Load a directory of PDF s" />
+   </children>
+</AnchorPane>
