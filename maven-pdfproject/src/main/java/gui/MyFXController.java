@@ -3,6 +3,7 @@ package gui;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import app.TextProcessor;
 import common.PDFContainer;
@@ -22,6 +23,9 @@ public class MyFXController {
 	
 	@FXML
 	private Button loadPdfButton;
+	
+	@FXML
+	private Button tempTestButton;
 	
 	@FXML 
 	private Label pageNumber;
@@ -99,6 +103,14 @@ public class MyFXController {
 			TextProcessor tp=new TextProcessor(selectedFile);
 			setLabels(tp);
 		}		
+	}
+	
+	@FXML
+	public void testWeightes() {
+		@SuppressWarnings("unused")
+		ArrayList<ArrayList<Integer>> subTitles = 
+				common.PDFContainer.lds.getSubTitles();	
+		
 	}
 	
 }

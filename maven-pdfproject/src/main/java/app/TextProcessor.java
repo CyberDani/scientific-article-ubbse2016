@@ -67,7 +67,7 @@ public class TextProcessor {
 	 		subTitles = new String[subtitleFontSizeAndRow.length];
 	 		 				
 			for(int i = 0; i<subTitles.length;++i){
-				subTitles[i] = subtitleFontSizeAndRow[i][1];
+				subTitles[i] = subtitleFontSizeAndRow[i][2];
 			}
 			
 			try {

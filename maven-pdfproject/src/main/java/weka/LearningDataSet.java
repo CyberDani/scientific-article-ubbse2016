@@ -253,4 +253,24 @@ public class LearningDataSet {
 	public String toString(){
 		return data.toString();
 	}
+	
+	public ArrayList<ArrayList<Integer>> getSubTitles() {
+	    ArrayList<ArrayList<Integer>> outer = new ArrayList<ArrayList<Integer>>();
+	    
+	    int subTitleAttrInd = 0;
+	    while(common.PDFContainer.PDFAttrNames[++subTitleAttrInd].equals("subtitles")){}
+	    
+	    long l = data.size();
+	    
+	    Instance inst;
+	    for(long i = 0;i<l;++i)
+	    {
+	    	inst = data.instance((int)i);
+	    	Attribute attr = inst.attribute(subTitleAttrInd);
+	    	System.out.println(inst.stringValue(attr));
+	    }
+
+	    return outer;
+
+	}
 }
