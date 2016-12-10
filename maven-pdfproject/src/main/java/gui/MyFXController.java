@@ -108,7 +108,7 @@ public class MyFXController {
 	@FXML
 	public void testWeightes() {
 		@SuppressWarnings("unused")
-		ArrayList<ArrayList<Integer>> subTitles = 
+		ArrayList<ArrayList<String>> subTitles = 
 				common.PDFContainer.lds.getSubTitles();	
 		
 	}

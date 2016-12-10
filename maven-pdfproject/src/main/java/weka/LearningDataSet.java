@@ -254,23 +254,25 @@ public class LearningDataSet {
 		return data.toString();
 	}
 	
-	public ArrayList<ArrayList<Integer>> getSubTitles() {
-	    ArrayList<ArrayList<Integer>> outer = new ArrayList<ArrayList<Integer>>();
+	public ArrayList<ArrayList<String>> getSubTitles() {
+	    ArrayList<ArrayList<String>> answer = new ArrayList<ArrayList<String>>();
 	    
 	    int subTitleAttrInd = 0;
 	    while(common.PDFContainer.PDFAttrNames[++subTitleAttrInd].equals("subtitles")){}
 	    
 	    long l = data.size();
 	    
-	    Instance inst;
 	    for(long i = 0;i<l;++i)
 	    {
-	    	inst = data.instance((int)i);
+	    	Instance inst = data.instance((int)i);
 	    	Attribute attr = inst.attribute(subTitleAttrInd);
-	    	System.out.println(inst.stringValue(attr));
+	    	String subtitles = inst.stringValue(attr);
+	    	
+	    	ArrayList<String> arrList = common.Tools.stringToArrList(subtitles);
+	    	answer.add(arrList);
 	    }
 
-	    return outer;
+	    return answer;
 
 	}
 }
