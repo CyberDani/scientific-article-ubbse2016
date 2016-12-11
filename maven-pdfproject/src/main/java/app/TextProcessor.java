@@ -74,7 +74,7 @@ public class TextProcessor {
 			try {
 				
 				path = file.getAbsolutePath();
-				PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, Float.toString(mostUsedFontSizeInPDF) ,numOfImages,averageNumberOfRowsInParagraph,bibliography, scientific);
+				PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, mostUsedFontSizeInPDF ,numOfImages,averageNumberOfRowsInParagraph,bibliography, scientific);
 				setPDF(pdf);
 				System.out.println(ConnectionContainer.dm);
 				ConnectionContainer.dm.insertDocument("LearningData", pdf);

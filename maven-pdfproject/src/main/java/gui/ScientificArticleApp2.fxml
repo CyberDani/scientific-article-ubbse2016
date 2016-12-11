@@ -47,7 +47,7 @@
             <Button fx:id="loadFromDbButton" layoutX="13.0" layoutY="61.0" mnemonicParsing="false" onAction="#loadDataFromDB" prefHeight="31.0" prefWidth="165.0" text="Build training set from DB" />
             <Button fx:id="loadFromFileButton" layoutX="202.0" layoutY="61.0" mnemonicParsing="false" onAction="#loadDataFromFile" prefHeight="31.0" prefWidth="165.0" text="Build training set from file" />
             <Button fx:id="saveTrainingSetButton" layoutX="378.0" layoutY="61.0" mnemonicParsing="false" onAction="#saveTrainingSet" prefHeight="31.0" prefWidth="154.0" text="Save training set to file" />
-            <Label layoutX="208.0" layoutY="16.0" text="Set the training file" underline="true">
+            <Label layoutX="182.0" layoutY="14.0" text="Building up the training set" underline="true">
                <font>
                   <Font size="15.0" />
                </font>

@@ -8,14 +8,14 @@ public class PDF {
 	private String[] subtitles;
 	private int pagesNr;
 	private double wordsRow;
-	private String fontSize;
+	private float fontSize;
 	private boolean bibliography;
 	private int avgRowInParagraph;
 	private int imgNum;
 	private Boolean scientific;
 
 	public PDF(String path, String[] subtitles, int pagesNr, double wordsRow, 
-			String fontSize,  int imgNum, int averageRowInParagraph, 
+			float fontSize,  int imgNum, int averageRowInParagraph, 
 			Boolean bibliography, Scientific sc) {
 		setPath(path);
 		setSubtitles(subtitles);
@@ -43,7 +43,7 @@ public class PDF {
 		setSubtitles(null);
 		setPagesNr(0);
 		setWordsRow(0);
-		setFontSize("0.0");
+		setFontSize(0);
 		setBibliography(false);
 	}
 	
@@ -108,11 +108,11 @@ public class PDF {
 		this.wordsRow = wordsRow;
 	}
 
-	public String getFontSize() {
+	public float getFontSize() {
 		return fontSize;
 	}
 
-	public void setFontSize(String fontSize) {
+	public void setFontSize(float fontSize) {
 		this.fontSize = fontSize;
 	}
 
