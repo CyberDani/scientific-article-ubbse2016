@@ -153,7 +153,6 @@ public class MyFXController {
 	
 	@FXML
 	public void trainPushed(){
-		PDFContainer.dlp = new DataLearnerPredictor(PDFContainer.lds);
 		String alg = algorithmCombo.getValue();
 
 		if(alg == null){
@@ -163,6 +162,8 @@ public class MyFXController {
 			alert.setContentText("Please choose an existing algorithm from the combobox.");
 			alert.showAndWait();
 		}else if(alg.equals("J48")){
+			
+			PDFContainer.dlp = new DataLearnerPredictor(PDFContainer.lds);
 			PDFContainer.dlp.setAlgorithm(LearningAlgorithm.DecisionTree_J48);
 			PDFContainer.dlp.train();
 		}
