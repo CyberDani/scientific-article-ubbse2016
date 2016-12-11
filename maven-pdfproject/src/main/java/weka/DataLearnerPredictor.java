@@ -3,6 +3,8 @@ package weka;
 import common.LearningAlgorithm;
 import weka.classifiers.trees.J48;
 import weka.core.Instances;
+import weka.classifiers.Evaluation;
+import java.util.Random;
 
 public class DataLearnerPredictor {
 
@@ -40,6 +42,29 @@ public class DataLearnerPredictor {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} 
+        	
+            break;
+        default: //throw Exception
+                 break;
+		}
+	}
+	
+	public void crossValidation(){
+		switch (learnAlg) {
+		
+        case DecisionTree_J48:
+        	Evaluation eval = null;
+        	J48 tree = new J48();
+        	
+        	try {
+        		eval = new Evaluation(data);
+				eval.crossValidateModel(tree, data, data.size()-1, new Random(1));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        	
+        	System.out.println(eval.toSummaryString("\nResults\n\n", false));
+        	System.out.println(eval.pctCorrect() + " " +eval.pctIncorrect());
         	
             break;
         default: //throw Exception

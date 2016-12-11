@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import app.TextProcessor;
+import common.LearningAlgorithm;
 import common.PDFContainer;
 import common.Scientific;
 import javafx.collections.FXCollections;
@@ -18,6 +19,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import mongodb.PDF;
+import weka.DataLearnerPredictor;
 import weka.LearningDataSet;
 
 public class MyFXController {
@@ -129,12 +131,38 @@ public class MyFXController {
 			options = FXCollections.observableArrayList(
 		        "Nothing yet"
 		    );
-		break;
+			break;
+		case 2:
+			options = FXCollections.observableArrayList(
+		        "Nothing yet"
+		    );
+			break;
+		case 3:
+			options = FXCollections.observableArrayList(
+		        "Nothing yet"
+		    );
+			break;
 		default:
 			break;
 		}
 		
 		algorithmCombo.setItems(options);
+	}
+	
+	@FXML
+	public void trainPushed(){
+		PDFContainer.dlp = new DataLearnerPredictor(PDFContainer.lds);
+		String alg = algorithmCombo.getValue();
+
+		if(alg.equals("J48")){
+			PDFContainer.dlp.setAlgorithm(LearningAlgorithm.DecisionTree_J48);
+			PDFContainer.dlp.train();
+		}
+	}
+	
+	@FXML
+	public void crossValidation(){
+		PDFContainer.dlp.crossValidation();
 	}
 	
 	@FXML

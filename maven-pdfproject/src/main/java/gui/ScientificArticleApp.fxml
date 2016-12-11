@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -10,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="577.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MyFXController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="577.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MyFXController">
    <children>
       <Text layoutX="34.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Scientific Article recognizer" wrappingWidth="508.578125">
          <font>
@@ -82,7 +83,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Button fx:id="saveStat" layoutX="415.0" layoutY="370.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="118.0" text="Save statistics">
+      <Button fx:id="saveStat" layoutX="438.0" layoutY="409.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="118.0" text="Save statistics">
          <font>
             <Font size="15.0" />
          </font>
@@ -97,8 +98,8 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Button fx:id="tempTestButton" layoutX="34.0" layoutY="374.0" mnemonicParsing="false" onAction="#testWeightes" text="Temporal Testing Button" />
-      <Pane id="greenPane" layoutX="56.0" layoutY="170.0" prefHeight="128.0" prefWidth="478.0">
+      <Button fx:id="tempTestButton" layoutX="219.0" layoutY="409.0" mnemonicParsing="false" onAction="#testWeightes" text="Temporal Testing Button" />
+      <Pane id="greenPane" layoutX="52.0" layoutY="148.0" prefHeight="128.0" prefWidth="478.0">
          <children>
             <Label layoutX="166.0" layoutY="14.0" text="Train your training set" underline="true">
                <font>
@@ -107,7 +108,7 @@
             </Label>
             <ComboBox fx:id="dataStructCombo" layoutX="14.0" layoutY="83.0" onAction="#dataStructSelected" prefHeight="25.0" prefWidth="150.0" />
             <ComboBox fx:id="algorithmCombo" layoutX="193.0" layoutY="83.0" prefWidth="150.0" />
-            <Button layoutX="366.0" layoutY="83.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Train" />
+            <Button layoutX="366.0" layoutY="83.0" mnemonicParsing="false" onAction="#trainPushed" prefHeight="25.0" prefWidth="92.0" text="Train" />
             <Label layoutX="14.0" layoutY="54.0" text="Select the data structure">
                <font>
                   <Font size="14.0" />
@@ -118,6 +119,30 @@
                   <Font size="14.0" />
                </font>
             </Label>
+         </children>
+      </Pane>
+      <Pane id="greenPane" layoutX="53.0" layoutY="294.0" prefHeight="92.0" prefWidth="478.0">
+         <children>
+            <Label layoutX="143.0" layoutY="14.0" text="Test your choosed algorithm" underline="true">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" text="CrossValidation" />
+            <Pane layoutX="327.0" layoutY="44.0" prefHeight="30.0" prefWidth="137.0" style="-fx-background-color: #9BD993; -fx-border-color: black;">
+               <children>
+                  <Label layoutX="14.0" layoutY="5.0" text="Precission:">
+                     <font>
+                        <Font name="System Italic" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="99.0" layoutY="6.0" text="\%" textFill="#2300d3">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
          </children>
       </Pane>
    </children>
