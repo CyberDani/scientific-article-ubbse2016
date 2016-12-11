@@ -12,9 +12,11 @@ import common.Scientific;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -154,7 +156,13 @@ public class MyFXController {
 		PDFContainer.dlp = new DataLearnerPredictor(PDFContainer.lds);
 		String alg = algorithmCombo.getValue();
 
-		if(alg.equals("J48")){
+		if(alg == null){
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Warning dialog");
+			alert.setHeaderText("You have not choosen an algorithm.");
+			alert.setContentText("Please choose an existing algorithm from the combobox.");
+			alert.showAndWait();
+		}else if(alg.equals("J48")){
 			PDFContainer.dlp.setAlgorithm(LearningAlgorithm.DecisionTree_J48);
 			PDFContainer.dlp.train();
 		}
@@ -162,7 +170,17 @@ public class MyFXController {
 	
 	@FXML
 	public void crossValidation(){
-		PDFContainer.dlp.crossValidation();
+		if(PDFContainer.dlp != null){
+			PDFContainer.dlp.crossValidation();
+		}else{
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Warning dialog");
+			alert.setHeaderText("You have not train your dataset.");
+			alert.setContentText("Please choose an existing algorithm from the combobox "
+					+ "and train your existing dataset.");
+			alert.showAndWait();
+		}
+		
 	}
 	
 	@FXML
@@ -172,8 +190,8 @@ public class MyFXController {
 		fileChooser.setTitle("Open File");
 		File selectedFile= fileChooser.showOpenDialog(stage);
 		if (selectedFile != null) {
-			TextProcessor tp=new TextProcessor(selectedFile,Scientific.UNKNOWN);
-			setLabels(tp);
+			//TextProcessor tp=new TextProcessor(selectedFile,Scientific.UNKNOWN);
+			//setLabels(tp);
 		}		
 	}
 	
