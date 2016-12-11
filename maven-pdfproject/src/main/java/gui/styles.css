@@ -1,3 +1,11 @@
 .root{
 -fx-background-color:#BEEB9F;
 }
+
+#greenPane{
+	-fx-background-color: #6ED482;
+	-fx-border-width: 2;
+	-fx-border-color: #545454;
+	-fx-background-radius: 10;
+	-fx-border-radius: 10;
+}

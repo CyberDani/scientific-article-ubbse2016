@@ -45,7 +45,7 @@ public class LearningFXController {
 	public void loadDataFromDB(){
 			PDF dbData[] = common.ConnectionContainer.dm.findAll(); 
 			PDFContainer.lds = new LearningDataSet();
-			PDFContainer.lds.addAllPDF(dbData, true);
+			PDFContainer.lds.addAllPDF(dbData);
 			PDFContainer.lds.write();
 			isDataSetLoaded=true;
 	}
