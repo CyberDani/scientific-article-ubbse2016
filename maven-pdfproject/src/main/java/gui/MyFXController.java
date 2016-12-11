@@ -185,14 +185,23 @@ public class MyFXController {
 	
 	@FXML
 	public void loadPdf() {
-		Stage stage = (Stage) loadPdfButton.getScene().getWindow();
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open File");
-		File selectedFile= fileChooser.showOpenDialog(stage);
-		if (selectedFile != null) {
-			//TextProcessor tp=new TextProcessor(selectedFile,Scientific.UNKNOWN);
-			//setLabels(tp);
-		}		
+		if(PDFContainer.dlp != null){
+			Stage stage = (Stage) loadPdfButton.getScene().getWindow();
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open File");
+			File selectedFile= fileChooser.showOpenDialog(stage);
+			if (selectedFile != null) {
+				//TextProcessor tp=new TextProcessor(selectedFile,Scientific.UNKNOWN);
+				//setLabels(tp);
+			}		
+		}else{
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Warning dialog");
+			alert.setHeaderText("You have not train your dataset.");
+			alert.setContentText("Please choose an existing algorithm from the combobox "
+					+ "and train your existing dataset.");
+			alert.showAndWait();
+		}
 	}
 	
 	@FXML
