@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import app.TextProcessor;
 import common.PDFContainer;
 import common.Scientific;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -24,6 +27,12 @@ public class MyFXController {
 	
 	@FXML
 	private Button loadPdfButton;
+	
+	@FXML
+	private ComboBox<String> dataStructCombo;
+	
+	@FXML
+	private ComboBox<String> algorithmCombo;
 	
 	@FXML
 	private Button tempTestButton;
@@ -64,6 +73,17 @@ public class MyFXController {
 	@FXML
 	private Label bibliographyValue;
 	
+	@FXML
+	public void initialize(){
+		ObservableList<String> options = 
+			    FXCollections.observableArrayList(
+			        "Decision tree",
+			        "Other"
+			    );
+		
+		dataStructCombo.setItems(options);
+	}
+	
 	private void setLabels(TextProcessor tp){
 		PDF myPDF=tp.getPDF();
 		
@@ -94,6 +114,29 @@ public class MyFXController {
 		bibliographyValue.setVisible(true);
 	}
 		
+	@FXML
+	public void dataStructSelected(){
+		int ind = dataStructCombo.getSelectionModel().getSelectedIndex();
+		ObservableList<String> options = null;
+		
+		switch (ind) {
+		case 0:
+				options = FXCollections.observableArrayList(
+			        "J48"
+			    );
+			break;
+		case 1:
+			options = FXCollections.observableArrayList(
+		        "Nothing yet"
+		    );
+		break;
+		default:
+			break;
+		}
+		
+		algorithmCombo.setItems(options);
+	}
+	
 	@FXML
 	public void loadPdf() {
 		Stage stage = (Stage) loadPdfButton.getScene().getWindow();
