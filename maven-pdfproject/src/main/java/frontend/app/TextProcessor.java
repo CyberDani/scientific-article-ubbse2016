@@ -1,4 +1,4 @@
-package app;
+package frontend.app;
 
 import java.awt.image.RenderedImage;
 import java.io.BufferedWriter;
@@ -19,9 +19,10 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
 
-import common.ConnectionContainer;
+import backend.repository.jdbc.ConnectionManager;
+import backend.repository.jdbc.DataManager;
 import common.Scientific;
-import mongodb.PDF;
+import frontend.model.PDF;
 
 
 public class TextProcessor {
@@ -37,7 +38,7 @@ public class TextProcessor {
 	private static boolean bibliography;
 	private static String titleFontSize;
 	private static String titleFontFamily;
-	
+
 	private static float mostUsedSubTitleFontSize;
 	private static float mostUsedFontSizeInPDF;
 	private static float[][] pdfFontsWithRows;
@@ -45,48 +46,46 @@ public class TextProcessor {
 	private static float numberOfSubtitles;
 	private static int averageNumberOfRowsInParagraph;
 	private static int numOfImages;
-	
+
 	private String subTitles[]; 
 	private File file;
 	private String path;
 	private PDF pdfObj;
-	
+
 	private static List<FontAndRow> pdfData = new ArrayList<FontAndRow>();
 	private static String[] rows;
-	
-		public void setPDF(PDF pdf){
-			this.pdfObj=pdf;
+
+	public void setPDF(PDF pdf){
+		this.pdfObj=pdf;
+	}
+
+	public PDF getPDF(){
+		return pdfObj;
+	}
+
+	public TextProcessor(File file, Scientific scientific){
+		processText(file);
+		this.file= file;
+		subTitles = new String[subtitleFontSizeAndRow.length];
+
+		for(int i = 0; i<subTitles.length;++i){
+			subTitles[i] = subtitleFontSizeAndRow[i][2];
 		}
-		
-		public PDF getPDF(){
-			return pdfObj;
+
+		try {
+
+			path = file.getAbsolutePath();
+			PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, mostUsedFontSizeInPDF ,numOfImages,averageNumberOfRowsInParagraph,bibliography, scientific);
+			setPDF(pdf);
+			DataManager dm = new DataManager();
+			dm.insertDocument("LearningData", pdf);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			//
 		}
-		
-	 	public TextProcessor(File file, Scientific scientific){
-	 		processText(file);
-	 		this.file= file;
-	 		subTitles = new String[subtitleFontSizeAndRow.length];
-	 		 				
-			for(int i = 0; i<subTitles.length;++i){
-				subTitles[i] = subtitleFontSizeAndRow[i][2];
-			}
-			
-			try {
-				
-				path = file.getAbsolutePath();
-				PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, mostUsedFontSizeInPDF ,numOfImages,averageNumberOfRowsInParagraph,bibliography, scientific);
-				setPDF(pdf);
-				System.out.println(ConnectionContainer.dm);
-				ConnectionContainer.dm.insertDocument("LearningData", pdf);
-			} catch (Exception e) {
-					System.out.println(e.getMessage());
-				} finally {
-					//
-				}
- 	}
-	
-	
-	 	
+	}
+
 	public static void printStatistics(){
 		System.out.println("Page number:" + pageNumber);
 		System.out.println("Average words/row:" + avgWordsInRow);
@@ -97,7 +96,7 @@ public class TextProcessor {
 		System.out.println("Most used subtitle font-size:"+mostUsedSubTitleFontSize);
 		System.out.println("Average number of rows:"+averageNumberOfRowsInParagraph);
 	}
-	
+
 	public static boolean bibliographyExistence(){
 
 		for (int i = 0; i< rows.length; i++) {
@@ -110,13 +109,13 @@ public class TextProcessor {
 					return true;
 			}
 		}
-		
+
 		return false;
-		
+
 	}
-	
-	
-	
+
+
+
 	/*
 	 * Extracts data between [] and splits it by
 	 * @param row row to be processed
@@ -127,7 +126,7 @@ public class TextProcessor {
 		String result = row.substring(row.lastIndexOf("[")+1,row.lastIndexOf("]"));
 		return result.split(",");
 	}
-	
+
 	/*
 	 * The data is number+fontFamily, we only need the font-family
 	 * @param data data to process
@@ -136,18 +135,18 @@ public class TextProcessor {
 		String[] fontFamily=data.split("\\+");
 		return fontFamily[1];
 	}
-	
+
 	public static void printRows(){
 		for(int i=0; i<rows.length; i++)
 			System.out.println(rows[i]);
 	}
-	
+
 	public static void getFontSizeWithNumberOfRows(){
 		int length, iterator, counter, iterHelp, rowCounter;
 		String forSubtitles, replacement, cleanedRow, rowFontSize;
 		Pattern patternForRegex;
 		Matcher match;
-		
+
 		forSubtitles = "";
 		replacement = " ";
 		length = rows.length;
@@ -156,12 +155,12 @@ public class TextProcessor {
 		counter = 0;
 
 		patternForRegex = Pattern.compile("\\[[a-zA-Z0-9+-]+,[0-9]+\\.+[0-9]+\\]");		// containing one or more font entries
-		
+
 		for(int i=0; i<length; i++){										// counting the number of rows till another font data entry
 			iterator = i;
 			counter = 0;
 			match = patternForRegex.matcher(rows[i].toString());
-			
+
 			if(match.find())
 			{
 				// checking if the followed row is not starting or containing another font entry => so that row belongs to the previous font entry
@@ -169,7 +168,7 @@ public class TextProcessor {
 
 					iterHelp = i+1;
 					while((iterHelp<length) && (patternForRegex.matcher(rows[iterHelp].toString()).find() == false)){
-						
+
 						rowCounter++;
 						counter++;
 						if(counter <= 3)	// to store the first 3 row
@@ -177,7 +176,7 @@ public class TextProcessor {
 							cleanedRow = rows[i].replaceAll(patternForRegex.toString(), replacement);	// cleaning the row from font entries
 							forSubtitles += cleanedRow + " ";
 						}
-						
+
 						i++;
 						iterHelp = i;
 					}
@@ -188,7 +187,7 @@ public class TextProcessor {
 						String data = match.group(match.groupCount());
 						String[] fontData = extractData(data);
 						rowFontSize = fontData[1];
-						
+
 						FontAndRow fontAndRow = new FontAndRow();
 						fontAndRow.setFontSize(rowFontSize);
 						fontAndRow.setSomeRows(forSubtitles);
@@ -198,7 +197,7 @@ public class TextProcessor {
 					rowCounter = 0;				// for reusing them
 					if (counter != 0)			// to get the row before
 						i--;
-					
+
 					forSubtitles = "";
 				}
 				else {	// if the row which contains font entry isn't followed by a row without font entry
@@ -209,12 +208,12 @@ public class TextProcessor {
 						String data = match.group(match.groupCount());
 						String[] fontData = extractData(data);
 						rowFontSize = fontData[1];
-					
+
 						FontAndRow fontAndRow = new FontAndRow();
 						fontAndRow.setFontSize(rowFontSize);
-						
+
 						cleanedRow = rows[i].replaceAll(patternForRegex.toString(), replacement);
-						
+
 						fontAndRow.setSomeRows(cleanedRow);
 						fontAndRow.setNumberOfRows(rowCounter);
 						pdfData.add(fontAndRow);
@@ -229,26 +228,26 @@ public class TextProcessor {
 		}
 		System.out.println("--------------------------------------------------------------------------------------");*/
 	}
-	
+
 	public static float getTheMostUsedFont(){
-		
+
 		int length, actualLength;
 		float sum, mostUsedF;
 		float[][] temp;
 		boolean exists;
-		
+
 		sum = 0;
 		mostUsedF = 0;
 		length = 0;
 		actualLength = 0;
 		exists = false;
-		
+
 		length = pdfData.size();
-		
+
 		temp = new float[pdfData.size()][2];					// we need only two columns for size and number of rows
-		
+
 		for (FontAndRow fdata: pdfData){
-			
+
 			for(int i=0; i<length; i++){						// if the 2D array contains the new font size
 				if(temp[i][0] == Float.parseFloat(fdata.getFontSize())){
 					temp[i][1] += fdata.getNumberOfRows();
@@ -268,14 +267,14 @@ public class TextProcessor {
 			}
 			exists = false;
 		}
-		
+
 		pdfFontsWithRows = new float[actualLength][2];
-		
+
 		sum = temp[0][1];
 		for(int i=0; i<actualLength; i++){						// saving the data to a global 2D array
 			pdfFontsWithRows[i][0] = temp[i][0];
 			pdfFontsWithRows[i][1] = temp[i][1];
-			
+
 			if((i+1 < actualLength) && (sum < temp[i+1][1])){	// and searching for the most used font-size
 				sum = temp[i+1][1];
 				mostUsedF = temp[i+1][0];
@@ -284,17 +283,17 @@ public class TextProcessor {
 
 		return mostUsedF;
 	}
-	
+
 	public static float getTheMostUsedSubtitleFontSize(){
 		float sum, mostUsedFontForSubtitles;
 		int numberOfRows, numberOfChars, length, index, actualLength;
 		boolean exists;
 		String[][] temp;
 		float[][] subTitleFontSizeData;
-		
+
 		length = pdfData.size();
 		temp = new String[length][3];	// [][0] font-size, [][1] number of rows, [][2] rows
-		
+
 		exists = false;
 		index = 0;
 		actualLength = 0;
@@ -302,9 +301,9 @@ public class TextProcessor {
 		//numberOfRows = 3;
 		numberOfRows = 1;			// temporary trying to eliminate to much words
 		numberOfChars = 5;
-		
+
 		for (FontAndRow fData: pdfData){
-			
+
 			if(mostUsedFontSizeInPDF < Float.parseFloat(fData.getFontSize())){	// the subtitle's font-size must be bigger than the most used font-size
 				if(numberOfRows >= fData.getNumberOfRows()){					// the subtitle's row's number can be maximum 3	
 					if(numberOfChars <= fData.getSomeRows().length()){			// the subtitle must be at least 5 character long
@@ -316,16 +315,16 @@ public class TextProcessor {
 				}
 			}
 		}
-		
+
 		subtitleFontSizeAndRow = new String[index][3];
 		subTitleFontSizeData = new float[index][2];
 		sum = Float.parseFloat(temp[0][1]);
 		for(int i=0; i<index; i++){
-			
+
 			subtitleFontSizeAndRow[i][0] = temp[i][0];
 			subtitleFontSizeAndRow[i][1] = temp[i][1];
 			subtitleFontSizeAndRow[i][2] = temp[i][2];
-			
+
 			for(int k=0; k<index; k++){						// if the 2D array contains the new font size
 				if(subTitleFontSizeData[k][0] == Float.parseFloat(temp[i][0])){
 					subTitleFontSizeData[k][1] += Float.parseFloat(temp[i][1]);
@@ -352,30 +351,30 @@ public class TextProcessor {
 				mostUsedFontForSubtitles = Float.parseFloat(temp[i+1][0]);
 			}
 		}
-		
+
 		/*System.out.println("///////////////////////////////////////////////////////////////////////////////////////////");
 		System.out.println("Cimek: ");
 		for(int j=0; j<index; j++){
 			System.out.println("Font-meret: "+subtitleFontSizeAndRow[j][0]+" Tartalom: "+ subtitleFontSizeAndRow[j][2]);
 		}
 		System.out.println("///////////////////////////////////////////////////////////////////////////////////////////");*/
-		
+
 		return mostUsedFontForSubtitles;
 	}
-	
+
 	public static int getTheAverageRowFromParagraphs(){
-		
+
 		int avgRowByParagraph;
 		int numberOfRowsInPDF = rows.length;
 		int numberOfSubtitles = subtitleFontSizeAndRow.length-1;// one of the subTitle is the title so we don't need to count that in
 		int sum = 0;
-		
+
 		sum = numberOfRowsInPDF - subtitleFontSizeAndRow.length;
 		avgRowByParagraph = sum / numberOfSubtitles;
-		
+
 		return avgRowByParagraph;
 	}
-	
+
 	public static void processTextByRow(){
 		rows = text.split("\n");
 		//printRows(rows);
@@ -386,22 +385,22 @@ public class TextProcessor {
 			System.out.println("Az adott PDF nem elemezheto! (A programnak nem lathato.)");
 			System.exit(1);
 		}
-		
+
 		if(fontData[1].equals("0.0")){				// if the first row doesn't have a font-size, which means it's 0.0
 			System.out.println("Az adott PDF nem elemezheto! (A programnak nem lathato.)");
 			System.exit(1);
 		}
-		
-		
+
+
 		getFontSizeWithNumberOfRows();
 		mostUsedFontSizeInPDF = getTheMostUsedFont();
 		mostUsedSubTitleFontSize = getTheMostUsedSubtitleFontSize();
 		averageNumberOfRowsInParagraph = getTheAverageRowFromParagraphs();
-		
+
 		avgWordsInRow=numberOfWords();
 		bibliography=bibliographyExistence();
 	}
-	
+
 	public static float numberOfWords(){
 		char c;
 		int count=1;
@@ -416,91 +415,91 @@ public class TextProcessor {
 					count++;
 				}
 			}
-			
+
 			sum+=count;
 		}
 		//Every page has a number at the end, that don't counts as a row
 		sum=sum - pageNumber;
 		int rowNumber=rows.length - pageNumber;
-		
+
 		return sum / rowNumber;
 	}
-	
+
 	private static int getImagesFromResources(PDResources resources){
 
 		int num=0;
-	    for (COSName xObjectName : resources.getXObjectNames()) {
-	        PDXObject xObject;
+		for (COSName xObjectName : resources.getXObjectNames()) {
+			PDXObject xObject;
 			try {
 				xObject = resources.getXObject(xObjectName);
-				  if (xObject instanceof PDFormXObject || xObject instanceof PDImageXObject ) {
-			        	num++;
-			      }
+				if (xObject instanceof PDFormXObject || xObject instanceof PDImageXObject ) {
+					num++;
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-	    }
-	    
-	    return num;
+		}
+
+		return num;
 	}
-	
+
 	public static int getImageNumberFromPDF(PDDocument doc) {
 
 		int overallNum=0;
-		
-        for (PDPage page : doc.getPages()) {
-				overallNum+=getImagesFromResources(page.getResources());	
-        }
 
-        return overallNum;
+		for (PDPage page : doc.getPages()) {
+			overallNum+=getImagesFromResources(page.getResources());	
+		}
+
+		return overallNum;
 	}
-	
+
 	public static void processText(File file){
-	
+
 		try {
-				File inputFile = new File(file.getAbsolutePath());
-				pd = PDDocument.load(inputFile);
-				
-				numOfImages=getImageNumberFromPDF(pd);
-				
-				pageNumber=pd.getNumberOfPages();
-				PDFTextStripper stripper = new PDFTextStripper() {
-				    String prevBaseFont;
+			File inputFile = new File(file.getAbsolutePath());
+			pd = PDDocument.load(inputFile);
 
-				    protected void writeString(String text, List<TextPosition> textPositions) throws IOException
-				    {
-				        StringBuilder builder = new StringBuilder();
+			numOfImages=getImageNumberFromPDF(pd);
 
-				        for (TextPosition position : textPositions)
-				        {
-				            String baseFont = position.getFont().getName();
-				            if (baseFont != null && !baseFont.equals(prevBaseFont))
-				            {
-				            	float size=position.getFontSizeInPt();
-				                builder.append('[').append(baseFont).append(',').append(size+"").append(']');
-				                prevBaseFont = baseFont;
-				            }
-				            builder.append(position);
-				        }
+			pageNumber=pd.getNumberOfPages();
+			PDFTextStripper stripper = new PDFTextStripper() {
+				String prevBaseFont;
 
-				        writeString(builder.toString());
-				    }
-				};
-				
-				sb = new StringBuilder();
-				// Add text to the StringBuilder from the PDF
-				stripper.setStartPage(1); // Start extracting from page 3
-				stripper.setEndPage(pageNumber); // Extract till page 4
-				sb.append(stripper.getText(pd));
-				text=sb.toString();
+				protected void writeString(String text, List<TextPosition> textPositions) throws IOException
+				{
+					StringBuilder builder = new StringBuilder();
 
-				if (pd != null) {
-					pd.close();
+					for (TextPosition position : textPositions)
+					{
+						String baseFont = position.getFont().getName();
+						if (baseFont != null && !baseFont.equals(prevBaseFont))
+						{
+							float size=position.getFontSizeInPt();
+							builder.append('[').append(baseFont).append(',').append(size+"").append(']');
+							prevBaseFont = baseFont;
+						}
+						builder.append(position);
+					}
+
+					writeString(builder.toString());
 				}
-				
-				processTextByRow();
-				
-			
+			};
+
+			sb = new StringBuilder();
+			// Add text to the StringBuilder from the PDF
+			stripper.setStartPage(1); // Start extracting from page 3
+			stripper.setEndPage(pageNumber); // Extract till page 4
+			sb.append(stripper.getText(pd));
+			text=sb.toString();
+
+			if (pd != null) {
+				pd.close();
+			}
+
+			processTextByRow();
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	

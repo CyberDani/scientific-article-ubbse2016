@@ -1,28 +1,24 @@
-package gui;
+package frontend.gui;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import app.TextProcessor;
+import backend.weka.DataLearnerPredictor;
 import common.LearningAlgorithm;
 import common.PDFContainer;
-import common.Scientific;
+import frontend.app.TextProcessor;
+import frontend.model.PDF;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import mongodb.PDF;
-import weka.DataLearnerPredictor;
-import weka.LearningDataSet;
 
 public class MyFXController {
 	

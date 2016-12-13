@@ -1,4 +1,4 @@
-package mongodb;
+package frontend.model;
 
 import common.Scientific;
 

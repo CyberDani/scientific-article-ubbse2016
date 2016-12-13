@@ -1,17 +1,17 @@
-package app;
+package frontend.app;
 
 import java.lang.reflect.Field;
 
-import common.ConnectionContainer;
+import backend.repository.DAOFactory;
+import backend.repository.PDFDAO;
+import backend.repository.jdbc.ConnectionManager;
 import common.PDFContainer;
+import frontend.model.PDF;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import mongodb.DataManager;
-import mongodb.MongoDBJDBC;
-import mongodb.PDF;
 
 public class Main extends Application {
 
@@ -29,18 +29,11 @@ public class Main extends Application {
 			PDFContainer.PDFAttrTypes[i] = fields[i].getType();
 		}
 		
-		
-		// Kapcsolat kezdemenyezese
-		final MongoDBJDBC db = new MongoDBJDBC("PDFdata", "localhost", 27017);	
-		db.createConnection();
-		ConnectionContainer.dm = new DataManager(db.getDatabase());
-		
-		
 		// Alkalmazas bezarasa
 		Runtime.getRuntime().addShutdownHook(new Thread() 
 		{            
 			public void run() {                
-				db.closeConnection();
+				ConnectionManager.getInstance().closeConnection();
 			}        
 		});
 		

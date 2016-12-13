@@ -1,7 +1,7 @@
 package common;
 
-import weka.DataLearnerPredictor;
-import weka.LearningDataSet;
+import backend.weka.DataLearnerPredictor;
+import backend.weka.LearningDataSet;
 
 public class PDFContainer {
 	public static String PDFAttrNames[];

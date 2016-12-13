@@ -1,13 +1,19 @@
-package gui;
+package frontend.gui;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import app.Main;
-import app.TextProcessor;
+import backend.repository.DAOFactory;
+import backend.repository.PDFDAO;
+import backend.weka.LearningDataSet;
 import common.PDFContainer;
 import common.Scientific;
+import frontend.app.Main;
+import frontend.app.TextProcessor;
+import frontend.model.PDF;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,8 +24,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import mongodb.PDF;
-import weka.LearningDataSet;
 
 public class LearningFXController {
 
@@ -45,11 +49,12 @@ public class LearningFXController {
 	
 	@FXML
 	public void loadDataFromDB(){
-			PDF dbData[] = common.ConnectionContainer.dm.findAll(); 
+			List<PDF> dbData = new ArrayList<PDF>();
+			dbData = DAOFactory.getInstance().getPDFDAO().getAllPDFs();
 			PDFContainer.lds = new LearningDataSet();
-			PDFContainer.lds.addAllPDF(dbData);
+			PDFContainer.lds.addAllPDF(new PDF[dbData.size()]);
 			PDFContainer.lds.write();
-			isDataSetLoaded=true;
+			isDataSetLoaded = true;
 	}
 	
 	@FXML

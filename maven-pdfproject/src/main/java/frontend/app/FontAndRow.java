@@ -1,4 +1,4 @@
-package app;
+package frontend.app;
 
 public class FontAndRow {
 

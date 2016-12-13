@@ -1,4 +1,4 @@
-package weka;
+package backend.weka;
 
 import common.LearningAlgorithm;
 import weka.classifiers.trees.J48;

@@ -1,26 +1,35 @@
-package mongodb;
+package backend.repository.jdbc;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
-public class MongoDBJDBC {
-	private String database;
-	private String URI;
-	private int port;
+public class ConnectionManager {
+
+	private static Object lock = new Object();
+	private static ConnectionManager INSTANCE;
 	private MongoDatabase db; 
 	private MongoClient mongoClient;
 
-	public MongoDBJDBC(String database, String URI, int port ) {
-		this.database = database;
-		this.URI = URI;
-		this.port = port;
+	public ConnectionManager() {
+		createConnection();
+	}
+
+	public static ConnectionManager getInstance() {
+		if (INSTANCE == null) {
+			synchronized (lock) {
+				if (INSTANCE == null) {
+					INSTANCE = new ConnectionManager();
+				}
+			}	
+		}
+		return INSTANCE;
 	}
 
 	public void createConnection() {
 		mongoClient = null;
-		mongoClient = new MongoClient(URI, port);
+		mongoClient = new MongoClient("localhost", 27017);
 		// New way to get database
-		db = mongoClient.getDatabase(database);
+		db = mongoClient.getDatabase("PDFdata");
 		System.out.println("Connect to database successfully");
 	}
 	

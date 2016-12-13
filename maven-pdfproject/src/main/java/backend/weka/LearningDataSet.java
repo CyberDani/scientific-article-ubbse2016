@@ -1,4 +1,4 @@
-package weka;
+package backend.weka;
 
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -17,7 +17,7 @@ import java.util.Date;
 
 import common.PDFContainer;
 import common.Scientific;
-import mongodb.PDF;
+import frontend.model.PDF;
 import weka.clusterers.Cobweb;
 
 public class LearningDataSet {
