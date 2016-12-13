@@ -1,5 +1,8 @@
 package backend.repository.jdbc;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import backend.model.PDF;
 import backend.repository.DAOFactory;
 import backend.repository.PDFDAO;
 

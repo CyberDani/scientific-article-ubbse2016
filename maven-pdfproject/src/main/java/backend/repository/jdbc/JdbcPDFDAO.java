@@ -11,6 +11,7 @@ import java.util.Map;
 import org.bson.Document;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
@@ -132,6 +133,16 @@ public class JdbcPDFDAO implements PDFDAO {
 		}
 
 		return answer;
+	}
+
+	public void insertPDF(String collection, PDF pdf) throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(pdf);
+		System.out.println(json);
+
+		MongoCollection<Document> coll = cm.getDatabase().getCollection(collection);
+		Document doc = Document.parse(json);
+		coll.insertOne(doc);
 	}
 
 }

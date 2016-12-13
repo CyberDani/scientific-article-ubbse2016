@@ -19,8 +19,8 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
 
-import backend.repository.jdbc.ConnectionManager;
-import backend.repository.jdbc.DataManager;
+import backend.repository.DAOFactory;
+import backend.repository.PDFDAO;
 import common.Scientific;
 import backend.model.PDF;
 
@@ -50,7 +50,8 @@ public class TextProcessor {
 	private File file;
 	private String path;
 	private PDF pdfObj;
-
+	private PDFDAO pdfDAO;
+	
 	private static List<FontAndRow> pdfData = new ArrayList<FontAndRow>();
 	private static String[] rows;
 
@@ -63,6 +64,8 @@ public class TextProcessor {
 	}
 
 	public TextProcessor(File file, Scientific scientific){
+		pdfDAO = DAOFactory.getInstance().getPDFDAO();
+		
 		processText(file);
 		this.file= file;
 		subTitles = new String[subtitleFontSizeAndRow.length];
@@ -76,8 +79,7 @@ public class TextProcessor {
 			path = file.getAbsolutePath();
 			PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, mostUsedFontSizeInPDF ,numOfImages,averageNumberOfRowsInParagraph,bibliography, scientific);
 			setPDF(pdf);
-			DataManager dm = new DataManager();
-			dm.insertDocument("LearningData", pdf);
+			pdfDAO.insertPDF("LearningData", pdf);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
