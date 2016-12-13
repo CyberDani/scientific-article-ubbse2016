@@ -1,0 +1,13 @@
+app\FontAndRow.class
+mongodb\DataManager.class
+common\PDFContainer.class
+app\Main.class
+weka\LearningDataSet.class
+common\Tools.class
+app\Main$1.class
+mongodb\MongoDBJDBC.class
+mongodb\PDF.class
+common\ConnectionContainer.class
+gui\MyFXController.class
+app\TextProcessor$1.class
+app\TextProcessor.class
