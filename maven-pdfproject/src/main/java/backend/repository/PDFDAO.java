@@ -3,7 +3,7 @@ package backend.repository;
 import java.util.List;
 
 import backend.repository.exception.RepositoryException;
-import frontend.model.PDF;
+import backend.model.PDF;
 
 public interface PDFDAO {
 	

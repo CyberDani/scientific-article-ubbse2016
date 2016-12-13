@@ -13,7 +13,7 @@ import common.PDFContainer;
 import common.Scientific;
 import frontend.app.Main;
 import frontend.app.TextProcessor;
-import frontend.model.PDF;
+import backend.model.PDF;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

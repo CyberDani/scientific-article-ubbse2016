@@ -22,8 +22,7 @@ import org.apache.pdfbox.text.TextPosition;
 import backend.repository.jdbc.ConnectionManager;
 import backend.repository.jdbc.DataManager;
 import common.Scientific;
-import frontend.model.PDF;
-
+import backend.model.PDF;
 
 public class TextProcessor {
 

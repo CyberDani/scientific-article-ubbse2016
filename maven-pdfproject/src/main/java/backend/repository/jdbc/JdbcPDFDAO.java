@@ -19,7 +19,7 @@ import com.mongodb.client.MongoCursor;
 import backend.repository.PDFDAO;
 import common.PDFContainer;
 import common.Tools;
-import frontend.model.PDF;
+import backend.model.PDF;
 
 public class JdbcPDFDAO implements PDFDAO {
 

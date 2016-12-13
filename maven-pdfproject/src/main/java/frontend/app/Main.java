@@ -6,7 +6,7 @@ import backend.repository.DAOFactory;
 import backend.repository.PDFDAO;
 import backend.repository.jdbc.ConnectionManager;
 import common.PDFContainer;
-import frontend.model.PDF;
+import backend.model.PDF;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
-import frontend.model.PDF;
+import backend.model.PDF;
 
 public class DataManager {
 	private ConnectionManager cm;

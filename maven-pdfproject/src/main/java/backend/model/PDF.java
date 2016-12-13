@@ -1,4 +1,4 @@
-package frontend.model;
+package backend.model;
 
 import common.Scientific;
 

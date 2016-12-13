@@ -7,7 +7,7 @@ import backend.weka.DataLearnerPredictor;
 import common.LearningAlgorithm;
 import common.PDFContainer;
 import frontend.app.TextProcessor;
-import frontend.model.PDF;
+import backend.model.PDF;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
