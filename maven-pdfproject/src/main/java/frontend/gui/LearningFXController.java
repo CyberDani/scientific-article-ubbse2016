@@ -6,14 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import backend.model.PDF;
 import backend.repository.DAOFactory;
-import backend.repository.PDFDAO;
 import backend.weka.LearningDataSet;
 import common.PDFContainer;
 import common.Scientific;
 import frontend.app.Main;
 import frontend.app.TextProcessor;
-import backend.model.PDF;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
