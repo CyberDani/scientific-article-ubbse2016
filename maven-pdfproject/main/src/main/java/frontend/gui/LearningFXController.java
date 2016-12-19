@@ -51,7 +51,15 @@ public class LearningFXController {
 	@FXML
 	private Button loadDirOfPdfButton;
 
+	@FXML 
+	private Button runCrawlerButton;
+	
 	private boolean isDataSetLoaded=false;
+	
+	@FXML 
+	public void runCrawler(){
+		
+	}
 	
 	@FXML
 	public void loadDataFromDB(){

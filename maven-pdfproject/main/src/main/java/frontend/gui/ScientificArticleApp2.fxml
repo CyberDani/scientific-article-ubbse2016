@@ -27,8 +27,8 @@
             <Insets bottom="1.0" left="1.0" right="1.0" top="10.0" />
          </padding>
          <children>
-            <Button fx:id="loadPdfToDbButton" layoutX="24.0" layoutY="70.0" mnemonicParsing="false" onAction="#loadPdf" prefHeight="31.0" prefWidth="165.0" text="Load PDF to DB" />
-            <Button fx:id="loadDirOfPdfButton" layoutX="211.0" layoutY="70.0" mnemonicParsing="false" onAction="#loadDirectoryOfPDFs" prefHeight="31.0" prefWidth="165.0" text="Load a directory of PDF s" />
+            <Button fx:id="loadPdfToDbButton" layoutX="64.0" layoutY="70.0" mnemonicParsing="false" onAction="#loadPdf" prefHeight="31.0" prefWidth="165.0" text="Load PDF to DB" />
+            <Button fx:id="loadDirOfPdfButton" layoutX="260.0" layoutY="70.0" mnemonicParsing="false" onAction="#loadDirectoryOfPDFs" prefHeight="31.0" prefWidth="165.0" text="Load a directory of PDF s" />
             <CheckBox fx:id="scientificCheck" layoutX="24.0" layoutY="42.0" mnemonicParsing="false" text="Scientific">
                <font>
                   <Font size="13.0" />
@@ -50,6 +50,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
+            <Button fx:id="runCrawlerButton" layoutX="400.0" layoutY="9.0" mnemonicParsing="false" onAction="#runCrawler" prefHeight="31.0" prefWidth="110.0" text="Run Crawler" />
          </children>
       </Pane>
    </children>
