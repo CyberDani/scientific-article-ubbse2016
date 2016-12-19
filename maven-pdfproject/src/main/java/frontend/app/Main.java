@@ -48,6 +48,6 @@ public class Main extends Application {
 		Scene scene = new Scene(myApp);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		//scene.getStylesheets().add(getClass().getResource("../gui/styles.css").toExternalForm());	
+		scene.getStylesheets().add(getClass().getResource("../gui/styles.css").toExternalForm());	
 	}
 }
