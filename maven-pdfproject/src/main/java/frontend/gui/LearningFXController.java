@@ -104,10 +104,12 @@ public class LearningFXController {
 			 FXMLLoader loader = new FXMLLoader();
 			 loader.setLocation(Main.class.getResource("../gui/ScientificArticleApp.fxml"));
 			 AnchorPane myApp;
+			 
 			try {
 				 myApp = (AnchorPane) loader.load();
 				 Scene scene = new Scene(myApp);
 				 stage.setScene(scene);
+				 scene.getStylesheets().add(getClass().getResource("../gui/styles.css").toExternalForm());
 				 stage.show();
 			} catch (IOException e) {
 				e.printStackTrace();
