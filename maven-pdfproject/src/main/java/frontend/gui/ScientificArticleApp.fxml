@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="577.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.gui.MyFXController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="577.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.gui.MyFXController">
    <children>
       <Text layoutX="34.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Scientific Article recognizer" wrappingWidth="508.578125">
          <font>
@@ -80,7 +80,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Button fx:id="saveStat" layoutX="438.0" layoutY="409.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="118.0" text="Save statistics">
+      <Button fx:id="saveStat" layoutX="436.0" layoutY="409.0" mnemonicParsing="false" onAction="#saveStatistics" prefHeight="32.0" prefWidth="127.0" text="Save statistics" visible="false">
          <font>
             <Font size="15.0" />
          </font>
@@ -95,7 +95,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Button fx:id="tempTestButton" layoutX="219.0" layoutY="409.0" mnemonicParsing="false" onAction="#testWeightes" text="Temporal Testing Button" />
+      <Button fx:id="tempTestButton" layoutX="101.0" layoutY="409.0" mnemonicParsing="false" onAction="#testWeightes" text="Temporal Testing Button" />
       <Pane id="greenPane" layoutX="52.0" layoutY="148.0" prefHeight="128.0" prefWidth="478.0">
          <children>
             <Label layoutX="166.0" layoutY="14.0" text="Train your training set" underline="true">
@@ -142,5 +142,10 @@
             </Pane>
          </children>
       </Pane>
+      <Button fx:id="backButton" layoutX="285.0" layoutY="409.0" mnemonicParsing="false" onAction="#backToTraining" prefHeight="32.0" prefWidth="137.0" text="Back to training">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
