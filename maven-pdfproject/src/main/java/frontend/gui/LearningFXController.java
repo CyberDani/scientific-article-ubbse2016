@@ -2,9 +2,12 @@ package frontend.gui;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.filechooser.FileFilter;
 
 import backend.model.PDF;
 import backend.repository.DAOFactory;
@@ -21,6 +24,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -44,6 +48,9 @@ public class LearningFXController {
 	@FXML 
 	private Button loadPdfToDbButton;
 	
+	@FXML
+	private Button loadDirOfPdfButton;
+
 	private boolean isDataSetLoaded=false;
 	
 	@FXML
@@ -140,6 +147,44 @@ public class LearningFXController {
 			
 			TextProcessor tp=new TextProcessor(selectedFile, sc);
 		}		
+	}
+	
+	 public File[] pdfFinder( File selectedDirectory){
+		 
+		   FilenameFilter fileNameFilter = new FilenameFilter() {
+
+				public boolean accept(File dir, String name) {
+			        return name.endsWith(".pdf");
+				}
+		 	
+		 	};
+
+	        return selectedDirectory.listFiles(fileNameFilter);
+	        
+	    }
+	
+	@FXML
+	public void loadDirectoryOfPDFs(){
+		Stage stage = (Stage) loadDirOfPdfButton.getScene().getWindow();
+		DirectoryChooser chooser = new DirectoryChooser();
+		chooser.setTitle("Load Directory of PDF's");
+		File selectedDirectory = chooser.showDialog(stage);
+		if(selectedDirectory!=null){
+			Scientific sc;
+			if(scientificCheck.isSelected()){
+				sc = Scientific.SCIENTIFIC;
+			}else{
+				sc = Scientific.NONSCIENTIFIC;
+			}
+			
+			File [] pdfs = pdfFinder(selectedDirectory);
+			
+			for(int i=0;i<pdfs.length;i++){
+				System.out.println("Processed PDF:"+pdfs[i]);
+				new TextProcessor(pdfs[i],sc);
+			}
+		
+		}
 	}
 	
 }

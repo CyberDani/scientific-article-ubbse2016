@@ -28,7 +28,7 @@
          </padding>
          <children>
             <Button fx:id="loadPdfToDbButton" layoutX="24.0" layoutY="70.0" mnemonicParsing="false" onAction="#loadPdf" prefHeight="31.0" prefWidth="165.0" text="Load PDF to DB" />
-            <Button layoutX="211.0" layoutY="70.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="165.0" text="Load a directory of PDF s" />
+            <Button fx:id="loadDirOfPdfButton" layoutX="211.0" layoutY="70.0" mnemonicParsing="false" onAction="#loadDirectoryOfPDFs" prefHeight="31.0" prefWidth="165.0" text="Load a directory of PDF s" />
             <CheckBox fx:id="scientificCheck" layoutX="24.0" layoutY="42.0" mnemonicParsing="false" text="Scientific">
                <font>
                   <Font size="13.0" />
