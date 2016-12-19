@@ -40,7 +40,7 @@ public class Controller {
          * will reach the line after this only when crawling is finished.
          */
         
-        String storageFolder = "D:/5.felev/Crawler/crawler4j-master/src/main/java/edu/uci/ics/crawler4j/data/crawl/pdfs";
+        String storageFolder = "E:/PDFProject/scientific-article-ubbse2016/maven-pdfproject/crawler/src/main/java/edu/uci/ics/crawler4j/data/crawl/pdfs";
         MyCrawler.configure(storageFolder);
         controller.start(MyCrawler.class, numberOfCrawlers);
     }
