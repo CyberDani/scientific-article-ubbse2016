@@ -12,6 +12,7 @@ import backend.repository.DAOFactory;
 import backend.weka.LearningDataSet;
 import common.PDFContainer;
 import common.Scientific;
+import common.Settings;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
@@ -59,6 +60,11 @@ public class LearningFXController {
 	private Button runCrawlerButton;
 	
 	private boolean isDataSetLoaded=false;
+	
+	@FXML
+	public void initialize(){
+		// ...
+	}
 	
 	@FXML 
 	public void runCrawler(){
@@ -108,7 +114,11 @@ public class LearningFXController {
 	public void loadDataFromDB(){
 			List<PDF> dbData = new ArrayList<PDF>();
 			dbData = DAOFactory.getInstance().getPDFDAO().getAllPDFs();
+			
+			Settings.weightedAvg = true;
 			PDFContainer.lds = new LearningDataSet();
+			
+			
 			PDFContainer.lds.addAllPDF(dbData);
 			PDFContainer.lds.write();
 			isDataSetLoaded = true;
@@ -123,7 +133,11 @@ public class LearningFXController {
 		fileChooser.setTitle("Open Training Set File");
 		File selectedFile= fileChooser.showOpenDialog(stage);
 		if (selectedFile != null) {
-			PDFContainer.lds = new LearningDataSet(selectedFile.getAbsolutePath());
+			
+			Settings.weightedAvg = true;
+			PDFContainer.lds = new LearningDataSet();
+			
+			PDFContainer.lds.buildFromFile(selectedFile.getAbsolutePath());
 			PDFContainer.lds.write();
 			isDataSetLoaded=true;
 		}			

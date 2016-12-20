@@ -18,6 +18,7 @@ import java.util.List;
 
 import common.PDFContainer;
 import common.Scientific;
+import common.Settings;
 import backend.model.PDF;
 import weka.clusterers.Cobweb;
 
@@ -39,7 +40,7 @@ public class LearningDataSet {
 	* variable.
 	*/
 	private ArrayList<String> attVals;
-	DateFormat generalDateFormat;
+	private DateFormat generalDateFormat;
 	
 	/**
 	* Initialize required essentials.
@@ -107,10 +108,15 @@ public class LearningDataSet {
 				ArrayList<Attribute> attsRel = new ArrayList<Attribute>();
 				
 				if(PDFContainer.unused.get(unusedSize-1).equals(attrName)){
-					// -- numeric
-				    attsRel.add(new Attribute("Value"));
-				    Instances dataRel = new Instances(PDFContainer.PDFAttrNames[i], attsRel, 0);
-				    atts.add(new Attribute(PDFContainer.PDFAttrNames[i], dataRel, 0));
+					if(Settings.weightedAvg){
+						// - numeric
+						atts.add(new Attribute(PDFContainer.PDFAttrNames[i]));
+					}else{
+						// -- numeric
+					    attsRel.add(new Attribute("Value"));
+					    Instances dataRel = new Instances(PDFContainer.PDFAttrNames[i], attsRel, 0);
+					    atts.add(new Attribute(PDFContainer.PDFAttrNames[i], dataRel, 0));
+					}
 				}else{
 					// - string
 					attsRel.add(new Attribute("Value", 
@@ -138,6 +144,25 @@ public class LearningDataSet {
 	* @param path Contains the path of an .arff file.
 	*/
 	public LearningDataSet(String path) {
+		ArffLoader loader = new ArffLoader();
+		try {
+			loader.setSource(new File(path));
+			data = loader.getDataSet();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	* Building up the whole class from an arff(<b>A</b>ttribute 
+	* <b>R</b>elational <b>F</b>ile <b>F</b>ormat) file.
+	* <br />
+	* The file has to reperesents informations about PDF files with the current 
+	* using attributes, but this has been not verified by the application yet.
+	* 
+	* @param path Contains the path of an .arff file.
+	*/
+	public void buildFromFile(String path) {
 		ArffLoader loader = new ArffLoader();
 		try {
 			loader.setSource(new File(path));
@@ -288,8 +313,6 @@ public class LearningDataSet {
 			    vals[index] = data.attribute(index).addRelation(dataRel);
 			    ++index;
 			}else if(PDFContainer.PDFAttrTypes[i] == String[].class){
-				// - relational
-			    Instances dataRel = new Instances(data.attribute(index).relation(), 0);
 			    
 			    String elements[] = null;
 			    
@@ -303,17 +326,25 @@ public class LearningDataSet {
 			    
 			    if(PDFContainer.unused.get(unusedSize-1).equals(attrName)){
 			    	double[] valsRel;
-					
 				    int n = elements.length;
 				    
-				    for(int j = 0;j<n;++j){
-				    	valsRel = new double[1];
-				    	valsRel[0] = 2;
-					    dataRel.add(new DenseInstance(1.0, valsRel));
+				    if(Settings.weightedAvg){
+				    	vals[index] = n;
+				    }else{
+				    	// - relational
+					    Instances dataRel = new Instances(data.attribute(index).relation(), 0);
+				    	for(int j = 0;j<n;++j){
+					    	valsRel = new double[1];
+					    	valsRel[0] = 2;
+						    dataRel.add(new DenseInstance(1.0, valsRel));
+					    }
+					    
+					    vals[index] = data.attribute(index).addRelation(dataRel);
 				    }
-				    
-				    vals[index] = data.attribute(index).addRelation(dataRel);
 			    }else{
+			    	// - relational
+				    Instances dataRel = new Instances(data.attribute(index).relation(), 0);
+				    
 			    	// -- add instances
 				    double[] valsRel;
 			
