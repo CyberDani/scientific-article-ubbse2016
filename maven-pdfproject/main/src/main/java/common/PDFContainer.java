@@ -41,5 +41,5 @@ public class PDFContainer {
 	* useless information</i>). The last value has to be the
 	* subtitles.
 	*/
-	List<String> unused = Arrays.asList("path","subtitles");
+	public static List<String> unused = Arrays.asList("_id","path","subtitles");
 }

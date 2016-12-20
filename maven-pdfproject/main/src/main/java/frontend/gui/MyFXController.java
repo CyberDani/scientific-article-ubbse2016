@@ -170,7 +170,7 @@ public class MyFXController {
 		avgRowParagraphValue.setVisible(true);
 		
 		mostUsedFont.setVisible(true);
-		mostUsedFontValue.setText(Float.toString(myPDF.getFontSize()));
+		mostUsedFontValue.setText(Double.toString(myPDF.getFontSize()));
 		mostUsedFontValue.setVisible(true);
 		
 		numOfImg.setVisible(true);

@@ -8,7 +8,7 @@ public class PDF {
 	private String[] subtitles;
 	private int pagesNr;
 	private double wordsRow;
-	private float fontSize;
+	private double fontSize;
 	private boolean bibliography;
 	private int avgRowInParagraph;
 	private int imgNum;
@@ -108,11 +108,11 @@ public class PDF {
 		this.wordsRow = wordsRow;
 	}
 
-	public float getFontSize() {
+	public double getFontSize() {
 		return fontSize;
 	}
 
-	public void setFontSize(float fontSize) {
+	public void setFontSize(double fontSize) {
 		this.fontSize = fontSize;
 	}
 

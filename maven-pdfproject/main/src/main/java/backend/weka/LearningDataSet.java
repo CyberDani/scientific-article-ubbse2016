@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import common.PDFContainer;
 import common.Scientific;
@@ -61,8 +62,17 @@ public class LearningDataSet {
 	private void generateFormat() {
 		atts = new ArrayList<Attribute>();
 		
-		// 1. set up attributes
+		// set up attributes
 		for(int i=0;i<PDFContainer.attrNo;++i){
+			
+			String attrName = PDFContainer.PDFAttrNames[i];
+			int unusedSize = PDFContainer.unused.size();
+			
+			//Ignore predefined attributes(except subtitles)
+			if(PDFContainer.unused.contains(attrName) &&
+					!PDFContainer.unused.get(unusedSize-1).equals(attrName)){
+				continue;
+			}
 			
 			if(PDFContainer.PDFAttrTypes[i] == int.class || 
 					PDFContainer.PDFAttrTypes[i] == float.class ||
@@ -160,7 +170,18 @@ public class LearningDataSet {
 		
 		double[] vals = new double[data.numAttributes()];
 		
-		for(int i = 1; i< PDFContainer.attrNo; ++i){
+		int index = 0;
+		
+		for(int i = 0; i< PDFContainer.attrNo; ++i){
+			
+			String attrName = PDFContainer.PDFAttrNames[i];
+			int unusedSize = PDFContainer.unused.size();
+			
+			//Ignore predefined attributes(except subtitles)
+			if(PDFContainer.unused.contains(attrName) &&
+					!PDFContainer.unused.get(unusedSize-1).equals(attrName)){
+				continue;
+			}
 			
 			//fields[j].get(pdf);
 			
@@ -171,7 +192,8 @@ public class LearningDataSet {
 			{
 				// - numeric
 				try {
-					vals[i-1] = ((Number)fields[i].get(pdf)).doubleValue();
+					vals[index] = ((Number)fields[i].get(pdf)).doubleValue();
+					++index;
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
@@ -181,8 +203,9 @@ public class LearningDataSet {
 				// - date
 				try {
 					try {
-						vals[i-1] = data.attribute(i).parseDate(
+						vals[index] = data.attribute(index).parseDate(
 								generalDateFormat.format(fields[i].get(pdf)).toString());
+						++index;
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					} catch (IllegalAccessException e) {
@@ -194,7 +217,8 @@ public class LearningDataSet {
 			}else if(PDFContainer.PDFAttrTypes[i] == boolean.class){
 				// - nominal
 				try {
-					vals[i-1] = attVals.indexOf(fields[i].get(pdf).toString());
+					vals[index] = attVals.indexOf(fields[i].get(pdf).toString());
+					++index;
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
@@ -205,11 +229,11 @@ public class LearningDataSet {
 				try {
 					Boolean boolVal = (Boolean)fields[i].get(pdf);
 					if(boolVal != null){
-						vals[i-1] = attVals.indexOf(boolVal.toString());
+						vals[index] = attVals.indexOf(boolVal.toString());
 					}else{
 						//...
 					}
-					
+					++index;
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
@@ -219,18 +243,19 @@ public class LearningDataSet {
 				// - string
 				try {
 					String strData = fields[i].get(pdf).toString();
-					vals[i-1] = data.attribute(i-1).addStringValue(strData);
+					vals[index] = data.attribute(index).addStringValue(strData);
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				}
+				++index;
 			}else if(PDFContainer.PDFAttrTypes[i] == int[].class || 
 						PDFContainer.PDFAttrTypes[i] == float[].class ||
 							PDFContainer.PDFAttrTypes[i] == double[].class ||
 								PDFContainer.PDFAttrTypes[i] == long[].class){
 				// - relational
-			    Instances dataRel = new Instances(data.attribute(i-1).relation(), 0);
+			    Instances dataRel = new Instances(data.attribute(index).relation(), 0);
 			    double elements[] = null;
 			    
 			    try {
@@ -252,10 +277,11 @@ public class LearningDataSet {
 				    dataRel.add(new DenseInstance(1.0, valsRel));
 			    }
 			    
-			    vals[i-1] = data.attribute(i-1).addRelation(dataRel);
+			    vals[index] = data.attribute(index).addRelation(dataRel);
+			    ++index;
 			}else if(PDFContainer.PDFAttrTypes[i] == String[].class){
 				// - relational
-			    Instances dataRel = new Instances(data.attribute(i-1).relation(), 0);
+			    Instances dataRel = new Instances(data.attribute(index).relation(), 0);
 			    String elements[] = null;
 			    
 			    try {
@@ -277,8 +303,8 @@ public class LearningDataSet {
 				    dataRel.add(new DenseInstance(1.0, valsRel));
 			    }
 			    
-			    vals[i-1] = data.attribute(i-1).addRelation(dataRel);
-			    
+			    vals[index] = data.attribute(index).addRelation(dataRel);
+			    ++index;
 			}else if(PDFContainer.PDFAttrTypes[i] == Scientific.class){
 				///
 			}
@@ -301,6 +327,22 @@ public class LearningDataSet {
 		int n = pdf.length;
 		for(int i = 0;i<n;++i){
 			addPDF(pdf[i]);
+		}
+	}
+	
+	/**
+	* Add multiple PDF instances to the training set via reflection.
+	* <br /><br />
+	* <b>Handled types:</b> int, float, double, long, Date, boolean, Boolean,
+	* String, int[], float[], double[], long[], String[].
+	* 
+	* @param pdf this is a list of PDF class containing information 
+	* about multiple pdf files.
+	*/
+	public void addAllPDF(List<PDF> pdfList){
+		
+		for (PDF pdf : pdfList) {
+			addPDF(pdf);
 		}
 	}
 	

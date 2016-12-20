@@ -109,7 +109,7 @@ public class LearningFXController {
 			List<PDF> dbData = new ArrayList<PDF>();
 			dbData = DAOFactory.getInstance().getPDFDAO().getAllPDFs();
 			PDFContainer.lds = new LearningDataSet();
-			PDFContainer.lds.addAllPDF(new PDF[dbData.size()]);
+			PDFContainer.lds.addAllPDF(dbData);
 			PDFContainer.lds.write();
 			isDataSetLoaded = true;
 	}
