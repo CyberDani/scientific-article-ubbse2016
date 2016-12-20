@@ -2,6 +2,7 @@ package backend.weka;
 
 import common.LearningAlgorithm;
 import weka.classifiers.trees.J48;
+import weka.classifiers.trees.M5P;
 import weka.core.Instances;
 import weka.core.Utils;
 import weka.classifiers.Evaluation;
@@ -12,6 +13,7 @@ public class DataLearnerPredictor {
 	private Instances data;
 	private LearningAlgorithm learnAlg;
 	private J48 tree = null;
+	private M5P m5ptree = null;
 	
 	public DataLearnerPredictor(LearningDataSet ds){
 		learnAlg = null;
@@ -31,16 +33,32 @@ public class DataLearnerPredictor {
 	}
 	
 	public void train(){
+		String[] options = null;
 		switch (learnAlg) {
 		
         case DecisionTree_J48:
-        	String[] options = new String[1];
+        	options = new String[1];
         	options[0] = "-U"; // unpruned tree
         	tree = new J48(); // new instance of tree
         	
         	try {
-				tree.setOptions(options); // set the options
+        		data.setClassIndex(data.numAttributes()-1);
+				//tree.setOptions(options); // set the options
 				tree.buildClassifier(data); // build classifier
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+        	
+            break;
+        case DecisionTreeLinRegression_M5P:
+        	options = new String[1];
+        	options[0] = "-U"; // unpruned tree
+        	m5ptree = new M5P(); // new instance of tree
+        	
+        	try {
+        		data.setClassIndex(data.numAttributes()-1);
+				//tree.setOptions(options); // set the options
+        		m5ptree.buildClassifier(data); // build classifier
 			} catch (Exception e) {
 				e.printStackTrace();
 			} 
@@ -52,15 +70,30 @@ public class DataLearnerPredictor {
 	}
 	
 	public void crossValidation(){
+		Evaluation eval = null;
 		switch (learnAlg) {
 		
         case DecisionTree_J48:
-        	Evaluation eval = null;
         	J48 tree = new J48();
         	
         	try {
         		eval = new Evaluation(data);
 				eval.crossValidateModel(tree, data, data.size()-1, new Random(1));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        	
+        	System.out.println(eval.toSummaryString("\nResults\n\n", false));
+        	System.out.println(eval.pctCorrect() + " " +eval.pctIncorrect());
+        	
+            break;
+        case DecisionTreeLinRegression_M5P:
+        	
+        	M5P m5ptree = new M5P();
+        	
+        	try {
+        		eval = new Evaluation(data);
+				eval.crossValidateModel(m5ptree, data, data.size()-1, new Random(1));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

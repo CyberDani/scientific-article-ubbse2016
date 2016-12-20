@@ -94,7 +94,7 @@ public class MyFXController {
 		ObservableList<String> options = 
 			    FXCollections.observableArrayList(
 			        "Decision tree",
-			        "Other"
+			        "Decision tree with linear regression"
 			    );
 		
 		dataStructCombo.setItems(options);
@@ -190,12 +190,12 @@ public class MyFXController {
 		switch (ind) {
 		case 0:
 				options = FXCollections.observableArrayList(
-			        "J48"
+			        "J48(C4.5)"
 			    );
 			break;
 		case 1:
 			options = FXCollections.observableArrayList(
-		        "Nothing yet"
+				"M5P(M5 Base)"
 		    );
 			break;
 		case 2:
@@ -225,10 +225,15 @@ public class MyFXController {
 			alert.setHeaderText("You have not choosen an algorithm.");
 			alert.setContentText("Please choose an existing algorithm from the combobox.");
 			alert.showAndWait();
-		}else if(alg.equals("J48")){
+		}else if(alg.equals("J48(C4.5)")){
 			
 			PDFContainer.dlp = new DataLearnerPredictor(PDFContainer.lds);
 			PDFContainer.dlp.setAlgorithm(LearningAlgorithm.DecisionTree_J48);
+			PDFContainer.dlp.train();
+		}else if(alg.equals("M5P(M5 Base)")){
+			
+			PDFContainer.dlp = new DataLearnerPredictor(PDFContainer.lds);
+			PDFContainer.dlp.setAlgorithm(LearningAlgorithm.DecisionTreeLinRegression_M5P);
 			PDFContainer.dlp.train();
 		}
 	}
