@@ -12,11 +12,12 @@ public class PDF {
 	private boolean bibliography;
 	private int avgRowInParagraph;
 	private int imgNum;
+	private long fileSize;
 	private Boolean scientific;
 
 	public PDF(String path, String[] subtitles, int pagesNr, double wordsRow, 
 			float fontSize,  int imgNum, int averageRowInParagraph, 
-			Boolean bibliography, Scientific sc) {
+			Boolean bibliography, long fileSize , Scientific sc) {
 		setPath(path);
 		setSubtitles(subtitles);
 		setPagesNr(pagesNr);
@@ -25,6 +26,7 @@ public class PDF {
 		setBibliography(bibliography);
 		setImgNum(imgNum);
 		setAvgRowInParagraph(averageRowInParagraph);
+		setFileSize(fileSize);
 		
 		scientific = null;
 		
@@ -47,6 +49,13 @@ public class PDF {
 		setBibliography(false);
 	}
 	
+	public long getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(long fileSize) {
+		this.fileSize = fileSize;
+	}
 	
 	public boolean isScientific() {
 		return scientific;
