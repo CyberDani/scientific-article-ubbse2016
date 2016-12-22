@@ -128,7 +128,7 @@ public class MyFXController {
 		try {
 			 myApp = (AnchorPane) loader.load();
 			 StatisticsFXController statisticsCont=loader.<StatisticsFXController>getController();
-			 statisticsCont.setTPObject(tp);
+			 statisticsCont.initializePage(tp);
 			 Scene scene = new Scene(myApp);
 			 stage.setScene(scene);
 			 stage.show();
@@ -137,71 +137,6 @@ public class MyFXController {
 		}
 	}
 	
-	private String buildStatisticsString(){
-		PDF myPDF=tp.getPDF();
-		String statistics="PDF name:"+myPDF.getPath().split("\\\\")[5]+System.getProperty("line.separator")
-						+"Is scientific:"+System.getProperty("line.separator")
-						+"Page number:"+myPDF.getPagesNr()+System.getProperty("line.separator")
-						+"Average words in a row:"+myPDF.getWordsRow()+System.getProperty("line.separator")
-						+"Average row/paragraph:"+myPDF.getAvgRowInParagraph()+System.getProperty("line.separator")
-						+"Most used font size:"+myPDF.getFontSize()+System.getProperty("line.separator")
-						+"Number of images:"+myPDF.getImgNum()+System.getProperty("line.separator")
-						+"Bibliography available:"+myPDF.getBibliography();
-		
-		return statistics;
-	}
-	
-	@FXML
-	public void saveStatistics(){
-		 Stage stage= (Stage) backButton.getScene().getWindow();
-		 FileChooser fileChooser = new FileChooser();
-		 
-		 FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-		 fileChooser.getExtensionFilters().add(extFilter);
-		 File file = fileChooser.showSaveDialog(stage);
-		 
-		 if(file != null){
-			 try {
-				String data=buildStatisticsString();
-	            FileWriter fileWriter = null;
-	            fileWriter = new FileWriter(file);
-	            fileWriter.write(data);
-	            fileWriter.close();
-	        } catch (IOException ex) {
-	        	//logger here later
-	      }
-		}
-	}
-	
-	private void setLabels(){
-		PDF myPDF=tp.getPDF();
-		
-		result.setVisible(true);
-		
-		pageNumber.setVisible(true);
-		pageNumberValue.setText(Integer.toString(myPDF.getPagesNr()));
-		pageNumberValue.setVisible(true);
-		
-		avgWords.setVisible(true);
-		avgWordsValue.setText(Double.toString(myPDF.getWordsRow()));
-		avgWordsValue.setVisible(true);
-		
-		avgRowParagraph.setVisible(true);
-		avgRowParagraphValue.setText(Integer.toString(myPDF.getAvgRowInParagraph()));
-		avgRowParagraphValue.setVisible(true);
-		
-		mostUsedFont.setVisible(true);
-		mostUsedFontValue.setText(Double.toString(myPDF.getFontSize()));
-		mostUsedFontValue.setVisible(true);
-		
-		numOfImg.setVisible(true);
-		numOfImgValue.setText(Integer.toString(myPDF.getImgNum()));
-		numOfImgValue.setVisible(true);
-		
-		bibliography.setVisible(true);
-		bibliographyValue.setText(Boolean.toString(myPDF.getBibliography()));
-		bibliographyValue.setVisible(true);
-	}
 		
 	@FXML
 	public void dataStructSelected(){
@@ -263,7 +198,6 @@ public class MyFXController {
 	public void crossValidation(){
 		if(PDFContainer.dlp != null){
 			PDFContainer.dlp.crossValidation();
-			showStat.setVisible(true);
 		}else{
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("Warning dialog");
@@ -285,6 +219,7 @@ public class MyFXController {
 			if (selectedFile != null) {
 				tp=new TextProcessor(selectedFile,Scientific.UNKNOWN);
 				//setLabels(tp);
+				showStat.setVisible(true);
 			}		
 		}else{
 			Alert alert = new Alert(AlertType.WARNING);

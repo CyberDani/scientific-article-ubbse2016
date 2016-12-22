@@ -6,7 +6,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="577.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.gui.StatisticsFXController">
    <children>
       <Text layoutX="41.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Scientific Article statistics page" wrappingWidth="508.578125">
@@ -14,80 +13,90 @@
             <Font size="24.0" />
          </font>
       </Text>
-      <Label fx:id="avgWords" layoutX="193.0" layoutY="133.0" text="Avg words/row:">
+      <Label fx:id="avgWords" layoutX="130.0" layoutY="155.0" text="Avg words/row:">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="avgWordsValue" layoutX="316.0" layoutY="133.0" text="Label">
+      <Label fx:id="avgWordsValue" layoutX="257.0" layoutY="155.0" text="Label">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="pageNumber" layoutX="199.0" layoutY="171.0" text="Page number:">
+      <Label fx:id="pageNumber" layoutX="136.0" layoutY="183.0" text="Page number:">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="pageNumberValue" layoutX="316.0" layoutY="171.0" text="Label">
+      <Label fx:id="pageNumberValue" layoutX="257.0" layoutY="183.0" text="Label">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="mostUsedFont" layoutX="193.0" layoutY="209.0" prefHeight="21.0" prefWidth="104.0" text="Most used font:">
+      <Label fx:id="mostUsedFont" layoutX="130.0" layoutY="210.0" prefHeight="21.0" prefWidth="104.0" text="Most used font:">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="mostUsedFontValue" layoutX="316.0" layoutY="209.0" text="Label">
+      <Label fx:id="mostUsedFontValue" layoutX="257.0" layoutY="210.0" text="Label">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="avgRowParagraph" layoutX="143.0" layoutY="247.0" text="Average row/paragraph:">
+      <Label fx:id="avgRowParagraph" layoutX="85.0" layoutY="237.0" text="Average row/paragraph:">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="numOfImgValue" layoutX="316.0" layoutY="324.0" text="Label">
+      <Label fx:id="numOfImgValue" layoutX="257.0" layoutY="295.0" text="Label">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="bibliography" layoutX="157.0" layoutY="284.0" text="Bibliography available:">
+      <Label fx:id="bibliography" layoutX="97.0" layoutY="264.0" text="Bibliography available:">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="bibliographyValue" layoutX="316.0" layoutY="284.0" text="Label">
+      <Label fx:id="bibliographyValue" layoutX="257.0" layoutY="264.0" text="Label">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="numOfImg" layoutX="168.0" layoutY="324.0" text="Number of images:">
+      <Label fx:id="numOfImg" layoutX="119.0" layoutY="295.0" text="Number of images:">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="avgRowParagraphValue" layoutX="316.0" layoutY="247.0" text="Label">
+      <Label fx:id="avgRowParagraphValue" layoutX="257.0" layoutY="237.0" text="Label">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Text layoutX="131.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PDF name:" wrappingWidth="113.578125">
+      <Text layoutX="136.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PDF name:" wrappingWidth="113.578125">
          <font>
             <Font size="17.0" />
          </font>
       </Text>
-      <Label layoutX="231.0" layoutY="90.0" text="Label">
+      <Label fx:id="pdfNameValue" layoutX="228.0" layoutY="87.0" text="Label">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Button fx:id="saveStat" layoutX="423.0" layoutY="345.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="127.0" text="Save statistics">
+      <Button fx:id="saveStat" layoutX="423.0" layoutY="345.0" mnemonicParsing="false" onAction="#saveStatistics" prefHeight="32.0" prefWidth="127.0" text="Save statistics">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
+      <Text layoutX="136.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Is Scientific:">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Text>
+      <Label layoutX="401.0" layoutY="89.0">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
