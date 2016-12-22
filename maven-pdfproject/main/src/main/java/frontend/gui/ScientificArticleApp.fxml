@@ -21,81 +21,12 @@
          </font>
       </Text>
       <Button fx:id="loadPdfButton" layoutX="307.0" layoutY="106.0" mnemonicParsing="false" onAction="#loadPdf" prefHeight="30.0" prefWidth="100.0" text="Load PDF" />
-      <Label fx:id="avgWords" layoutX="187.0" layoutY="213.0" text="Avg words/row:" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="avgWordsValue" layoutX="322.0" layoutY="213.0" text="Label" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font></Label>
-      <Label fx:id="pageNumber" layoutX="193.0" layoutY="182.0" text="Page number:" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="pageNumberValue" layoutX="322.0" layoutY="182.0" text="Label" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="mostUsedFont" layoutX="187.0" layoutY="281.0" prefHeight="21.0" prefWidth="104.0" text="Most used font:" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="mostUsedFontValue" layoutX="322.0" layoutY="281.0" text="Label" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="avgRowParagraph" layoutX="130.0" layoutY="248.0" text="Average row/paragraph:" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="bibliography" layoutX="153.0" layoutY="352.0" text="Bibliography available:" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="bibliographyValue" layoutX="322.0" layoutY="352.0" text="Label" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="numOfImg" layoutX="164.0" layoutY="314.0" text="Number of images:" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="numOfImgValue" layoutX="322.0" layoutY="314.0" text="Label" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="avgRowParagraphValue" layoutX="322.0" layoutY="248.0" text="Label" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Button fx:id="saveStat" layoutX="436.0" layoutY="409.0" mnemonicParsing="false" onAction="#saveStatistics" prefHeight="32.0" prefWidth="127.0" text="Save statistics" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Button>
       <Text fx:id="result" layoutX="143.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Is scientific PDF:" visible="false">
          <font>
             <Font size="21.0" />
          </font>
       </Text>
-      <Label layoutX="322.0" layoutY="149.0" text="Label" visible="false">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Button fx:id="tempTestButton" layoutX="101.0" layoutY="409.0" mnemonicParsing="false" onAction="#testWeightes" text="Temporal Testing Button" />
+      <Button fx:id="tempTestButton" layoutX="34.0" layoutY="397.0" mnemonicParsing="false" onAction="#testWeightes" text="Temporal Testing Button" />
       <Pane id="greenPane" layoutX="52.0" layoutY="148.0" prefHeight="128.0" prefWidth="478.0">
          <children>
             <Label layoutX="166.0" layoutY="14.0" text="Train your training set" underline="true">
@@ -128,7 +59,7 @@
             <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#crossValidation" text="CrossValidation" />
             <Pane layoutX="327.0" layoutY="44.0" prefHeight="30.0" prefWidth="137.0" style="-fx-background-color: #9BD993; -fx-border-color: black;">
                <children>
-                  <Label layoutX="14.0" layoutY="5.0" text="Precission:">
+                  <Label layoutX="14.0" layoutY="5.0" text="Accuracy:">
                      <font>
                         <Font name="System Italic" size="14.0" />
                      </font>
@@ -142,10 +73,11 @@
             </Pane>
          </children>
       </Pane>
-      <Button fx:id="backButton" layoutX="285.0" layoutY="409.0" mnemonicParsing="false" onAction="#backToTraining" prefHeight="32.0" prefWidth="137.0" text="Back to training">
+      <Button fx:id="backButton" layoutX="407.0" layoutY="409.0" mnemonicParsing="false" onAction="#backToTraining" prefHeight="32.0" prefWidth="137.0" text="Back to training">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
+      <Button fx:id="showStat" layoutX="255.0" layoutY="409.0" mnemonicParsing="false" onAction="#showStaticsPage" prefHeight="32.0" prefWidth="137.0" text="Show Statistics" visible="false" />
    </children>
 </AnchorPane>

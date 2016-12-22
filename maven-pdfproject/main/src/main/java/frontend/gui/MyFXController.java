@@ -53,6 +53,9 @@ public class MyFXController {
 	@FXML
 	private Button saveStat;
 	
+	@FXML
+	private Button showStat;
+	
 	@FXML 
 	private Label pageNumber;
 
@@ -108,6 +111,24 @@ public class MyFXController {
 		 AnchorPane myApp;
 		try {
 			 myApp = (AnchorPane) loader.load();
+			 Scene scene = new Scene(myApp);
+			 stage.setScene(scene);
+			 stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void showStaticsPage(){
+		Stage stage= (Stage) showStat.getScene().getWindow();
+		 FXMLLoader loader = new FXMLLoader();
+		 loader.setLocation(Main.class.getResource("../gui/ScientificArticleApp3.fxml"));
+		 AnchorPane myApp;
+		try {
+			 myApp = (AnchorPane) loader.load();
+			 StatisticsFXController statisticsCont=loader.<StatisticsFXController>getController();
+			 statisticsCont.setTPObject(tp);
 			 Scene scene = new Scene(myApp);
 			 stage.setScene(scene);
 			 stage.show();
@@ -242,6 +263,7 @@ public class MyFXController {
 	public void crossValidation(){
 		if(PDFContainer.dlp != null){
 			PDFContainer.dlp.crossValidation();
+			showStat.setVisible(true);
 		}else{
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("Warning dialog");
@@ -262,7 +284,6 @@ public class MyFXController {
 			File selectedFile= fileChooser.showOpenDialog(stage);
 			if (selectedFile != null) {
 				tp=new TextProcessor(selectedFile,Scientific.UNKNOWN);
-				saveStat.setVisible(true);
 				//setLabels(tp);
 			}		
 		}else{
