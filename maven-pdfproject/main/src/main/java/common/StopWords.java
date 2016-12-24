@@ -745,7 +745,6 @@ public class StopWords {
 		} else {
 		    return false;
 		}
-		
 	}
 	
 }
