@@ -21,6 +21,8 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import frontend.app.Main;
 import frontend.app.TextProcessor;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -28,7 +30,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -59,12 +63,43 @@ public class LearningFXController {
 	@FXML 
 	private Button runCrawlerButton;
 	
-	private boolean isDataSetLoaded=false;
+	@FXML 
+	private ChoiceBox<String> choiceB;
 	
 	@FXML
+	private Pane crawlerPane;
+	
+	@FXML 
+	private Pane trainingPane;
+	
+	@FXML
+	private Pane loadDataPane;
+	
+	private boolean isDataSetLoaded=false;
+		
+	@FXML
 	public void initialize(){
-		// ...
-	}
+		choiceB.getItems().addAll("Crawler", "Learning");
+		choiceB.getSelectionModel().select("Crawler");
+		 choiceB.valueProperty().addListener(new ChangeListener<String>() {
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					switch(newValue){
+						case "Crawler": {
+							crawlerPane.setVisible(true);
+							trainingPane.setVisible(false);
+							loadDataPane.setVisible(false);
+							break;
+						}
+						case "Learning":{
+							crawlerPane.setVisible(false);
+							trainingPane.setVisible(true);
+							loadDataPane.setVisible(true);
+							break;
+						}
+					}
+				}    
+		    });
+    }
 	
 	@FXML 
 	public void runCrawler(){
