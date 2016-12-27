@@ -85,7 +85,8 @@ public class StatisticsFXController {
 		
 		PDF myPDF=tp.getPDF();
 		
-		pdfNameValue.setText(myPDF.getPath().split("\\\\")[5]);
+		String[] asd = myPDF.getPath().split("\\\\");
+		pdfNameValue.setText(asd[asd.length-1]);
 		pageNumberValue.setText(Integer.toString(myPDF.getPagesNr()));
 		avgWordsValue.setText(Double.toString(myPDF.getWordsRow()));
 		avgRowParagraphValue.setText(Integer.toString(myPDF.getAvgRowInParagraph()));
