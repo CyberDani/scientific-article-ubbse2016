@@ -388,11 +388,11 @@ public class TextProcessor {
 				Integer freq = PDFContainer.wordsOccurence.get(word);
 				
 				if (freq == null) {
-					if(PDFContainer.numberOfWordsToInsert==0){
+					if(wordsInserted<PDFContainer.numberOfWordsToInsert){
 						PDFContainer.wordsOccurence.put(word,1);
-					}
-					else if(wordsInserted<PDFContainer.numberOfWordsToInsert){
 						wordsInserted++;
+					}
+					else if(PDFContainer.numberOfWordsToInsert==0){
 						PDFContainer.wordsOccurence.put(word,1);
 					}
 				} else {
