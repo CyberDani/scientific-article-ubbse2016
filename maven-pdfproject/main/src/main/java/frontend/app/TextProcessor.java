@@ -56,6 +56,8 @@ public class TextProcessor {
 	
 	private static List<FontAndRow> pdfData = new ArrayList<FontAndRow>();
 	private static String[] rows;
+	
+	private static int wordsInserted=0;
 
 	public void setPDF(PDF pdf){
 		this.pdfObj=pdf;
@@ -386,7 +388,13 @@ public class TextProcessor {
 				Integer freq = PDFContainer.wordsOccurence.get(word);
 				
 				if (freq == null) {
-					PDFContainer.wordsOccurence.put(word,1);
+					if(PDFContainer.numberOfWordsToInsert==0){
+						PDFContainer.wordsOccurence.put(word,1);
+					}
+					else if(wordsInserted<PDFContainer.numberOfWordsToInsert){
+						wordsInserted++;
+						PDFContainer.wordsOccurence.put(word,1);
+					}
 				} else {
 					PDFContainer.wordsOccurence.put(word,freq+1);
 				}
