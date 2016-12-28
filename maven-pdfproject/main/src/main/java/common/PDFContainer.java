@@ -1,6 +1,8 @@
 package common;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import backend.weka.DataLearnerPredictor;
@@ -35,6 +37,10 @@ public class PDFContainer {
 	* array with this string value;
 	*/
 	public static String nullString = "NO DATA";
+	
+	public static List<String> words = new ArrayList<String>();
+	public static HashMap<String, Integer> wordsOccurence = new HashMap<String, Integer>();
+	
 	/**
 	* Contains that attributes from the PDF entity which we doesn`t 
 	* like to be loaded in the training set(<i>e.g. string values or 

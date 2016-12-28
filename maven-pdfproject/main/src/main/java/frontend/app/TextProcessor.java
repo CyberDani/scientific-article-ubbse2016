@@ -21,7 +21,9 @@ import org.apache.pdfbox.text.TextPosition;
 
 import backend.repository.DAOFactory;
 import backend.repository.PDFDAO;
+import common.PDFContainer;
 import common.Scientific;
+import common.StopWords;
 import backend.model.PDF;
 
 public class TextProcessor {
@@ -376,7 +378,30 @@ public class TextProcessor {
 
 		return avgRowByParagraph;
 	}
-
+	
+	private static void countWordOccurence(String line){
+		String[] words=line.split(" .!,;?><");
+		for(String word:words){
+			if(!StopWords.isStopWord(word)){
+				Integer freq = PDFContainer.wordsOccurence.get(word);
+				
+				if (freq == null) {
+					PDFContainer.wordsOccurence.put(word,1);
+				} else {
+					PDFContainer.wordsOccurence.put(word,freq+1);
+				}
+			}
+		}
+	}
+	
+	
+	private static void processWordsByRow(List<String> lines){
+		
+		for(String line:PDFContainer.words){
+			countWordOccurence(line);
+		}
+	}
+	
 	public static void processTextByRow(){
 		rows = text.split("\n");
 		//printRows(rows);
@@ -393,7 +418,9 @@ public class TextProcessor {
 			System.exit(1);
 		}
 
-
+		processWordsByRow(PDFContainer.words);
+		System.out.println(PDFContainer.wordsOccurence);
+		
 		getFontSizeWithNumberOfRows();
 		mostUsedFontSizeInPDF = getTheMostUsedFont();
 		mostUsedSubTitleFontSize = getTheMostUsedSubtitleFontSize();
@@ -471,19 +498,24 @@ public class TextProcessor {
 				protected void writeString(String text, List<TextPosition> textPositions) throws IOException
 				{
 					StringBuilder builder = new StringBuilder();
-
+					StringBuilder wordBuilder = new StringBuilder();
+					
 					for (TextPosition position : textPositions)
 					{
 						String baseFont = position.getFont().getName();
 						if (baseFont != null && !baseFont.equals(prevBaseFont))
 						{
 							float size=position.getFontSizeInPt();
+							
 							builder.append('[').append(baseFont).append(',').append(size+"").append(']');
 							prevBaseFont = baseFont;
 						}
+						
+						wordBuilder.append(position);
 						builder.append(position);
 					}
-
+					
+					PDFContainer.words.add(wordBuilder.toString());
 					writeString(builder.toString());
 				}
 			};
