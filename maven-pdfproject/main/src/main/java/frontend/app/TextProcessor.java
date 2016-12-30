@@ -21,6 +21,7 @@ import org.apache.pdfbox.text.TextPosition;
 
 import backend.repository.DAOFactory;
 import backend.repository.PDFDAO;
+import ch.qos.logback.core.net.SyslogOutputStream;
 import common.PDFContainer;
 import common.Scientific;
 import common.StopWords;
@@ -381,23 +382,33 @@ public class TextProcessor {
 		return avgRowByParagraph;
 	}
 	
+	private static void putInHashMap(String word){
+		if(!StopWords.isStopWord(word)){
+			Integer freq = PDFContainer.wordsOccurence.get(word);
+			
+			if (freq == null) {
+				if(wordsInserted<PDFContainer.numberOfWordsToInsert){
+					PDFContainer.wordsOccurence.put(word,1);
+					wordsInserted++;
+				}
+				else if(PDFContainer.numberOfWordsToInsert==0){
+					PDFContainer.wordsOccurence.put(word,1);
+				}
+			} else {
+				PDFContainer.wordsOccurence.put(word,freq+1);
+			}
+		}	
+	}
+	
 	private static void countWordOccurence(String line){
 		String[] words=line.split(" .!,;?><");
 		for(String word:words){
-			if(!StopWords.isStopWord(word)){
-				Integer freq = PDFContainer.wordsOccurence.get(word);
-				
-				if (freq == null) {
-					if(wordsInserted<PDFContainer.numberOfWordsToInsert){
-						PDFContainer.wordsOccurence.put(word,1);
-						wordsInserted++;
-					}
-					else if(PDFContainer.numberOfWordsToInsert==0){
-						PDFContainer.wordsOccurence.put(word,1);
-					}
-				} else {
-					PDFContainer.wordsOccurence.put(word,freq+1);
-				}
+			
+			if(word.matches("[a-zA-z?]{4,}")){ //if it is a word or a world with ? in it, min 4 character words
+				putInHashMap(word);
+			}else if(word.matches("^[a-zA-z?]{4,}.*")) {  //%if the word has .;%" after it
+				word=word.substring(0,word.length()-1);
+				putInHashMap(word);
 			}
 		}
 	}

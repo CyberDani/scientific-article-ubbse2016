@@ -49,5 +49,5 @@ public class PDFContainer {
 	*/
 	public static List<String> unused = Arrays.asList("_id","path","subtitles");
 	
-	public static int numberOfWordsToInsert=10;
+	public static int numberOfWordsToInsert=0;
 }
