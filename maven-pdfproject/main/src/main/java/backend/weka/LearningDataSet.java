@@ -82,13 +82,13 @@ public class LearningDataSet {
 			{
 				// - numeric
 				atts.add(new Attribute(PDFContainer.PDFAttrNames[i]));
-			}else if(PDFContainer.PDFAttrTypes[i] == Date.class){
+			}else if(PDFContainer.PDFAttrTypes[i] == Date.class){ 
 				// - date
 			    atts.add(new Attribute(PDFContainer.PDFAttrNames[i], "yyyy-MM-dd"));
 			}else if(PDFContainer.PDFAttrTypes[i] == boolean.class ||
 					PDFContainer.PDFAttrTypes[i] == Boolean.class ){
-				// - nominal
-			    atts.add(new Attribute(PDFContainer.PDFAttrNames[i], attVals));
+			    // - numeric now (not nominal) for multiple algorithm compability
+				atts.add(new Attribute(PDFContainer.PDFAttrNames[i]));
 			}else if(PDFContainer.PDFAttrTypes[i] == String.class){
 				// - string
 			    atts.add(new Attribute(PDFContainer.PDFAttrNames[i], 
@@ -248,9 +248,13 @@ public class LearningDataSet {
 					e.printStackTrace();
 				}
 			}else if(PDFContainer.PDFAttrTypes[i] == boolean.class){
-				// - nominal
+				// - numeric
 				try {
-					vals[index] = attVals.indexOf(fields[i].get(pdf).toString());
+					double boolVal = -1;
+					if ((boolean) fields[i].get(pdf)){
+						boolVal = 1;
+					}
+					vals[index] = boolVal;
 					++index;
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
@@ -258,15 +262,18 @@ public class LearningDataSet {
 					e.printStackTrace();
 				}
 			}else if(PDFContainer.PDFAttrTypes[i] == Boolean.class){
-				// - nominal
+				// - numeric
 				try {
-					Boolean boolVal = (Boolean)fields[i].get(pdf);
-					if(boolVal != null){
-						vals[index] = attVals.indexOf(boolVal.toString());
+					double boolVal = -1;
+					if ((Boolean) fields[i].get(pdf)==null){
+						boolVal = 0;
 					}else{
-						//...
+						if ((Boolean) fields[i].get(pdf)){
+							boolVal = 1;
+						}
+						vals[index] = boolVal;
+						++index;
 					}
-					++index;
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
