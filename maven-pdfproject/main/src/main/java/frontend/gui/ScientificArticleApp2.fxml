@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="424.0" minWidth="-Infinity" prefHeight="494.0" prefWidth="577.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="frontend.gui.LearningFXController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="424.0" minWidth="-Infinity" prefHeight="494.0" prefWidth="577.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.gui.LearningFXController">
   <children>
     <Text layoutX="107.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Learning Set Page&amp;Crawler">
       <font>
@@ -61,9 +56,8 @@
     <Pane id="greenPane" fx:id="crawlerPane" layoutX="25.0" layoutY="223.0" prefHeight="135.0" prefWidth="532.0">
       <children>
         <Label font="$x1" layoutX="224.0" layoutY="14.0" prefHeight="21.0" prefWidth="110.0" text="Use the crawler" underline="true" />
-        <Button id="setSeedsFile" fx:id="setSeedsFileButton" layoutX="374.0" layoutY="55.0" mnemonicParsing="false" onMouseClicked="#setSeedsFile" prefHeight="25.0" prefWidth="144.0" text="Set Seeds File" />
-        <CheckBox fx:id="isScientific" layoutX="53.0" layoutY="59.0" mnemonicParsing="false" text="Scientific" />
-        <Button id="downloadDir" fx:id="setStorageFolderButton" layoutX="169.0" layoutY="54.0" mnemonicParsing="false" onMouseClicked="#setStorageFolder" prefHeight="25.0" prefWidth="165.0" text="Set Storage Folder" />
+        <Button id="setSeedsFile" fx:id="setSeedsFileButton" layoutX="290.0" layoutY="55.0" mnemonicParsing="false" onMouseClicked="#setSeedsFile" prefHeight="25.0" prefWidth="144.0" text="Set Seeds File" />
+        <Button id="downloadDir" fx:id="setStorageFolderButton" layoutX="75.0" layoutY="55.0" mnemonicParsing="false" onMouseClicked="#setStorageFolder" prefHeight="25.0" prefWidth="165.0" text="Set Storage Folder" />
         <Button fx:id="runCrawlerButton" disable="true" layoutX="191.0" layoutY="90.0" mnemonicParsing="false" onAction="#runCrawler" prefHeight="31.0" prefWidth="150.0" text="Run Crawler" />
       </children>
     </Pane>
