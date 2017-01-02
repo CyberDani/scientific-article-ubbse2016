@@ -1,11 +1,13 @@
 package backend.model;
 
+import java.util.HashMap;
+
 import common.Scientific;
 
 public class PDF {
 	private Object _id;
 	private String path;
-	private String[] subtitles;
+	private HashMap<String, Integer> words;
 	private int pagesNr;
 	private double wordsRow;
 	private double fontSize;
@@ -15,11 +17,11 @@ public class PDF {
 	private long fileSize;
 	private Boolean scientific;
 
-	public PDF(String path, String[] subtitles, int pagesNr, double wordsRow, 
+	public PDF(String path, HashMap<String, Integer> words, int pagesNr, double wordsRow, 
 			float fontSize,  int imgNum, int averageRowInParagraph, 
 			Boolean bibliography, long fileSize , Scientific sc) {
 		setPath(path);
-		setSubtitles(subtitles);
+		setWords(words);
 		setPagesNr(pagesNr);
 		setWordsRow(wordsRow);
 		setFontSize(fontSize);
@@ -42,13 +44,21 @@ public class PDF {
 	public PDF()
 	{
 		setPath("");
-		setSubtitles(null);
+		setWords(null);
 		setPagesNr(0);
 		setWordsRow(0);
 		setFontSize(0);
 		setBibliography(false);
 	}
 	
+	public HashMap<String, Integer> getWords() {
+		return words;
+	}
+
+	public void setWords(HashMap<String, Integer> words) {
+		this.words = words;
+	}
+
 	public long getFileSize() {
 		return fileSize;
 	}
@@ -91,14 +101,6 @@ public class PDF {
 
 	public void setPath(String path) {
 		this.path = path;
-	}
-
-	public String[] getSubtitles() {
-		return subtitles;
-	}
-
-	public void setSubtitles(String[] subtitles) {
-		this.subtitles = subtitles;
 	}
 
 	public int getPagesNr() {

@@ -83,7 +83,7 @@ public class TextProcessor {
 
 			path = file.getAbsolutePath();
 			long fileSize=file.length()/1024;
-			PDF pdf = new PDF(path, subTitles, pageNumber, avgWordsInRow, mostUsedFontSizeInPDF ,numOfImages,averageNumberOfRowsInParagraph,bibliography, fileSize, scientific);
+			PDF pdf = new PDF(path, PDFContainer.wordsOccurence, pageNumber, avgWordsInRow, mostUsedFontSizeInPDF ,numOfImages,averageNumberOfRowsInParagraph,bibliography, fileSize, scientific);
 			setPDF(pdf);
 			pdfDAO.insertPDF("LearningData", pdf);
 		} catch (Exception e) {

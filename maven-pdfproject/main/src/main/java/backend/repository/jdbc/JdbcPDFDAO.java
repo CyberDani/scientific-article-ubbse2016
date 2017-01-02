@@ -103,6 +103,10 @@ public class JdbcPDFDAO implements PDFDAO {
 							ArrayList<Float> data = (ArrayList<Float>)myMap.get(PDFContainer.PDFAttrNames[i]);
 							float newData[] = Tools.floatArrListToArray(data);
 							declaredField.set(temp, newData);
+						}else if(declaredField.getType() == HashMap.class){
+							@SuppressWarnings("unchecked")
+							HashMap<String,Integer> data = (HashMap<String,Integer>)myMap.get(PDFContainer.PDFAttrNames[i]);
+							declaredField.set(temp, data);
 						}else{
 							declaredField.set(temp, myMap.get(PDFContainer.PDFAttrNames[i]));
 						}

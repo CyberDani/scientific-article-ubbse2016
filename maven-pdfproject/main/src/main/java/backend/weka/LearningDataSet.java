@@ -69,9 +69,8 @@ public class LearningDataSet {
 			String attrName = PDFContainer.PDFAttrNames[i];
 			int unusedSize = PDFContainer.unused.size();
 			
-			//Ignore predefined attributes(except subtitles)
-			if(PDFContainer.unused.contains(attrName) &&
-					!PDFContainer.unused.get(unusedSize-1).equals(attrName)){
+			//Ignore predefined attributes
+			if(PDFContainer.unused.contains(attrName)){
 				continue;
 			}
 			
@@ -107,23 +106,12 @@ public class LearningDataSet {
 				// - relational
 				ArrayList<Attribute> attsRel = new ArrayList<Attribute>();
 				
-				if(PDFContainer.unused.get(unusedSize-1).equals(attrName)){
-					if(Settings.weightedAvg){
-						// - numeric
-						atts.add(new Attribute(PDFContainer.PDFAttrNames[i]));
-					}else{
-						// -- numeric
-					    attsRel.add(new Attribute("Value"));
-					    Instances dataRel = new Instances(PDFContainer.PDFAttrNames[i], attsRel, 0);
-					    atts.add(new Attribute(PDFContainer.PDFAttrNames[i], dataRel, 0));
-					}
-				}else{
-					// - string
-					attsRel.add(new Attribute("Value", 
-							(ArrayList<String>) null));
-				    Instances dataRel = new Instances(PDFContainer.PDFAttrNames[i], attsRel, 0);
-				    atts.add(new Attribute(PDFContainer.PDFAttrNames[i], dataRel, 0));
-				}				
+				// - string
+				attsRel.add(new Attribute("Value", 
+						(ArrayList<String>) null));
+			    Instances dataRel = new Instances(PDFContainer.PDFAttrNames[i], attsRel, 0);
+			    atts.add(new Attribute(PDFContainer.PDFAttrNames[i], dataRel, 0));
+							
 			}	  
 		}
 		
@@ -329,42 +317,24 @@ public class LearningDataSet {
 					e1.printStackTrace();
 				} catch (IllegalAccessException e1) {
 					e1.printStackTrace();
-				}
+				}	    
+			   
+		    	// - relational
+			    Instances dataRel = new Instances(data.attribute(index).relation(), 0);
 			    
-			    if(PDFContainer.unused.get(unusedSize-1).equals(attrName)){
-			    	double[] valsRel;
-				    int n = elements.length;
-				    
-				    if(Settings.weightedAvg){
-				    	vals[index] = n;
-				    }else{
-				    	// - relational
-					    Instances dataRel = new Instances(data.attribute(index).relation(), 0);
-				    	for(int j = 0;j<n;++j){
-					    	valsRel = new double[1];
-					    	valsRel[0] = 2;
-						    dataRel.add(new DenseInstance(1.0, valsRel));
-					    }
-					    
-					    vals[index] = data.attribute(index).addRelation(dataRel);
-				    }
-			    }else{
-			    	// - relational
-				    Instances dataRel = new Instances(data.attribute(index).relation(), 0);
-				    
-			    	// -- add instances
-				    double[] valsRel;
-			
-				    int n = elements.length;
-				    
-				    for(int j = 0;j<n;++j){
-				    	valsRel = new double[1];
-				    	valsRel[0] = dataRel.attribute(0).addStringValue(elements[j]);
-					    dataRel.add(new DenseInstance(1.0, valsRel));
-				    }
-				    
-				    vals[index] = data.attribute(index).addRelation(dataRel);
+		    	// -- add instances
+			    double[] valsRel;
+		
+			    int n = elements.length;
+			    
+			    for(int j = 0;j<n;++j){
+			    	valsRel = new double[1];
+			    	valsRel[0] = dataRel.attribute(0).addStringValue(elements[j]);
+				    dataRel.add(new DenseInstance(1.0, valsRel));
 			    }
+			    
+			    vals[index] = data.attribute(index).addRelation(dataRel);
+			    
 			    
 			    ++index;
 			}else if(PDFContainer.PDFAttrTypes[i] == Scientific.class){

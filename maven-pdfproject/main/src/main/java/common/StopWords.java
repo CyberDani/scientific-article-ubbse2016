@@ -697,6 +697,7 @@ public class StopWords {
 	    		"whose",
 	    		"why",
 	    		"widely",
+	    		"will", 	// + Dani
 	    		"willing",
 	    		"wish",
 	    		"with",

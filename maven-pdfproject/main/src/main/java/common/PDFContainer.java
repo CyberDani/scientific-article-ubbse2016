@@ -47,7 +47,7 @@ public class PDFContainer {
 	* useless information</i>). The last value has to be the
 	* subtitles.
 	*/
-	public static List<String> unused = Arrays.asList("_id","path","subtitles");
+	public static List<String> unused = Arrays.asList("_id","path","words");
 	
 	public static int numberOfWordsToInsert=0;
 }
