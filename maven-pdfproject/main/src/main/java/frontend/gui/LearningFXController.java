@@ -1,11 +1,19 @@
 package frontend.gui;
 
+import java.awt.Component;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import com.drew.metadata.Directory;
 
 import backend.model.PDF;
 import backend.repository.DAOFactory;
@@ -16,6 +24,7 @@ import common.Settings;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
+import edu.uci.ics.crawler4j.main.Controller;
 import edu.uci.ics.crawler4j.main.MyCrawler;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
@@ -41,183 +50,202 @@ public class LearningFXController {
 
 	@FXML
 	private Button loadFromDbButton;
-	
+
 	@FXML
 	private CheckBox scientificCheck;
-	
+
 	@FXML
 	private Button loadFromFileButton;
-	
+
 	@FXML
 	private Button saveTrainingSetButton;
-	
+
 	@FXML
 	private Button loadOtherSceneButton;
-	
+
 	@FXML 
 	private Button loadPdfToDbButton;
-	
+
 	@FXML
 	private Button loadDirOfPdfButton;
 
 	@FXML 
+	private Button setSeedsFileButton;
+
+	@FXML 
+	private Button setStorageFolderButton;
+
+	@FXML 
 	private Button runCrawlerButton;
-	
+
 	@FXML 
 	private ChoiceBox<String> choiceB;
-	
+
 	@FXML
 	private Pane crawlerPane;
-	
+
 	@FXML 
 	private Pane trainingPane;
-	
+
 	@FXML
 	private Pane loadDataPane;
+
+	private boolean isDataSetLoaded = false;
+	private String storageFolder;
+	private String seedsFile;
+	private Boolean seedsFileSelected = false;
+	private Boolean storageFolderSelected = false;
 	
-	private boolean isDataSetLoaded=false;
-		
 	@FXML
 	public void initialize(){
 		choiceB.getItems().addAll("Crawler", "Learning");
 		choiceB.getSelectionModel().select("Crawler");
-		 choiceB.valueProperty().addListener(new ChangeListener<String>() {
-				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-					switch(newValue){
-						case "Crawler": {
-							crawlerPane.setVisible(true);
-							trainingPane.setVisible(false);
-							loadDataPane.setVisible(false);
-							break;
-						}
-						case "Learning":{
-							crawlerPane.setVisible(false);
-							trainingPane.setVisible(true);
-							loadDataPane.setVisible(true);
-							break;
-						}
-					}
-				}    
-		    });
-    }
-	
+		choiceB.valueProperty().addListener(new ChangeListener<String>() {
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				switch(newValue){
+				case "Crawler": {
+					crawlerPane.setVisible(true);
+					trainingPane.setVisible(false);
+					loadDataPane.setVisible(false);
+					break;
+				}
+				case "Learning":{
+					crawlerPane.setVisible(false);
+					trainingPane.setVisible(true);
+					loadDataPane.setVisible(true);
+					break;
+				}
+				}
+			}    
+		});
+	}
+
 	@FXML 
-	public void runCrawler(){
+	public void setStorageFolder() {
+		Stage stage = (Stage) setStorageFolderButton.getScene().getWindow();
+		DirectoryChooser chooser = new DirectoryChooser();
+		chooser.setTitle("Set Storage Folder");
+		File selectedDirectory = chooser.showDialog(stage);
+		if (selectedDirectory != null) {
+			storageFolder = selectedDirectory.getPath();
+			storageFolderSelected = true;
+			if (seedsFileSelected) {
+				runCrawlerButton.setDisable(false);
+			}
+		}
+		else {
+			storageFolderSelected = false;
+			runCrawlerButton.setDisable(true);		
+		}
+	}
+
+	@FXML 
+	public void setSeedsFile()  {
+		Stage stage = (Stage) setSeedsFileButton.getScene().getWindow();
+		FileChooser fileChooser = new FileChooser();
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TEXT FILES", "*.txt");
+		fileChooser.getExtensionFilters().add(extFilter);
+		fileChooser.setTitle("Set Seeds File");
+		File selectedFile = fileChooser.showOpenDialog(stage);
+
+		if (selectedFile != null) {
+			seedsFile = selectedFile.getPath();
+			seedsFileSelected = true;
+			if (storageFolderSelected) {
+				runCrawlerButton.setDisable(false);
+			}
+		}
+		else {
+			seedsFileSelected = false;
+			runCrawlerButton.setDisable(true);
+		}
+	}
+
+	@FXML 
+	public void runCrawler() {
 		String crawlStorageFolder = "/data/crawl/root";
-        int numberOfCrawlers = 7;
-
-        CrawlConfig config = new CrawlConfig();
-        config.setCrawlStorageFolder(crawlStorageFolder);
-        config.setIncludeBinaryContentInCrawling(true);
-
-        /*
-         * Instantiate the controller for this crawl.
-         */
-        PageFetcher pageFetcher = new PageFetcher(config);
-        RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-        CrawlController controller = null;;
+		int numberOfCrawlers = 7;
+	
+		Controller controller = new Controller(crawlStorageFolder, numberOfCrawlers, storageFolder, seedsFile);
 		try {
-			controller = new CrawlController(config, pageFetcher, robotstxtServer);
+			controller.runCrawler();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}	
 
-        /*
-         * For each crawl, you need to add some seed urls. These are the first
-         * URLs that are fetched and then the crawler starts following links
-         * which are found in these pages
-         */
-//        controller.addSeed("http://www.ics.uci.edu/~lopes/");
-//        controller.addSeed("http://www.ics.uci.edu/~welling/");
-//        controller.addSeed("http://www.ics.uci.edu/");
-      
-        controller.addSeed("http://www.pdf995.com/samples/pdf.pdf");
 
-        /*
-         * Start the crawl. This is a blocking operation, meaning that your code
-         * will reach the line after this only when crawling is finished.
-         */
-        String storageFolder = "E:/PDFProject/scientific-article-ubbse2016/maven-pdfproject/crawler/src/main/java/edu/uci/ics/crawler4j/data/crawl/pdfs";
-        MyCrawler.configure(storageFolder);
-        controller.start(MyCrawler.class, numberOfCrawlers);
-    }	
-	
-	
 	@FXML
-	public void loadDataFromDB(){
-			List<PDF> dbData = new ArrayList<PDF>();
-			dbData = DAOFactory.getInstance().getPDFDAO().getAllPDFs();
-			
-			Settings.weightedAvg = true;
-			PDFContainer.lds = new LearningDataSet();
-			
-			
-			PDFContainer.lds.addAllPDF(dbData);
-			PDFContainer.lds.write();
-			isDataSetLoaded = true;
+	public void loadDataFromDB() {
+		List<PDF> dbData = new ArrayList<PDF>();
+		dbData = DAOFactory.getInstance().getPDFDAO().getAllPDFs();
+
+		Settings.weightedAvg = true;
+		PDFContainer.lds = new LearningDataSet();
+
+		PDFContainer.lds.addAllPDF(dbData);
+		PDFContainer.lds.write();
+		isDataSetLoaded = true;
 	}
-	
+
 	@FXML
 	public void loadDataFromFile(){
 		Stage stage = (Stage) loadFromFileButton.getScene().getWindow();
 		FileChooser fileChooser = new FileChooser();
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Attribute Relational File Format", "*.arff");
-        fileChooser.getExtensionFilters().add(extFilter);
+		fileChooser.getExtensionFilters().add(extFilter);
 		fileChooser.setTitle("Open Training Set File");
 		File selectedFile= fileChooser.showOpenDialog(stage);
 		if (selectedFile != null) {
-			
+
 			Settings.weightedAvg = true;
 			PDFContainer.lds = new LearningDataSet();
-			
+
 			PDFContainer.lds.buildFromFile(selectedFile.getAbsolutePath());
 			PDFContainer.lds.write();
 			isDataSetLoaded=true;
 		}			
 	}
-	
+
 	public void saveFile(File file){
 		FileWriter fileWriter = null;
-        try {
-        	 fileWriter = new FileWriter(file);
-			 fileWriter.write(PDFContainer.lds.toString());
-			 fileWriter.close();
+		try {
+			fileWriter = new FileWriter(file);
+			fileWriter.write(PDFContainer.lds.toString());
+			fileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}     
 	}
-	
+
 	@FXML
-	public void saveTrainingSet(){
+	public void saveTrainingSet() {
 		Stage stage = (Stage) saveTrainingSetButton.getScene().getWindow();
 		FileChooser fileChooser = new FileChooser();
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Attribute Relational File Format", "arff");
-        fileChooser.getExtensionFilters().add(extFilter);
-        fileChooser.setTitle("Save training set");
+		fileChooser.getExtensionFilters().add(extFilter);
+		fileChooser.setTitle("Save training set");
 		File file = fileChooser.showSaveDialog(stage);
-		
-		
-		if(file!=null){
+
+		if (file != null){
 			saveFile(file);
 		}
 	}
-	
+
 	@FXML
-	public void changeScene(){
-	  if(isDataSetLoaded==true){
-			 Stage stage= (Stage) saveTrainingSetButton.getScene().getWindow();
-			 FXMLLoader loader = new FXMLLoader();
-			 loader.setLocation(Main.class.getResource("../gui/ScientificArticleApp.fxml"));
-			 AnchorPane myApp;
-			 
+	public void changeScene() {
+		if(isDataSetLoaded == true) {
+			Stage stage = (Stage) saveTrainingSetButton.getScene().getWindow();
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("../gui/ScientificArticleApp.fxml"));
+			AnchorPane myApp;
+
 			try {
-				 myApp = (AnchorPane) loader.load();
-				 Scene scene = new Scene(myApp);
-				 stage.setScene(scene);
-				 scene.getStylesheets().add(getClass().getResource("../gui/styles.css").toExternalForm());
-				 stage.show();
+				myApp = (AnchorPane) loader.load();
+				Scene scene = new Scene(myApp);
+				stage.setScene(scene);
+				scene.getStylesheets().add(getClass().getResource("../gui/styles.css").toExternalForm());
+				stage.show();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -230,13 +258,13 @@ public class LearningFXController {
 			alert.showAndWait();
 		}
 	}
-	
+
 	@FXML
 	public void loadPdf() {
 		Stage stage = (Stage) loadPdfToDbButton.getScene().getWindow();
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open File");
-		File selectedFile= fileChooser.showOpenDialog(stage);
+		File selectedFile = fileChooser.showOpenDialog(stage);
 		if (selectedFile != null) {
 			Scientific sc;
 			if(scientificCheck.isSelected()){
@@ -244,27 +272,25 @@ public class LearningFXController {
 			}else{
 				sc = Scientific.NONSCIENTIFIC;
 			}
-			
-			TextProcessor tp=new TextProcessor(selectedFile, sc);
+
+			TextProcessor tp = new TextProcessor(selectedFile, sc);
 		}		
 	}
-	
-	 public File[] pdfFinder( File selectedDirectory){
-		 
-		   FilenameFilter fileNameFilter = new FilenameFilter() {
 
-				public boolean accept(File dir, String name) {
-			        return name.endsWith(".pdf");
-				}
-		 	
-		 	};
+	public File[] pdfFinder(File selectedDirectory) {
+		FilenameFilter fileNameFilter = new FilenameFilter() {
 
-	        return selectedDirectory.listFiles(fileNameFilter);
-	        
-	    }
-	
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".pdf");
+			}
+
+		};
+
+		return selectedDirectory.listFiles(fileNameFilter);
+	}
+
 	@FXML
-	public void loadDirectoryOfPDFs(){
+	public void loadDirectoryOfPDFs() {
 		Stage stage = (Stage) loadDirOfPdfButton.getScene().getWindow();
 		DirectoryChooser chooser = new DirectoryChooser();
 		chooser.setTitle("Load Directory of PDF's");
@@ -276,15 +302,15 @@ public class LearningFXController {
 			}else{
 				sc = Scientific.NONSCIENTIFIC;
 			}
-			
+
 			File [] pdfs = pdfFinder(selectedDirectory);
-			
+
 			for(int i=0;i<pdfs.length;i++){
 				System.out.println("Processed PDF:"+pdfs[i]);
 				new TextProcessor(pdfs[i],sc);
 			}
-		
+
 		}
 	}
-	
+
 }

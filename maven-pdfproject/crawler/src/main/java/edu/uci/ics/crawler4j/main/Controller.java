@@ -1,47 +1,90 @@
 package edu.uci.ics.crawler4j.main;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 
-
 public class Controller {
-    public static void main(String[] args) throws Exception {
-        String crawlStorageFolder = "/data/crawl/root";
-        int numberOfCrawlers = 7;
+	private String crawlStorageFolder;
+	private int numberOfCrawlers;
+	private String storageFolder;
+	private String seedsFile;
 
-        CrawlConfig config = new CrawlConfig();
-        config.setCrawlStorageFolder(crawlStorageFolder);
-        config.setIncludeBinaryContentInCrawling(true);
+	public Controller(String crawlStorageFolder, int numberOfCrawlers, String storageFolder, String seedsFile) {
+		this.crawlStorageFolder = crawlStorageFolder;
+		this.numberOfCrawlers = numberOfCrawlers;
+		this.storageFolder = storageFolder;
+		this.seedsFile = seedsFile;
+	}
 
-        /*
-         * Instantiate the controller for this crawl.
-         */
-        PageFetcher pageFetcher = new PageFetcher(config);
-        RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-        CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+	private List<String> getSeeds() {
+		List<String> list = new ArrayList<String>();
+		BufferedReader br = null;
+		FileReader fr = null;
 
-        /*
-         * For each crawl, you need to add some seed urls. These are the first
-         * URLs that are fetched and then the crawler starts following links
-         * which are found in these pages
-         */
-//        controller.addSeed("http://www.ics.uci.edu/~lopes/");
-//        controller.addSeed("http://www.ics.uci.edu/~welling/");
-//        controller.addSeed("http://www.ics.uci.edu/");
-      
-        controller.addSeed("http://www.pdf995.com/samples/pdf.pdf");
+		try {
+			fr = new FileReader(seedsFile);
+			br = new BufferedReader(fr);
 
-        /*
-         * Start the crawl. This is a blocking operation, meaning that your code
-         * will reach the line after this only when crawling is finished.
-         */
-        
-        String storageFolder = "E:/PDFProject/scientific-article-ubbse2016/maven-pdfproject/crawler/src/main/java/edu/uci/ics/crawler4j/data/crawl/pdfs";
-        MyCrawler.configure(storageFolder);
-        controller.start(MyCrawler.class, numberOfCrawlers);
-    }
+			String currentLine;
+			while ((currentLine = br.readLine()) != null) {
+				list.add(currentLine);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null)
+					br.close();
+				if (fr != null)
+					fr.close();
+
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		return list;
+	}
+
+	public void runCrawler() throws Exception {
+		CrawlConfig config = new CrawlConfig();
+		config.setCrawlStorageFolder(crawlStorageFolder);
+		config.setIncludeBinaryContentInCrawling(true);
+
+		/*
+		 * Instantiate the controller for this crawl.
+		 */
+		PageFetcher pageFetcher = new PageFetcher(config);
+		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
+		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
+		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+
+		/*
+		 * For each crawl, you need to add some seed urls. These are the first
+		 * URLs that are fetched and then the crawler starts following links
+		 * which are found in these pages
+		 */
+
+		List<String> seeds = getSeeds();
+		for (String seed : seeds) {
+			controller.addSeed(seed);
+		}
+
+		/*
+		 * Start the crawl. This is a blocking operation, meaning that your code
+		 * will reach the line after this only when crawling is finished.
+		 */
+		MyCrawler.configure(storageFolder);
+		controller.start(MyCrawler.class, numberOfCrawlers);
+	}
+
 }
