@@ -661,6 +661,7 @@ public class StopWords {
 	    		"we",
 	    		"wed",
 	    		"welcome",
+	    		"well",		// Zsolt
 	    		"we'll",
 	    		"went",
 	    		"were",
