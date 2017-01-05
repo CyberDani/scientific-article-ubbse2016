@@ -8,12 +8,20 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.drew.metadata.Directory;
+import com.graphbuilder.struc.LinkedList;
 
 import backend.model.PDF;
 import backend.repository.DAOFactory;
@@ -21,6 +29,7 @@ import backend.weka.LearningDataSet;
 import common.PDFContainer;
 import common.Scientific;
 import common.Settings;
+import common.hashMapSort;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
@@ -179,8 +188,66 @@ public class LearningFXController {
 	public void loadDataFromDB() {
 		List<PDF> dbData = new ArrayList<PDF>();
 		dbData = DAOFactory.getInstance().getPDFDAO().getAllPDFs();
+		
+		NavigableMap<String, Double> pdfScientificTFIDF = new TreeMap<String, Double>();
+		List<Entry<String,Double>> sortedPDFScientificTFIDF, sortedPDFNotScientificTFIDF;
+		NavigableMap<String, Double> pdfNotScientificTFIDF = new TreeMap<String, Double>();
+		NavigableMap<String, Double> pdfDataOfWords = new TreeMap<String, Double>();
+		
+		String key, key2 = null;
+		@SuppressWarnings("unused")
+		Integer numOfWordsInCurrentPDF, contains=0;
+		@SuppressWarnings("unused")
+		double value, value2, TFIDF, hashMapValue;
+		boolean isScientific;
+		
+		for(int i=0; i<dbData.size(); i++) {
 
-		Settings.weightedAvg = true;
+			HashMap<String, Integer> words = dbData.get(i).getWords(); // getting words from 1 PDF
+			isScientific = dbData.get(i).isScientific();
+			for(Entry<String, Integer> entry : words.entrySet()) {
+				key = entry.getKey();
+				value = entry.getValue();
+				contains = 0;
+				
+				for(int j=0; j<dbData.size(); j++) {
+					
+					if(j != i){					// searching the word appearance from only other than the current pdf
+						HashMap<String, Integer> words2 = dbData.get(j).getWords(); // getting words from 1 PDF
+
+						for(Entry<String, Integer> entry2 : words2.entrySet()) {
+							key2 = entry2.getKey();
+							if(key.equals(key2)){
+								contains++;
+								break;
+							}
+						}
+					}
+				}
+				
+				if(isScientific && (pdfScientificTFIDF.isEmpty() || !pdfScientificTFIDF.containsKey(key2))) {
+					TFIDF = value * Math.log(dbData.size()  /  (1+contains));	// addig 1 to the divisor will prevent division by zero
+					pdfScientificTFIDF.put(key, TFIDF);
+				}
+				else if(!isScientific && (pdfNotScientificTFIDF.isEmpty() || !pdfNotScientificTFIDF.containsKey(key2))) {
+					TFIDF = value * Math.log(dbData.size()  /  (1+contains));	// addig 1 to the divisor will prevent division by zero
+					pdfNotScientificTFIDF.put(key, TFIDF);
+				}
+			}
+		}
+		
+		sortedPDFScientificTFIDF = hashMapSort.entriesSortByValues(pdfScientificTFIDF);
+		sortedPDFNotScientificTFIDF = hashMapSort.entriesSortByValues(pdfNotScientificTFIDF);
+		
+		for(int i=0; i<Settings.selectedWordsNr/2; i++) {
+			key = sortedPDFScientificTFIDF.get(i).getKey();
+			value = sortedPDFScientificTFIDF.get(i).getValue();
+			key2 = sortedPDFNotScientificTFIDF.get(i).getKey();
+			value2 = sortedPDFNotScientificTFIDF.get(i).getValue();
+			pdfDataOfWords.put(key, value);
+			pdfDataOfWords.put(key2, value2);
+		}
+		
 		PDFContainer.lds = new LearningDataSet();
 
 		PDFContainer.lds.addAllPDF(dbData);
@@ -198,7 +265,7 @@ public class LearningFXController {
 		File selectedFile= fileChooser.showOpenDialog(stage);
 		if (selectedFile != null) {
 
-			Settings.weightedAvg = true;
+			
 			PDFContainer.lds = new LearningDataSet();
 
 			PDFContainer.lds.buildFromFile(selectedFile.getAbsolutePath());
