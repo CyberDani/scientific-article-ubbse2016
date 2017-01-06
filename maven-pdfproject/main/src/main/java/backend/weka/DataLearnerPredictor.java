@@ -1,12 +1,15 @@
 package backend.weka;
 
 import common.LearningAlgorithm;
+import common.PDFContainer;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.M5P;
 import weka.core.Instances;
 import weka.core.Utils;
 import weka.classifiers.Evaluation;
 import java.util.Random;
+
+import backend.model.PDF;
 
 public class DataLearnerPredictor {
 
@@ -110,27 +113,33 @@ public class DataLearnerPredictor {
 		return -2.4;
 	}
 	
-	public void predict(){
+	public void predict(PDF pdf){
+		
+		LearningDataSet lds = new LearningDataSet(PDFContainer.lds.getPdfWords());
+		lds.addPDF(pdf);
+		
+		//data.add(lds)
 		
 		switch (learnAlg) {
         case DecisionTree_J48:
         	// output predictions
-        	System.out.println("# - actual - predicted - distribution");
-        	
+        	//System.out.println("# - actual - predicted - distribution");
+        		
         	double pred = 0;;
         	double[] dist = null;
         	
 			try {
-				pred = tree.classifyInstance(data.instance(0));
-				dist = tree.distributionForInstance(data.instance(0));
+				pred = tree.classifyInstance(lds.getInstances().instance(0));
+				//dist = tree.distributionForInstance(lds.getInstances().instance(0));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
-        	System.out.print((0+1) + " - ");
-        	System.out.print(data.instance(0).toString(data.classIndex()) + " - ");
-        	System.out.print(data.classAttribute().value((int) pred) + " - ");
-        	System.out.println(Utils.arrayToString(dist));
+        	//System.out.print((0+1) + " - ");
+        	//System.out.print(data.instance(0).toString(data.classIndex()) + " - ");
+        	
+        	System.out.print("pred: " + data.classAttribute().value((int) pred));
+        	//System.out.println(Utils.arrayToString(dist));
         	
         	
             break;

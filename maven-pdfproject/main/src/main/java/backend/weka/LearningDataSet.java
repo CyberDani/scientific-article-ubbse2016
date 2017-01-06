@@ -288,7 +288,15 @@ public class LearningDataSet {
 				try {
 					if(i==PDFContainer.attrNo-1){
 						//the last attribute must be nominal
-						vals[index] = attVals.indexOf(fields[i].get(pdf).toString());
+						
+						Boolean boolVal = (boolean) fields[i].get(pdf);
+						
+						if (boolVal == null){
+							boolVal = true;
+						}
+						
+						
+						vals[index] = attVals.indexOf(boolVal.toString());
 						++index;
 					}
 					
@@ -483,6 +491,13 @@ public class LearningDataSet {
 		return data.size();
 	}
 	
+	/**
+	* Get the list of used words in calculating weights.
+	*/
+	public List<String> getPdfWords() {
+		return pdfWords;
+	}
+
 	/**
 	* Get the actual training set as an Instances class instance.
 	*/
