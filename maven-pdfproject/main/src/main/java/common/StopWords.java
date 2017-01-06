@@ -734,7 +734,7 @@ public class StopWords {
 	}};
 	
 	/**
-	* Tells is a given word is a stopword.
+	* Tells if a given word is a stopword.
 	*/
 	public static boolean isStopWord(String word){
 		
