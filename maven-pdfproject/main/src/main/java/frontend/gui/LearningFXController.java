@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -192,6 +193,7 @@ public class LearningFXController {
 		NavigableMap<String, Double> pdfScientificTFIDF = new TreeMap<String, Double>();
 		List<Entry<String,Double>> sortedPDFScientificTFIDF, sortedPDFNotScientificTFIDF;
 		NavigableMap<String, Double> pdfNotScientificTFIDF = new TreeMap<String, Double>();
+		
 		NavigableMap<String, Double> pdfDataOfWords = new TreeMap<String, Double>();
 		
 		String key, key2 = null;
@@ -239,16 +241,34 @@ public class LearningFXController {
 		sortedPDFScientificTFIDF = hashMapSort.entriesSortByValues(pdfScientificTFIDF);
 		sortedPDFNotScientificTFIDF = hashMapSort.entriesSortByValues(pdfNotScientificTFIDF);
 		
-		for(int i=0; i<Settings.selectedWordsNr/2; i++) {
-			key = sortedPDFScientificTFIDF.get(i).getKey();
-			value = sortedPDFScientificTFIDF.get(i).getValue();
-			key2 = sortedPDFNotScientificTFIDF.get(i).getKey();
-			value2 = sortedPDFNotScientificTFIDF.get(i).getValue();
-			pdfDataOfWords.put(key, value);
-			pdfDataOfWords.put(key2, value2);
+		int sc = sortedPDFScientificTFIDF.size()-1;
+		int nonSc = sortedPDFNotScientificTFIDF.size()-1;
+		
+		for(int i=0; pdfDataOfWords.size() < Settings.selectedWordsNr; i++) {	
+			
+			if(sortedPDFScientificTFIDF.size() > i){
+				key = sortedPDFScientificTFIDF.get(i).getKey();
+				value = sortedPDFScientificTFIDF.get(i).getValue();
+				pdfDataOfWords.put(key, value);
+			}
+			
+			if(pdfDataOfWords.size() != Settings.selectedWordsNr){
+				
+				if(sortedPDFNotScientificTFIDF.size() > i){
+					key2 = sortedPDFNotScientificTFIDF.get(i).getKey();
+					value2 = sortedPDFNotScientificTFIDF.get(i).getValue();
+					pdfDataOfWords.put(key2, value2);
+				}
+			}
 		}
 		
-		PDFContainer.lds = new LearningDataSet();
+		List<String> pdfWordList = new Vector<String>();
+		
+		for(String word: pdfDataOfWords.keySet()){
+			pdfWordList.add(word);
+		}
+		
+		PDFContainer.lds = new LearningDataSet(pdfWordList);
 
 		PDFContainer.lds.addAllPDF(dbData);
 		PDFContainer.lds.write();
@@ -266,9 +286,9 @@ public class LearningFXController {
 		if (selectedFile != null) {
 
 			
-			PDFContainer.lds = new LearningDataSet();
+			PDFContainer.lds = new LearningDataSet(selectedFile.getAbsolutePath());
 
-			PDFContainer.lds.buildFromFile(selectedFile.getAbsolutePath());
+			//PDFContainer.lds.buildFromFile(selectedFile.getAbsolutePath());
 			PDFContainer.lds.write();
 			isDataSetLoaded=true;
 		}			

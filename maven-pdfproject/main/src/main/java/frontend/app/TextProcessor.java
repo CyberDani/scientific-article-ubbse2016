@@ -401,15 +401,28 @@ public class TextProcessor {
 	}
 	
 	private static void countWordOccurence(String line){
-		String[] words=line.split(" .!,;?><");
+		String[] words=line.split(" ");
+		
 		for(String word:words){
 			
-			if(word.matches("[a-zA-z?]{4,}")){ //if it is a word or a world with ? in it, min 4 character words
-				putInHashMap(word);
-			}else if(word.matches("^[a-zA-z?]{4,}.*")) {  //%if the word has .;%" after it
-				word=word.substring(0,word.length()-1);
-				putInHashMap(word);
+			int n = word.length();
+			
+			//potencialis szo-/mondatvegi jelek eltuntetese
+			while((n>0) && (word.charAt(n-1)=='.' || word.charAt(n-1)=='?' || word.charAt(n-1)=='!' || 
+					word.charAt(n-1)==';' || word.charAt(n-1)==',' || word.charAt(n-1)==')' ||
+					word.charAt(n-1)=='}' || word.charAt(n-1)==']' || word.charAt(n-1)==':')){
+				word=word.substring(0,--n);
 			}
+			
+			if(n>0){
+				if(word.matches("[a-zA-z?-]{4,}")){ //if it is a word or a world with ? in it, min 4 character words
+				putInHashMap(word);
+				}else if(word.matches("^[a-zA-z?-]{4,}.*")) {  //%if the word has .;*" after it
+					word = word.replaceAll("([\\.\\,\\;])", "");
+					putInHashMap(word);
+				}
+			}
+			
 		}
 	}
 	

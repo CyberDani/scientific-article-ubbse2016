@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NavigableMap;
 
 import common.PDFContainer;
 import common.Scientific;
@@ -42,6 +43,8 @@ public class LearningDataSet {
 	private ArrayList<String> attVals;
 	private DateFormat generalDateFormat;
 	
+	private List<String> pdfWords;
+	
 	/**
 	* Initialize required essentials.
 	*/
@@ -64,6 +67,7 @@ public class LearningDataSet {
 		atts = new ArrayList<Attribute>();
 		
 		// set up attributes
+		//int n = PDFContainer.attrNo + Settings.selectedWordsNr;
 		for(int i=0;i<PDFContainer.attrNo;++i){
 			
 			String attrName = PDFContainer.PDFAttrNames[i];
@@ -72,6 +76,13 @@ public class LearningDataSet {
 			//Ignore predefined attributes
 			if(PDFContainer.unused.contains(attrName)){
 				continue;
+			}
+			
+			if(i == PDFContainer.attrNo-1){
+				for(int ii=0;ii<Settings.selectedWordsNr;++ii){
+					// - numeric
+					atts.add(new Attribute(pdfWords.get(ii)));
+				}
 			}
 			
 			if(PDFContainer.PDFAttrTypes[i] == int.class || 
@@ -167,7 +178,8 @@ public class LearningDataSet {
 	* <b>Handled types:</b> int, float, double, long, Date, boolean, Boolean,
 	* String, int[], float[], double[], long[], String[].
 	*/
-	public LearningDataSet() {
+	public LearningDataSet(List<String> pdfWords) {
+		this.pdfWords = pdfWords;
 		init();
 		generateFormat();
 	}
@@ -192,6 +204,7 @@ public class LearningDataSet {
 		double[] vals = new double[data.numAttributes()];
 		
 		int index = 0;
+		//int no = PDFContainer.attrNo + Settings.selectedWordsNr;
 		
 		for(int i = 0; i< PDFContainer.attrNo; ++i){
 			
@@ -202,6 +215,15 @@ public class LearningDataSet {
 			if(PDFContainer.unused.contains(attrName) &&
 					!PDFContainer.unused.get(unusedSize-1).equals(attrName)){
 				continue;
+			}
+			
+			if(i == PDFContainer.attrNo - 1){
+				for(int ii = 0;ii<Settings.selectedWordsNr;++ii){
+					// - numeric
+					vals[index] = 0;
+					++index;
+				}
+				
 			}
 			
 			//fields[j].get(pdf);
