@@ -218,6 +218,11 @@ public class MyFXController {
 			File selectedFile= fileChooser.showOpenDialog(stage);
 			if (selectedFile != null) {
 				tp=new TextProcessor(selectedFile,Scientific.UNKNOWN);
+				
+				
+				PDFContainer.dlp.predict();
+				
+				
 				//setLabels(tp);
 				showStat.setVisible(true);
 			}		

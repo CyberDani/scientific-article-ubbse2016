@@ -41,6 +41,9 @@ public class LearningDataSet {
 	* variable.
 	*/
 	private ArrayList<String> attVals;
+	
+	private ArrayList<String> attVals2;
+	
 	private DateFormat generalDateFormat;
 	
 	private List<String> pdfWords;
@@ -54,6 +57,10 @@ public class LearningDataSet {
 		attVals = new ArrayList<String>();
 	    attVals.add("true");
 	    attVals.add("false");
+	    
+	    attVals2 = new ArrayList<String>();
+	    attVals2.add("1");
+	    attVals2.add("-1");
 	}
 	
 	/**
@@ -97,8 +104,14 @@ public class LearningDataSet {
 			    atts.add(new Attribute(PDFContainer.PDFAttrNames[i], "yyyy-MM-dd"));
 			}else if(PDFContainer.PDFAttrTypes[i] == boolean.class ||
 					PDFContainer.PDFAttrTypes[i] == Boolean.class ){
-			    // - numeric now (not nominal) for multiple algorithm compability
-				atts.add(new Attribute(PDFContainer.PDFAttrNames[i]));
+				if(i==PDFContainer.attrNo-1){
+					//the last attribute needs to be nominal
+					atts.add(new Attribute(PDFContainer.PDFAttrNames[i], attVals2));
+				}else{
+					// - numeric now (not nominal) for multiple algorithm compability
+					atts.add(new Attribute(PDFContainer.PDFAttrNames[i]));
+				}
+			    
 			}else if(PDFContainer.PDFAttrTypes[i] == String.class){
 				// - string
 			    atts.add(new Attribute(PDFContainer.PDFAttrNames[i], 
@@ -272,18 +285,25 @@ public class LearningDataSet {
 					e.printStackTrace();
 				}
 			}else if(PDFContainer.PDFAttrTypes[i] == Boolean.class){
-				// - numeric
 				try {
-					double boolVal = -1;
-					if ((Boolean) fields[i].get(pdf)==null){
-						boolVal = 0;
-					}else{
-						if ((Boolean) fields[i].get(pdf)){
-							boolVal = 1;
-						}
-						vals[index] = boolVal;
+					if(i==PDFContainer.attrNo-1){
+						//the last attribute must be nominal
+						vals[index] = attVals.indexOf(fields[i].get(pdf).toString());
 						++index;
+					}else{
+						//numeric
+						double boolVal = -1;
+						if ((Boolean) fields[i].get(pdf)==null){
+							boolVal = 0;
+						}else{
+							if ((Boolean) fields[i].get(pdf)){
+								boolVal = 1;
+							}
+							vals[index] = boolVal;
+							++index;
+						}
 					}
+					
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {

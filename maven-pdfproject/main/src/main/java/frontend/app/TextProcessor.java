@@ -85,7 +85,10 @@ public class TextProcessor {
 			long fileSize=file.length()/1024;
 			PDF pdf = new PDF(path, PDFContainer.wordsOccurence, pageNumber, avgWordsInRow, mostUsedFontSizeInPDF ,numOfImages,averageNumberOfRowsInParagraph,bibliography, fileSize, scientific);
 			setPDF(pdf);
-			pdfDAO.insertPDF("LearningData", pdf);
+			if(scientific != Scientific.UNKNOWN){
+				pdfDAO.insertPDF("LearningData", pdf);
+			}
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
