@@ -92,6 +92,9 @@ public class MyFXController {
 	@FXML
 	private Label bibliographyValue;
 	
+	@FXML 
+	private Label accuracyLabel;
+	
 	@FXML
 	public void initialize(){
 		ObservableList<String> options = 
@@ -197,7 +200,8 @@ public class MyFXController {
 	@FXML
 	public void crossValidation(){
 		if(PDFContainer.dlp != null){
-			PDFContainer.dlp.crossValidation();
+			double val = PDFContainer.dlp.crossValidation();
+			accuracyLabel.setText(String.format("%.3f", val) + " %");
 		}else{
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("Warning dialog");

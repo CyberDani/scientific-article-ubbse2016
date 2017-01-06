@@ -290,18 +290,6 @@ public class LearningDataSet {
 						//the last attribute must be nominal
 						vals[index] = attVals.indexOf(fields[i].get(pdf).toString());
 						++index;
-					}else{
-						//numeric
-						double boolVal = -1;
-						if ((Boolean) fields[i].get(pdf)==null){
-							boolVal = 0;
-						}else{
-							if ((Boolean) fields[i].get(pdf)){
-								boolVal = 1;
-							}
-							vals[index] = boolVal;
-							++index;
-						}
 					}
 					
 				} catch (IllegalArgumentException e) {

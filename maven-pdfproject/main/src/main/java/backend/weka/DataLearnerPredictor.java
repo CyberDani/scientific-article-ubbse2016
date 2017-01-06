@@ -69,7 +69,7 @@ public class DataLearnerPredictor {
 		}
 	}
 	
-	public void crossValidation(){
+	public double crossValidation(){
 		Evaluation eval = null;
 		switch (learnAlg) {
 		
@@ -85,8 +85,9 @@ public class DataLearnerPredictor {
         	
         	System.out.println(eval.toSummaryString("\nResults\n\n", false));
         	System.out.println(eval.pctCorrect() + " " +eval.pctIncorrect());
+        	return eval.pctCorrect();
         	
-            break;
+            
         case DecisionTreeLinRegression_M5P:
         	
         	M5P m5ptree = new M5P();
@@ -101,10 +102,12 @@ public class DataLearnerPredictor {
         	System.out.println(eval.toSummaryString("\nResults\n\n", false));
         	System.out.println(eval.pctCorrect() + " " +eval.pctIncorrect());
         	
-            break;
+        	return eval.pctCorrect();
         default: //throw Exception
                  break;
 		}
+		
+		return -2.4;
 	}
 	
 	public void predict(){
