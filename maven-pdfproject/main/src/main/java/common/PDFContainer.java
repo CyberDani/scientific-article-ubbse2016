@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import backend.model.PDF;
 import backend.weka.DataLearnerPredictor;
 import backend.weka.LearningDataSet;
 
@@ -48,6 +49,8 @@ public class PDFContainer {
 	* subtitles.
 	*/
 	public static List<String> unused = Arrays.asList("_id","path","words");
+	
+	public static List<PDF> dbData;
 	
 	public static int numberOfWordsToInsert=0;
 }

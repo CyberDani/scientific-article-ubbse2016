@@ -233,7 +233,13 @@ public class LearningDataSet {
 			if(i == PDFContainer.attrNo - 1){
 				for(int ii = 0;ii<Settings.selectedWordsNr;++ii){
 					// - numeric
-					vals[index] = 0;
+					// pdf - ezzel dolgozol most
+					// pdf.getPath.equals(PDFContainer.dbData.get(3).getPath) - a ket pdf ugyanaz
+					// PDFContainer.dbData;	// pdf adatok soronkent + pdf
+					
+					//vals[index] = 0; //pdfWords.get(ii) = ennek a sulya
+					
+					vals[index] = TFIDFforSelectedWords.TFIDFCalculation(pdf, pdfWords.get(ii));
 					++index;
 				}
 				
