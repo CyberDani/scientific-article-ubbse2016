@@ -34,9 +34,16 @@ public class TFIDFforSelectedWords {
 			
 			// Preventing the different type (scientific, non scientific) pdf analysation.
 			// We only need the same contra same pdf type.
-			if(actualPDF.isScientific() != PDFContainer.dbData.get(i).isScientific()){
-				continue;
+			Boolean actualScientific = actualPDF.isScientific();
+			
+			if(actualScientific != null){
+				if(actualScientific != PDFContainer.dbData.get(i).isScientific()){
+					continue;
+				}
+			}else{
+				System.out.println("");
 			}
+			
 			
 			// Excluding from IDF counting the actual pdf from all pdf if they are the same.
 			if(!actualPDF.getPath().equals(PDFContainer.dbData.get(i).getPath())){

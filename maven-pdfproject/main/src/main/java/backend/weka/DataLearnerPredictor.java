@@ -113,10 +113,11 @@ public class DataLearnerPredictor {
 		return -2.4;
 	}
 	
-	public void predict(PDF pdf){
+	public String predict(PDF pdf){
 		
 		LearningDataSet lds = new LearningDataSet(PDFContainer.lds.getPdfWords());
 		lds.addPDF(pdf);
+		Instances insts = lds.getInstances();
 		
 		//data.add(lds)
 		
@@ -129,7 +130,13 @@ public class DataLearnerPredictor {
         	double[] dist = null;
         	
 			try {
-				pred = tree.classifyInstance(lds.getInstances().instance(0));
+				//J48 tree2 = new J48();
+				
+				
+				insts.setClassIndex(insts.numAttributes()-1);
+				//tree2.buildClassifier(insts); // build classifier
+				
+				pred = tree.classifyInstance(insts.instance(0));
 				//dist = tree.distributionForInstance(lds.getInstances().instance(0));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -138,13 +145,15 @@ public class DataLearnerPredictor {
         	//System.out.print((0+1) + " - ");
         	//System.out.print(data.instance(0).toString(data.classIndex()) + " - ");
         	
-        	System.out.print("pred: " + data.classAttribute().value((int) pred));
+        	System.out.print("pred: " + insts.classAttribute().value((int) pred));
         	//System.out.println(Utils.arrayToString(dist));
         	
         	
-            break;
+            return insts.classAttribute().value((int) pred);
+            
         default: //throw Exception
                  break;
 		}
+		return null;
 	}
 }

@@ -67,11 +67,11 @@ public class PDF {
 		this.fileSize = fileSize;
 	}
 	
-	public boolean isScientific() {
+	public Boolean isScientific() {
 		return scientific;
 	}
 
-	public void setScientific(boolean scientific) {
+	public void setScientific(Boolean scientific) {
 		this.scientific = scientific;
 	}
 

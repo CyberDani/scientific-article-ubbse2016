@@ -12,26 +12,19 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="577.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.gui.MyFXController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="497.0" prefWidth="585.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.gui.MyFXController">
    <children>
-      <Text layoutX="34.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Scientific Article recognizer" wrappingWidth="508.578125">
+      <Text layoutX="38.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Scientific Article recognizer" wrappingWidth="508.578125">
          <font>
             <Font size="24.0" />
          </font>
       </Text>
-      <Text layoutX="73.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please select a PDF file:">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Text>
-      <Button fx:id="loadPdfButton" layoutX="307.0" layoutY="106.0" mnemonicParsing="false" onAction="#loadPdf" prefHeight="30.0" prefWidth="100.0" text="Load PDF" />
       <Text fx:id="result" layoutX="143.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Is scientific PDF:" visible="false">
          <font>
             <Font size="21.0" />
          </font>
       </Text>
-      <Button fx:id="tempTestButton" layoutX="34.0" layoutY="397.0" mnemonicParsing="false" onAction="#testWeightes" text="Temporal Testing Button" />
-      <Pane id="greenPane" layoutX="52.0" layoutY="148.0" prefHeight="128.0" prefWidth="478.0">
+      <Pane id="greenPane" layoutX="53.0" layoutY="83.0" prefHeight="128.0" prefWidth="478.0">
          <children>
             <Label layoutX="166.0" layoutY="14.0" text="Train your training set" underline="true">
                <font>
@@ -53,7 +46,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane id="greenPane" layoutX="53.0" layoutY="294.0" prefHeight="92.0" prefWidth="478.0">
+      <Pane id="greenPane" layoutX="54.0" layoutY="229.0" prefHeight="92.0" prefWidth="478.0">
          <children>
             <Label layoutX="143.0" layoutY="14.0" text="Test your choosed algorithm" underline="true">
                <font>
@@ -77,11 +70,30 @@
             </Pane>
          </children>
       </Pane>
-      <Button fx:id="backButton" layoutX="407.0" layoutY="409.0" mnemonicParsing="false" onAction="#backToTraining" prefHeight="32.0" prefWidth="137.0" text="Back to training">
+      <Button fx:id="backButton" layoutX="428.0" layoutY="451.0" mnemonicParsing="false" onAction="#backToTraining" prefHeight="32.0" prefWidth="137.0" text="Back to training">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
       <Button fx:id="showStat" layoutX="255.0" layoutY="409.0" mnemonicParsing="false" onAction="#showStaticsPage" prefHeight="32.0" prefWidth="137.0" text="Show Statistics" visible="false" />
+      <Pane id="greenPane" layoutX="54.0" layoutY="338.0" prefHeight="83.0" prefWidth="478.0">
+         <children>
+            <Label layoutX="157.0" layoutY="14.0" text="Predict an unseen PDF file" underline="true">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Button fx:id="loadPdfButton" layoutX="14.0" layoutY="48.0" mnemonicParsing="false" onAction="#loadPdf" prefHeight="25.0" prefWidth="92.0" text="Load PDF" />
+            <Pane layoutX="319.0" layoutY="46.0" prefHeight="25.0" prefWidth="145.0" style="-fx-background-color: #9BD993; -fx-border-color: black; -fx-border-radius: 5px;">
+               <children>
+                  <Label fx:id="scientificLabel" layoutX="34.0" layoutY="3.0" text="UNKNOWN" textFill="#0011c9">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

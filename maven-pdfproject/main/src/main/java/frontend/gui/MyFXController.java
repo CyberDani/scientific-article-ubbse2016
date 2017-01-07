@@ -45,9 +45,6 @@ public class MyFXController {
 	private ComboBox<String> algorithmCombo;
 	
 	@FXML
-	private Button tempTestButton;
-	
-	@FXML
 	private Button backButton;
 	
 	@FXML
@@ -94,6 +91,9 @@ public class MyFXController {
 	
 	@FXML 
 	private Label accuracyLabel;
+	
+	@FXML 
+	private Label scientificLabel;
 	
 	@FXML
 	public void initialize(){
@@ -221,11 +221,20 @@ public class MyFXController {
 			fileChooser.setTitle("Open File");
 			File selectedFile= fileChooser.showOpenDialog(stage);
 			if (selectedFile != null) {
-				tp=new TextProcessor(selectedFile,Scientific.SCIENTIFIC);
 				
+				tp = new TextProcessor(selectedFile,Scientific.UNKNOWN);
 				
-				PDFContainer.dlp.predict(tp.getPDF());
+				PDF pdf = tp.getPDF();
 				
+				String res = PDFContainer.dlp.predict(pdf);
+				
+				if(res!=null){
+					if(res.equals("-1")){
+						scientificLabel.setText("NON-SCIENTIFIC");
+					}else{
+						scientificLabel.setText("SCIENTIFIC");
+					}
+				}
 				
 				//setLabels(tp);
 				showStat.setVisible(true);
