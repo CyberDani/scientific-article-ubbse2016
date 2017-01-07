@@ -289,12 +289,11 @@ public class LearningDataSet {
 					if(i==PDFContainer.attrNo-1){
 						//the last attribute must be nominal
 						
-						Boolean boolVal = (boolean) fields[i].get(pdf);
+						Boolean boolVal = (Boolean)fields[i].get(pdf);
 						
 						if (boolVal == null){
 							boolVal = true;
 						}
-						
 						
 						vals[index] = attVals.indexOf(boolVal.toString());
 						++index;
