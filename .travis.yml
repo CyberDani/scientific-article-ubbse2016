@@ -1,0 +1,20 @@
+# Configuration for Travis CI
+
+# sudo is required for Docker calls
+sudo: required
+
+language: java
+
+# add dependent services
+services:
+  - docker
+
+# main script
+# for the push to work, the variables below must be set
+script:
+  # initial configurations
+
+  # build Docker image
+  - docker build -t annamari1466/scientificarticle C:/Users/anna_/Desktop/sparkexample-master
+  # push Docker image to DockerHub registry
+  - docker push annamari1466/scientificarticle
