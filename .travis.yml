@@ -12,9 +12,7 @@ services:
 # main script
 # for the push to work, the variables below must be set
 script:
-  # initial configurations
-
-	- docker login -e="$EMAIL" -u="$USER" -p="$PASSWORD" 
+  - docker login -e="$EMAIL" -u="$USER" -p="$PASSWORD" 
   # build Docker image
   - docker build -t annamari1466/scientificarticle sparkexample-master
   # push Docker image to DockerHub registry
