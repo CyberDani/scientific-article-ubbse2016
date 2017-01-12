@@ -15,6 +15,6 @@ script:
   # initial configurations
 
   # build Docker image
-  - docker build -t annamari1466/scientificarticle C:/Users/anna_/Desktop/sparkexample-master
+  - docker build -t annamari1466/scientificarticle sparkexample-master
   # push Docker image to DockerHub registry
   - docker push annamari1466/scientificarticle
