@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import backend.model.PDF;
 import backend.weka.DataLearnerPredictor;
-import backend.weka.TFIDF;
 import common.LearningAlgorithm;
 import common.PDFContainer;
 import common.Scientific;
@@ -273,97 +272,6 @@ public class MyFXController {
 					+ "and train your existing dataset.");
 			alert.showAndWait();
 		}
-	}
-	
-	
-	/**
-	 * TFIDF algorithm
-	 */
-	@FXML
-	public void testWeightes() {
-		ArrayList<ArrayList<String>> subTitles = 
-				common.PDFContainer.lds.getAllSubtitles();	
-		
-		double tfNumber = 0;
-		double idfNumber = 0;
-		String[] subtitleWordsFromPDF;			// subtitles from 1 PDF
-		String[] subtitle;						// 1 subtitle from subtitles
-		String[] words = {};
-		String[] temp = {};
-		String[] aggregatedWords = {};
-		
-		String[][] tfidfContainer;
-		
-		int index = 0, size = 0;
-		boolean status = false;
-		
-		for(ArrayList<String> subT : subTitles){
-			
-			subtitleWordsFromPDF = subT.toString().split(", ");		// subtitles from a pdf
-			for(String sT : subtitleWordsFromPDF){
-				size += sT.split(" ").length;
-			}
-			words = new String[size];
-			
-			for(int i=0; i<subtitleWordsFromPDF.length; i++){
-				subtitle = subtitleWordsFromPDF[i].replaceAll("([\\[:\\?\\\\+\\-\\]\\*\\!\\^\\%\\(\\)\\'\\@\\;\\#\\~\\\"\\/\\<\\>\\.\\&\\|¬\\`\\\\])", "").split(" ");		// 1 subtitle from pdf which is cleared from unwanted characters
-				for(String word : subtitle){
-					words[index] = word;
-					index++;
-				}
-			}
-			index = 0;
-			
-			//aggregating all subtitles from 1 selected pfd
-			temp = new String[size];
-			size = 0;
-			for(int i=0; i<words.length; i++){
-				
-				for(int j=0; j<words.length; j++){
-					if((temp[j]!= null) && temp[j].equals(words[i])){
-						status = true;
-						break;
-					}
-				}
-				
-				if(!status){
-					for(int k=0; k<temp.length; k++){
-						if(temp[k] == null){
-							temp[k] = words[i];
-							size++;
-							break;
-						}
-					}
-				}
-				status = false;
-			}
-			
-			aggregatedWords = new String[size];
-			for(int i=0; i<temp.length; i++){
-				if(temp[i] != null){
-					aggregatedWords[i] = temp[i];
-				}
-			}
-			
-			tfidfContainer = new String[size][2];
-			size = 0;
-			for(int h=0; h<aggregatedWords.length; h++){
-				tfNumber = TFIDF.tf(aggregatedWords[h], words, aggregatedWords);	// calculating TF (1 word, all words, aggregated words)
-				idfNumber = TFIDF.idf(aggregatedWords[h], subTitles);				// calculating IDF (1 word, all pdf's)
-				
-				tfidfContainer[h][0] = aggregatedWords[h];
-				tfidfContainer[h][1] = String.valueOf((tfNumber * idfNumber));
-				
-				// idf osszes pdf/ azok a pdf-ek amelyek tartalmazzak az adott szot... log(osszesPdf/azok a pdf-ek amelyek tartalmazzak az adott szot)
-				// az a kerdes, hogy ha egy szo szerepel tobb pdf-ben is akkor azt mar nem kell ellenorizni a kovetkezo pdf
-				// eseteben ha mar elozoleg ki volt szamitva ra a tfidf?
-				// vagy ha megis, akkor az elozoleg eltarolt adatot a szorol, hogy frissitsem? hozza kell adjam az uj tfidf erteket?
-				
-				// az elso pfd alcimeit kell osszehasonlitsam az osszes tobbivel, es utana mit kezdjek a megmaradt pdf-ekkel?
-			}
-		}
-		
-		
 	}
 	
 }
