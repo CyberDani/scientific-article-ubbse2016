@@ -98,5 +98,15 @@
             <Font size="15.0" />
          </font>
       </Label>
+      <Label fx:id="isScientific" layoutX="232.0" layoutY="122.0" text="Label">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Button fx:id="backButton" layoutX="282.0" layoutY="345.0" mnemonicParsing="false" onAction="#backToMainPage" prefHeight="32.0" prefWidth="127.0" text="Back">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

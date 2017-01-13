@@ -95,6 +95,9 @@ public class MyFXController {
 	@FXML 
 	private Label scientificLabel;
 	
+	/**
+	 * Load the base GUI
+	 */
 	@FXML
 	public void initialize(){
 		ObservableList<String> options = 
@@ -106,6 +109,10 @@ public class MyFXController {
 		dataStructCombo.setItems(options);
 	}
 	
+	
+	/**
+	 * Loads the window where you train your data
+	 */
 	@FXML
 	public void backToTraining(){
 		 Stage stage= (Stage) backButton.getScene().getWindow();
@@ -115,6 +122,7 @@ public class MyFXController {
 		try {
 			 myApp = (AnchorPane) loader.load();
 			 Scene scene = new Scene(myApp);
+			 scene.getStylesheets().add(getClass().getResource("../gui/styles.css").toExternalForm());	
 			 stage.setScene(scene);
 			 stage.show();
 		} catch (IOException e) {
@@ -122,6 +130,10 @@ public class MyFXController {
 		}
 	}
 	
+	
+	/**
+	 * Sets the page where are statistics about the processed PDF
+	 */
 	@FXML
 	public void showStaticsPage(){
 		Stage stage= (Stage) showStat.getScene().getWindow();
@@ -140,7 +152,10 @@ public class MyFXController {
 		}
 	}
 	
-		
+	
+	/**
+	 * Sets the training algorithms combobox
+	 */
 	@FXML
 	public void dataStructSelected(){
 		int ind = dataStructCombo.getSelectionModel().getSelectedIndex();
@@ -174,6 +189,9 @@ public class MyFXController {
 		algorithmCombo.setItems(options);
 	}
 	
+	/**
+	 * Train button action
+	 */
 	@FXML
 	public void trainPushed(){
 		String alg = algorithmCombo.getValue();
@@ -189,7 +207,7 @@ public class MyFXController {
 			PDFContainer.dlp = new DataLearnerPredictor(PDFContainer.lds);
 			PDFContainer.dlp.setAlgorithm(LearningAlgorithm.DecisionTree_J48);
 			PDFContainer.dlp.train();
-		}else if(alg.equals("M5P(M5 Base)")){
+		}else if(alg.equals("M5P(M5 Base)")){	
 			
 			PDFContainer.dlp = new DataLearnerPredictor(PDFContainer.lds);
 			PDFContainer.dlp.setAlgorithm(LearningAlgorithm.DecisionTreeLinRegression_M5P);
@@ -197,6 +215,10 @@ public class MyFXController {
 		}
 	}
 	
+	
+	/**
+	 * Calls the cross validation
+	 */
 	@FXML
 	public void crossValidation(){
 		if(PDFContainer.dlp != null){
@@ -213,6 +235,10 @@ public class MyFXController {
 		
 	}
 	
+	
+	/**
+	 * Loads pdf to decide if it is scientific or not
+	 */
 	@FXML
 	public void loadPdf() {
 		if(PDFContainer.dlp != null){
@@ -249,6 +275,10 @@ public class MyFXController {
 		}
 	}
 	
+	
+	/**
+	 * TFIDF algorithm
+	 */
 	@FXML
 	public void testWeightes() {
 		ArrayList<ArrayList<String>> subTitles = 
