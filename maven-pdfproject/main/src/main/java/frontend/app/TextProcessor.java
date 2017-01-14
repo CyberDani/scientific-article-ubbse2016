@@ -21,7 +21,6 @@ import org.apache.pdfbox.text.TextPosition;
 
 import backend.repository.DAOFactory;
 import backend.repository.PDFDAO;
-import ch.qos.logback.core.net.SyslogOutputStream;
 import common.PDFContainer;
 import common.Scientific;
 import common.StopWords;
