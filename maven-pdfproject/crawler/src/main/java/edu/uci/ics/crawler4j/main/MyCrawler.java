@@ -38,7 +38,8 @@ public class MyCrawler extends WebCrawler {
      @Override
      public boolean shouldVisit(Page referringPage, WebURL url) {
          String href = url.getURL().toLowerCase();
-         return !FILTERS1.matcher(href).matches();
+         String pageUrl = referringPage.getWebURL().getDomain().toLowerCase();
+         return !FILTERS1.matcher(href).matches() && (href.indexOf(pageUrl) >= 0);
      } 
      
      /**
