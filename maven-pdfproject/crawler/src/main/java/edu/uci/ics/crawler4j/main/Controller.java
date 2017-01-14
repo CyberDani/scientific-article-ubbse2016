@@ -18,6 +18,14 @@ public class Controller {
 	private String storageFolder;
 	private String seedsFile;
 
+	/**
+	 * Controller constructor
+	 * 
+	 * @param crawlStorageFolder 
+	 * @param numberOfCrawlers
+	 * @param storageFolder
+	 * @param seedsFile
+	 */
 	public Controller(String crawlStorageFolder, int numberOfCrawlers, String storageFolder, String seedsFile) {
 		this.crawlStorageFolder = crawlStorageFolder;
 		this.numberOfCrawlers = numberOfCrawlers;
@@ -25,6 +33,11 @@ public class Controller {
 		this.seedsFile = seedsFile;
 	}
 
+	/**
+	 * Get the list of seeds from the seedsFile
+	 * 
+	 * @return list of seeds
+	 */
 	private List<String> getSeeds() {
 		List<String> list = new ArrayList<String>();
 		BufferedReader br = null;
@@ -55,6 +68,11 @@ public class Controller {
 		return list;
 	}
 
+	/**
+	 * Run crawler
+	 * 
+	 * @throws Exception
+	 */
 	public void runCrawler() throws Exception {
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(crawlStorageFolder);
@@ -69,7 +87,7 @@ public class Controller {
 		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
 
 		/*
-		 * For each crawl, you need to add some seed urls. These are the first
+		 * For each crawl, we need to add some seed urls. These are the first
 		 * URLs that are fetched and then the crawler starts following links
 		 * which are found in these pages
 		 */
@@ -80,7 +98,7 @@ public class Controller {
 		}
 
 		/*
-		 * Start the crawl. This is a blocking operation, meaning that your code
+		 * Start the crawl. This is a blocking operation, meaning that the code
 		 * will reach the line after this only when crawling is finished.
 		 */
 		MyCrawler.configure(storageFolder);

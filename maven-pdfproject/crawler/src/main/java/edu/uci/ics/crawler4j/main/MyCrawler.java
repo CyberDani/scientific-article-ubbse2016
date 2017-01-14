@@ -17,38 +17,34 @@ public class MyCrawler extends WebCrawler {
 
 	public static File storageFolder;
 	
-	public static void configure(String folder) {
-		storageFolder = new File(folder);
-	}
-	
     private final static Pattern FILTERS1 = Pattern.compile(".*(\\.(css|js|gif|jpg"
             + "|png|mp3|mp3|zip|gz))$");
     private final static Pattern FILTERS2 = Pattern.compile(".*\\.pdf$", java.util.regex.Pattern.CASE_INSENSITIVE);
 
+	/**
+	 * Configure the storage folder
+	 * 
+	 * @param folder - the storage folder name
+	 */
+	public static void configure(String folder) {
+		storageFolder = new File(folder);
+	}
+	
     /**
-     * This method receives two parameters. The first parameter is the page
-     * in which we have discovered this new url and the second parameter is
-     * the new url. You should implement this function to specify whether
-     * the given url should be crawled or not (based on your crawling logic).
-     * In this example, we are instructing the crawler to ignore urls that
-     * have css, js, git, ... extensions and to only accept urls that start
-     * with "http://www.ics.uci.edu/". In this case, we didn't need the
-     * referringPage parameter to make the decision.
+     * Specify whether the given url should be crawled or not
+     * @param referringPage - the page in which we have discovered this new url 
+     * @param url - the new url
      */
      @Override
      public boolean shouldVisit(Page referringPage, WebURL url) {
          String href = url.getURL().toLowerCase();
-//         return !FILTERS.matcher(href).matches()
-//                 && href.startsWith("http://www.ics.uci.edu/");
-         return !FILTERS1.matcher(href).matches()
-        		 && href.startsWith("http://www.pdf995.com/samples/pdf.pdf");
-//         return href.startsWith("http://www.cs.ubbcluj.ro/~zbodo/");
-     }
-
+         return !FILTERS1.matcher(href).matches();
+     } 
+     
      /**
-      * This function is called when a page is fetched and ready
-      * to be processed by your program.
-      */
+      * This function is called when a page is fetched and ready to be processed 
+      * @param page - the page which will be visited
+     */
      @Override
      public void visit(Page page) {
          String url = page.getWebURL().getURL();
