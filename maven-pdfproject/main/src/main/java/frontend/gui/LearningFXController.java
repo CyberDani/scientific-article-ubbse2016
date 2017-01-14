@@ -106,9 +106,6 @@ public class LearningFXController {
 	private Boolean seedsFileSelected = false;
 	private Boolean storageFolderSelected = false;
 	
-	/**
-	 * Load the base GUI
-	 */
 	@FXML
 	public void initialize(){
 		choiceB.getItems().addAll("Crawler", "Learning");
@@ -116,27 +113,23 @@ public class LearningFXController {
 		choiceB.valueProperty().addListener(new ChangeListener<String>() {
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				switch(newValue){
-					case "Crawler": {
-						crawlerPane.setVisible(true);
-						trainingPane.setVisible(false);
-						loadDataPane.setVisible(false);
-						break;
-					}
-					case "Learning":{
-						crawlerPane.setVisible(false);
-						trainingPane.setVisible(true);
-						loadDataPane.setVisible(true);
-						break;
-					}
+				case "Crawler": {
+					crawlerPane.setVisible(true);
+					trainingPane.setVisible(false);
+					loadDataPane.setVisible(false);
+					break;
+				}
+				case "Learning":{
+					crawlerPane.setVisible(false);
+					trainingPane.setVisible(true);
+					loadDataPane.setVisible(true);
+					break;
+				}
 				}
 			}    
 		});
 	}
-	
 
-	/**
-	 * Sets the storage folder of crawler(the folder where the downloaded PDF's are)
-	 */
 	@FXML 
 	public void setStorageFolder() {
 		Stage stage = (Stage) setStorageFolderButton.getScene().getWindow();
@@ -156,10 +149,6 @@ public class LearningFXController {
 		}
 	}
 
-	
-	/**
-	 * Sets the file of links for the crawler
-	 */
 	@FXML 
 	public void setSeedsFile()  {
 		Stage stage = (Stage) setSeedsFileButton.getScene().getWindow();
@@ -182,10 +171,6 @@ public class LearningFXController {
 		}
 	}
 
-	
-	/**
-	 * Runs the crawler
-	 */
 	@FXML 
 	public void runCrawler() {
 		String crawlStorageFolder = "/data/crawl/root";
@@ -199,10 +184,7 @@ public class LearningFXController {
 		}
 	}	
 
-	
-	/**
-	 * Loads the training set from database
-	 */
+
 	@FXML
 	public void loadDataFromDB() {
 		PDFContainer.dbData = new ArrayList<PDF>();
@@ -301,10 +283,6 @@ public class LearningFXController {
 		isDataSetLoaded = true;
 	}
 
-	
-	/**
-	 * Loads the training set from file
-	 */
 	@FXML
 	public void loadDataFromFile(){
 		Stage stage = (Stage) loadFromFileButton.getScene().getWindow();
@@ -323,12 +301,7 @@ public class LearningFXController {
 			isDataSetLoaded=true;
 		}			
 	}
-	
-	
-	/**
-	 * 
-	 * @param file
-	 */
+
 	public void saveFile(File file){
 		FileWriter fileWriter = null;
 		try {
@@ -340,10 +313,6 @@ public class LearningFXController {
 		}     
 	}
 
-	
-	/**
-	 * Saves the training set to a file
-	 */
 	@FXML
 	public void saveTrainingSet() {
 		Stage stage = (Stage) saveTrainingSetButton.getScene().getWindow();
@@ -358,10 +327,6 @@ public class LearningFXController {
 		}
 	}
 
-	
-	/**
-	 * Changes the scene to the window where you Train an algorithm than decide if a PDF is scientific or not
-	 */
 	@FXML
 	public void changeScene() {
 		if(isDataSetLoaded == true) {
@@ -389,10 +354,6 @@ public class LearningFXController {
 		}
 	}
 
-	
-	/**
-	 * Load PDF to decide if is scientific or not
-	 */
 	@FXML
 	public void loadPdf() {
 		Stage stage = (Stage) loadPdfToDbButton.getScene().getWindow();
@@ -411,10 +372,6 @@ public class LearningFXController {
 		}		
 	}
 
-	
-	/**
-	 * Filter to find PDF's
-	 */
 	public File[] pdfFinder(File selectedDirectory) {
 		FilenameFilter fileNameFilter = new FilenameFilter() {
 
@@ -427,10 +384,6 @@ public class LearningFXController {
 		return selectedDirectory.listFiles(fileNameFilter);
 	}
 
-	
-	/**
-	 * Load a directory of PDF's
-	 */
 	@FXML
 	public void loadDirectoryOfPDFs() {
 		Stage stage = (Stage) loadDirOfPdfButton.getScene().getWindow();

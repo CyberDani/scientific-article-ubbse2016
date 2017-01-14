@@ -30,10 +30,7 @@ public class TextProcessor {
 
 	private static int pageNumber;
 	private static float avgWordsInRow;
-	private static int line=0;
-	private static int wordInLine;
 	private static PDDocument pd = null;
-	private static BufferedWriter wr;
 	private static StringBuilder sb = null;
 	private static String text;
 	private static boolean bibliography;
@@ -44,7 +41,6 @@ public class TextProcessor {
 	private static float mostUsedFontSizeInPDF;
 	private static float[][] pdfFontsWithRows;
 	private static String[][] subtitleFontSizeAndRow;
-	private static float numberOfSubtitles;
 	private static int averageNumberOfRowsInParagraph;
 	private static int numOfImages;
 
@@ -404,6 +400,7 @@ public class TextProcessor {
 	
 	private static void countWordOccurence(String line){
 		String[] words=line.split(" ");
+		String cleanedWord = "";
 		
 		for(String word:words){
 			
@@ -417,11 +414,12 @@ public class TextProcessor {
 			}
 			
 			if(n>0){
-				if(word.matches("[a-zA-z?-]{4,}")){ //if it is a word or a world with ? in it, min 4 character words
-				putInHashMap(word);
-				}else if(word.matches("^[a-zA-z?-]{4,}.*")) {  //%if the word has .;*" after it
-					word = word.replaceAll("([\\.\\,\\;])", "");
-					putInHashMap(word);
+				cleanedWord = word.toLowerCase();
+				if(cleanedWord.matches("[a-zA-z?-]{4,}")){ //if it is a word or a world with ? in it, min 4 character words
+				putInHashMap(cleanedWord);
+				}else if(cleanedWord.matches("^[a-zA-z?-]{4,}.*")) {  //%if the word has .;*" after it
+					cleanedWord = cleanedWord.replaceAll("([\\.\\,\\;])", "");
+					putInHashMap(cleanedWord);
 				}
 			}
 			
