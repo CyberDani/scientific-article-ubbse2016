@@ -64,10 +64,17 @@ public class TextProcessor {
 	}
 
 	public TextProcessor(File file, Scientific scientific){
+		int state;
+		
 		pdfDAO = DAOFactory.getInstance().getPDFDAO();
 		
+		state = processText(file);
+		if(state == -1){
+			System.out.println("Az adott PDF oldalszama sok, meglehet nem cikk!");
+			return;
+		}
 		// If an the PDFBox doen't recognise the given pdf.
-		if(!processText(file)){
+		if(state == -2){
 			System.out.println("Az adott PDF nem elemezheto! (A programnak nem lathato.)");
 			return;
 		}
@@ -519,7 +526,7 @@ public class TextProcessor {
 		return overallNum;
 	}
 
-	public static boolean processText(File file){
+	public static int processText(File file){
 
 		try {
 			File inputFile = new File(file.getAbsolutePath());
@@ -566,16 +573,21 @@ public class TextProcessor {
 			if (pd != null) {
 				pd.close();
 			}
-
-			// If an the PDFBox doen't recognise the given pdf.
+			
+			// If the given pdf is has more than 40 pages (if it's not an article).
+			if(pageNumber > 40){
+				return -1;
+			}
+			
+			// If the PDFBox doens't recognise the given pdf.
 			if(!processTextByRow()){
-				return false;
+				return -2;
 			}
 
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return true;
+		return 1;
 	}	
 }
