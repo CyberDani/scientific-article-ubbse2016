@@ -267,7 +267,10 @@ public class MyFXController {
 				
 				PDF pdf = tp.getPDF();
 				
-				String res = PDFContainer.dlp.predict(pdf);
+				String res = null;
+				try {
+					res = PDFContainer.dlp.predict(pdf);
+				} catch (Exception e) {}
 				
 				if(res!=null){
 					if(res.equals("-1")){

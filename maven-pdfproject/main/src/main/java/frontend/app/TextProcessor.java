@@ -69,11 +69,12 @@ public class TextProcessor {
 		pdfDAO = DAOFactory.getInstance().getPDFDAO();
 		
 		state = processText(file);
+		// If the pdf file contains a lot of pages (more than 40).
 		if(state == -1){
 			System.out.println("Az adott PDF oldalszama sok, meglehet nem cikk!");
 			return;
 		}
-		// If an the PDFBox doen't recognise the given pdf.
+		// If an the PDFBox doen't recognise the given pdf file.
 		if(state == -2){
 			System.out.println("Az adott PDF nem elemezheto! (A programnak nem lathato.)");
 			return;
@@ -176,6 +177,7 @@ public class TextProcessor {
 			iterator = i;
 			counter = 0;
 			match = patternForRegex.matcher(rows[i].toString());
+			System.out.println(rows[i]);
 
 			if(match.find())
 			{
