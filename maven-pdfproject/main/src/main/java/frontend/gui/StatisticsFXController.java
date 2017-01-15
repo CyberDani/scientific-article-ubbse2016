@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import backend.model.PDF;
+import common.PDFContainer;
 import frontend.app.Main;
 import frontend.app.TextProcessor;
 import javafx.fxml.FXML;
@@ -27,7 +28,7 @@ public class StatisticsFXController {
 	private Label pdfNameValue;
 	
 	@FXML
-	private Label isScientific;
+	private Label isScientificValue;
 	
 	@FXML
 	private Label avgWordsValue;
@@ -111,7 +112,16 @@ public class StatisticsFXController {
 		
 		String[] pdfName = myPDF.getPath().split("\\\\");
 		pdfNameValue.setText(pdfName[pdfName.length-1]);
-		//isScientific.setText();
+		
+		String res = PDFContainer.dlp.predict(myPDF);
+		if(res!=null){
+			if(res.equals("-1")){
+				isScientificValue.setText("NON-SCIENTIFIC");
+			}else{
+				isScientificValue.setText("SCIENTIFIC");
+			}
+		}
+		
 		pageNumberValue.setText(Integer.toString(myPDF.getPagesNr()));
 		avgWordsValue.setText(Double.toString(myPDF.getWordsRow()));
 		avgRowParagraphValue.setText(Integer.toString(myPDF.getAvgRowInParagraph()));
@@ -132,6 +142,7 @@ public class StatisticsFXController {
 		try {
 			 myApp = (AnchorPane) loader.load();
 			 Scene scene = new Scene(myApp);
+			 scene.getStylesheets().add(getClass().getResource("../gui/styles.css").toExternalForm());
 			 stage.setScene(scene);
 			 stage.show();
 		} catch (IOException e) {

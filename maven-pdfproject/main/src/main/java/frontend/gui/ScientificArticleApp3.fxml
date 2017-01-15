@@ -98,7 +98,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="isScientific" layoutX="232.0" layoutY="122.0" text="Label">
+      <Label fx:id="isScientificValue" layoutX="232.0" layoutY="122.0" text="Label">
          <font>
             <Font size="15.0" />
          </font>
