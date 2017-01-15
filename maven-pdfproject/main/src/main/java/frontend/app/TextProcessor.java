@@ -66,7 +66,11 @@ public class TextProcessor {
 	public TextProcessor(File file, Scientific scientific){
 		pdfDAO = DAOFactory.getInstance().getPDFDAO();
 		
-		processText(file);
+		// If an the PDFBox doen't recognise the given pdf.
+		if(!processText(file)){
+			System.out.println("Az adott PDF nem elemezheto! (A programnak nem lathato.)");
+			return;
+		}
 		this.file= file;
 		subTitles = new String[subtitleFontSizeAndRow.length];
 
@@ -434,20 +438,18 @@ public class TextProcessor {
 		}
 	}
 	
-	public static void processTextByRow(){
+	public static boolean processTextByRow(){
 		rows = text.split("\n");
 		//printRows(rows);
 		String[] fontData = {};
 		try{
 			fontData=extractData(rows[0]);
 		}catch(Exception ex){
-			System.out.println("Az adott PDF nem elemezheto! (A programnak nem lathato.)");
-			System.exit(1);
+			return false;
 		}
 
 		if(fontData[1].equals("0.0")){				// if the first row doesn't have a font-size, which means it's 0.0
-			System.out.println("Az adott PDF nem elemezheto! (A programnak nem lathato.)");
-			System.exit(1);
+			return false;
 		}
 
 		processWordsByRow(PDFContainer.words);
@@ -460,6 +462,8 @@ public class TextProcessor {
 
 		avgWordsInRow=numberOfWords();
 		bibliography=bibliographyExistence();
+		
+		return true;
 	}
 
 	public static float numberOfWords(){
@@ -515,7 +519,7 @@ public class TextProcessor {
 		return overallNum;
 	}
 
-	public static void processText(File file){
+	public static boolean processText(File file){
 
 		try {
 			File inputFile = new File(file.getAbsolutePath());
@@ -563,11 +567,15 @@ public class TextProcessor {
 				pd.close();
 			}
 
-			processTextByRow();
+			// If an the PDFBox doen't recognise the given pdf.
+			if(!processTextByRow()){
+				return false;
+			}
 
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}
+		return true;
 	}	
 }
