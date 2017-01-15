@@ -7,4 +7,6 @@ package edu.uci.ics.crawler4j.crawler.exceptions;
  */
 public class ParseException extends Exception {
 
+	private static final long serialVersionUID = 4557982113957351334L;
+
 }

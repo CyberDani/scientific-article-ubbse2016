@@ -6,6 +6,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import backend.model.PDF;
 
+/**
+ * 
+ * PDF Data Access interface
+ *
+ */
 public interface PDFDAO {
 	
 	List<PDF> getAllPDFs();

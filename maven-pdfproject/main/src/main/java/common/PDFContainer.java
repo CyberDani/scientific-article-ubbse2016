@@ -43,7 +43,7 @@ public class PDFContainer {
 	public static HashMap<String, Integer> wordsOccurence = new HashMap<String, Integer>();
 	
 	/**
-	* Contains that attributes from the PDF entity which we doesn`t 
+	* Contains that attributes from the PDF entity which we don`t 
 	* like to be loaded in the training set(<i>e.g. string values or 
 	* useless information</i>). The last value has to be the
 	* subtitles.

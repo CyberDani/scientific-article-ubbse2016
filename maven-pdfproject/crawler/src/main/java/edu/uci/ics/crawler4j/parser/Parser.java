@@ -23,7 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.tika.language.LanguageIdentifier;
+import org.apache.tika.language.*;
 import org.apache.tika.metadata.DublinCore;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
@@ -108,7 +108,8 @@ public class Parser extends Configurable {
             parseData.setTitle(metadata.get(DublinCore.TITLE));
             parseData.setMetaTags(contentHandler.getMetaTags());
             // Please note that identifying language takes less than 10 milliseconds
-            LanguageIdentifier languageIdentifier = new LanguageIdentifier(parseData.getText());
+            @SuppressWarnings("deprecation")
+			LanguageIdentifier languageIdentifier = new LanguageIdentifier(parseData.getText());
             page.setLanguage(languageIdentifier.getLanguage());
 
             Set<WebURL> outgoingUrls = new HashSet<>();

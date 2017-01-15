@@ -8,7 +8,9 @@ package edu.uci.ics.crawler4j.parser;
  * to do it
  */
 public class NotAllowedContentException extends Exception {
-    public NotAllowedContentException() {
+	private static final long serialVersionUID = -4259335406575453301L;
+
+	public NotAllowedContentException() {
         super("Not allowed to parse this type of content");
     }
 }

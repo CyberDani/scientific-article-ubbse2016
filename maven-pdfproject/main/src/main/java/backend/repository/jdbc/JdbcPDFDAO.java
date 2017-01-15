@@ -26,32 +26,36 @@ public class JdbcPDFDAO implements PDFDAO {
 
 	private final ConnectionManager cm;
 
+	/**
+	 *  Create an instance from ConnectionManager => create connection with MongoDB
+	 */
 	public JdbcPDFDAO() {
 		cm = ConnectionManager.getInstance();
 	}
 
+	/**
+	 * Return list of all PDF from database, from LearningData collection
+	 */
+	@SuppressWarnings("unchecked")
 	public List<PDF> getAllPDFs() {
-		// collection lekerese
+		/**
+		 *  Get a collection from database
+		 */
 		MongoCollection<Document> coll = cm.getDatabase().getCollection("LearningData"); 
 
 		MongoCursor<Document> cursor = coll.find().iterator();
-		//ObjectMapper mapper = new ObjectMapper();
 
-
-		// adat hosszusaganak meghatarozasa
-		int length = 0;
-
-		while (cursor.hasNext()) {
-			cursor.next();
-			++length;
-		}
 		List<PDF> answer = new ArrayList<PDF>();
 
 
-		// Iterator ujradefinialasa
+		/**
+		 * Redefine the iterator
+		 */
 		cursor = coll.find().iterator();
 
-		// adatok kinyerese es PDF osztalyba valo konvertalasa
+		/**
+		 * Get data from database and convert to PDF
+		 */
 		Field declaredField =  null;
 		while (cursor.hasNext()) { 
 
@@ -62,7 +66,6 @@ public class JdbcPDFDAO implements PDFDAO {
 			ObjectMapper objectMapper = new ObjectMapper();
 
 			try {
-
 
 				myMap = objectMapper.readValue(PDFJson, HashMap.class);
 
@@ -79,9 +82,10 @@ public class JdbcPDFDAO implements PDFDAO {
 					declaredField.setAccessible(true);
 
 					try {
-						// Convert ArrayList to Array(String, Integer, Double, Float)
+						/**
+						 *  Convert ArrayList to Array(String, Integer, Double, Float)
+						 */
 						if(declaredField.getType() == String[].class){
-							@SuppressWarnings("unchecked")
 							ArrayList<String> data = (ArrayList<String>)myMap.get(PDFContainer.PDFAttrNames[i]);
 							if(data == null)
 							{
@@ -104,7 +108,6 @@ public class JdbcPDFDAO implements PDFDAO {
 							float newData[] = Tools.floatArrListToArray(data);
 							declaredField.set(temp, newData);
 						}else if(declaredField.getType() == HashMap.class){
-							@SuppressWarnings("unchecked")
 							HashMap<String,Integer> data = (HashMap<String,Integer>)myMap.get(PDFContainer.PDFAttrNames[i]);
 							declaredField.set(temp, data);
 						}else{
@@ -126,7 +129,6 @@ public class JdbcPDFDAO implements PDFDAO {
 				e.printStackTrace();
 			}
 
-			//System.out.println("");
 			@SuppressWarnings("rawtypes")
 			LinkedHashMap id = (LinkedHashMap) myMap.get("_id");
 			Object key = id.keySet().iterator().next();
@@ -138,11 +140,16 @@ public class JdbcPDFDAO implements PDFDAO {
 
 		return answer;
 	}
-
+	
+	/**
+	 * 
+	 * Insert a PDF into database in a collection 
+	 * 
+	 */
 	public void insertPDF(String collection, PDF pdf) throws JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(pdf);
-		System.out.println(json);
+		//System.out.println(json);
 
 		MongoCollection<Document> coll = cm.getDatabase().getCollection(collection);
 		Document doc = Document.parse(json);
