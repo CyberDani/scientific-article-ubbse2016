@@ -89,6 +89,7 @@
                   </Label>
                </children>
             </Pane>
+            <Button fx:id="loadDirPDFs" layoutX="120.0" layoutY="48.0" mnemonicParsing="false" onAction="#loadDirOfPDFs" prefHeight="25.0" prefWidth="124.0" text="Load PDF directory" />
          </children>
       </Pane>
    </children>
