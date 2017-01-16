@@ -145,7 +145,7 @@ public class DataLearnerPredictor {
         	//System.out.print((0+1) + " - ");
         	//System.out.print(data.instance(0).toString(data.classIndex()) + " - ");
         	
-        	System.out.print("pred: " + insts.classAttribute().value((int) pred));
+        	System.out.print("prediction: " + insts.classAttribute().value((int) pred));
         	//System.out.println(Utils.arrayToString(dist));
         	
         	
