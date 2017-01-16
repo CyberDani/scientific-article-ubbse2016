@@ -106,9 +106,10 @@ public class LearningFXController {
 	private Boolean seedsFileSelected = false;
 	private Boolean storageFolderSelected = false;
 	
+	
 	/**
 	 * Load the base GUI
-	 */
+	*/
 	@FXML
 	public void initialize(){
 		choiceB.getItems().addAll("Crawler", "Learning");
@@ -116,27 +117,27 @@ public class LearningFXController {
 		choiceB.valueProperty().addListener(new ChangeListener<String>() {
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				switch(newValue){
-					case "Crawler": {
-						crawlerPane.setVisible(true);
-						trainingPane.setVisible(false);
-						loadDataPane.setVisible(false);
-						break;
-					}
-					case "Learning":{
-						crawlerPane.setVisible(false);
-						trainingPane.setVisible(true);
-						loadDataPane.setVisible(true);
-						break;
-					}
+				case "Crawler": {
+					crawlerPane.setVisible(true);
+					trainingPane.setVisible(false);
+					loadDataPane.setVisible(false);
+					break;
+				}
+				case "Learning":{
+					crawlerPane.setVisible(false);
+					trainingPane.setVisible(true);
+					loadDataPane.setVisible(true);
+					break;
+				}
 				}
 			}    
 		});
 	}
-	
 
+	
 	/**
 	 * Sets the storage folder of crawler(the folder where the downloaded PDF's are)
-	 */
+	*/
 	@FXML 
 	public void setStorageFolder() {
 		Stage stage = (Stage) setStorageFolderButton.getScene().getWindow();
@@ -159,7 +160,7 @@ public class LearningFXController {
 	
 	/**
 	 * Sets the file of links for the crawler
-	 */
+	*/
 	@FXML 
 	public void setSeedsFile()  {
 		Stage stage = (Stage) setSeedsFileButton.getScene().getWindow();
@@ -323,7 +324,7 @@ public class LearningFXController {
 			isDataSetLoaded=true;
 		}			
 	}
-	
+
 	
 	/**
 	 * 

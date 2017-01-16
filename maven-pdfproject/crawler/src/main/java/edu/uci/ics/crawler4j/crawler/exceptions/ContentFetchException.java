@@ -7,4 +7,6 @@ package edu.uci.ics.crawler4j.crawler.exceptions;
  */
 public class ContentFetchException extends Exception {
 
+	private static final long serialVersionUID = -1383756606293943638L;
+
 }

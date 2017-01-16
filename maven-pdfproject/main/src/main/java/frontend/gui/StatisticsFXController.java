@@ -5,12 +5,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import backend.model.PDF;
+import common.PDFContainer;
 import frontend.app.Main;
 import frontend.app.TextProcessor;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -19,6 +21,7 @@ import javafx.stage.Stage;
 public class StatisticsFXController {
 	
 	TextProcessor tp;
+	PDF[] pdfs;
 	
 	@FXML
 	private Button saveStat;
@@ -27,7 +30,7 @@ public class StatisticsFXController {
 	private Label pdfNameValue;
 	
 	@FXML
-	private Label isScientific;
+	private Label isScientificValue;
 	
 	@FXML
 	private Label avgWordsValue;
@@ -48,7 +51,13 @@ public class StatisticsFXController {
 	private Label numOfImgValue;
 	
 	@FXML
+	private Label pdfComboText;
+	
+	@FXML
 	private Button backButton;
+	
+	@FXML
+	private ComboBox pdfCombo;
 	
 	/**
 	 * Initializes the page
@@ -56,16 +65,36 @@ public class StatisticsFXController {
 	 */
 	void initializePage(TextProcessor tp){
 		this.tp=tp;
-		setLabels();
+		setLabels(-1);
+	}
+	
+	void initializePage(PDF[] pdfs){
+		this.pdfs=pdfs;
+		
+		for(PDF pdf:pdfs){
+			String[] pdfName = pdf.getPath().split("\\\\");
+			pdfCombo.getItems().add(pdfName[pdfName.length-1]);
+		}
+		pdfComboText.setVisible(true);
+		pdfCombo.setVisible(true);
 	}
 	
 	/**
 	 * Builds the statistics into a string
 	 * @return all statistics in a string
+	 * @param if there are multiple PDF's you need to select one
 	 */
-	private String buildStatisticsString(){
-		PDF myPDF=tp.getPDF();
-		String statistics="PDF name:"+myPDF.getPath().split("\\\\")[5]+System.getProperty("line.separator")
+	private String buildStatisticsString(int multiple){
+		
+		PDF myPDF;
+		if(multiple==-1){
+		  myPDF=tp.getPDF();
+		}else{
+		  myPDF=pdfs[multiple];
+		}
+		
+		String path[]=myPDF.getPath().split("\\\\");
+		String statistics="PDF name:"+path[path.length-1]+System.getProperty("line.separator")
 						+"Is scientific:"+System.getProperty("line.separator")
 						+"Page number:"+myPDF.getPagesNr()+System.getProperty("line.separator")
 						+"Average words in a row:"+myPDF.getWordsRow()+System.getProperty("line.separator")
@@ -91,7 +120,12 @@ public class StatisticsFXController {
 		 
 		 if(file != null){
 			 try {
-				String data=buildStatisticsString();
+				String data;
+				if(pdfCombo.isVisible())
+				  data=buildStatisticsString(pdfCombo.getSelectionModel().getSelectedIndex());
+				else
+				  data=buildStatisticsString(-1);
+				
 	            FileWriter fileWriter = null;
 	            fileWriter = new FileWriter(file);
 	            fileWriter.write(data);
@@ -103,21 +137,60 @@ public class StatisticsFXController {
 	}
 	
 	/**
-	 * Set labels on GUI with the corresponding value
+	 * Sets the labels visible
 	 */
-	private void setLabels(){
+	private void setLabelsVisible(){
+		pdfNameValue.setVisible(true);
+		isScientificValue.setVisible(true);
+		pageNumberValue.setVisible(true);
+		avgWordsValue.setVisible(true);
+		avgRowParagraphValue.setVisible(true);
+		mostUsedFontValue.setVisible(true);
+		numOfImgValue.setVisible(true);
+		bibliographyValue.setVisible(true);
+	}
+	
+	/**
+	 * Set labels on GUI with the corresponding value
+	 * @param if multiple PDF s are loaded we need the index of the PDF
+	 */
+	private void setLabels(int multiple){
 		
-		PDF myPDF=tp.getPDF();
+		PDF myPDF;
+		if(multiple==-1){
+			myPDF=tp.getPDF();
+		}else{
+			myPDF=pdfs[multiple];
+		}
 		
 		String[] pdfName = myPDF.getPath().split("\\\\");
 		pdfNameValue.setText(pdfName[pdfName.length-1]);
-		//isScientific.setText();
+		
+		String res = PDFContainer.dlp.predict(myPDF);
+		if(res!=null){
+			if(res.equals("-1")){
+				isScientificValue.setText("NON-SCIENTIFIC");
+			}else{
+				isScientificValue.setText("SCIENTIFIC");
+			}
+		}
+		
 		pageNumberValue.setText(Integer.toString(myPDF.getPagesNr()));
 		avgWordsValue.setText(Double.toString(myPDF.getWordsRow()));
 		avgRowParagraphValue.setText(Integer.toString(myPDF.getAvgRowInParagraph()));
 		mostUsedFontValue.setText(Double.toString(myPDF.getFontSize()));
 		numOfImgValue.setText(Integer.toString(myPDF.getImgNum()));
-		bibliographyValue.setText(Boolean.toString(myPDF.getBibliography()));
+		bibliographyValue.setText(Boolean.toString(myPDF.getBibliography()));		
+		setLabelsVisible();
+		
+	}
+	
+	/**
+	 * Sets the selected PDF data to GUI
+	 */
+	@FXML
+	private void setSelectedPDF(){
+		setLabels(pdfCombo.getSelectionModel().getSelectedIndex());
 	}
 	
 	/**
@@ -132,6 +205,7 @@ public class StatisticsFXController {
 		try {
 			 myApp = (AnchorPane) loader.load();
 			 Scene scene = new Scene(myApp);
+			 scene.getStylesheets().add(getClass().getResource("../gui/styles.css").toExternalForm());
 			 stage.setScene(scene);
 			 stage.show();
 		} catch (IOException e) {

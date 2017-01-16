@@ -5,7 +5,6 @@ import common.PDFContainer;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.M5P;
 import weka.core.Instances;
-import weka.core.Utils;
 import weka.classifiers.Evaluation;
 import java.util.Random;
 
@@ -127,7 +126,6 @@ public class DataLearnerPredictor {
         	//System.out.println("# - actual - predicted - distribution");
         		
         	double pred = 0;;
-        	double[] dist = null;
         	
 			try {
 				//J48 tree2 = new J48();

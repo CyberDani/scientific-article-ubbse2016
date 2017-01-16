@@ -2,6 +2,7 @@ package frontend.gui;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -36,6 +38,9 @@ public class MyFXController {
 	
 	@FXML
 	private Button loadPdfButton;
+	
+	@FXML
+	private Button loadDirPDFs;
 	
 	@FXML
 	private ComboBox<String> dataStructCombo;
@@ -234,6 +239,17 @@ public class MyFXController {
 		
 	}
 	
+	/**
+	 * Alert the user that he don't trained the dataset
+	 */
+	public void alertMessage(){
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Warning dialog");
+		alert.setHeaderText("You have not train your dataset.");
+		alert.setContentText("Please choose an existing algorithm from the combobox "
+				+ "and train your existing dataset.");
+		alert.showAndWait();
+	}
 	
 	/**
 	 * Loads pdf to decide if it is scientific or not
@@ -251,7 +267,10 @@ public class MyFXController {
 				
 				PDF pdf = tp.getPDF();
 				
-				String res = PDFContainer.dlp.predict(pdf);
+				String res = null;
+				try {
+					res = PDFContainer.dlp.predict(pdf);
+				} catch (Exception e) {}
 				
 				if(res!=null){
 					if(res.equals("-1")){
@@ -265,12 +284,75 @@ public class MyFXController {
 				showStat.setVisible(true);
 			}		
 		}else{
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.setTitle("Warning dialog");
-			alert.setHeaderText("You have not train your dataset.");
-			alert.setContentText("Please choose an existing algorithm from the combobox "
-					+ "and train your existing dataset.");
-			alert.showAndWait();
+			alertMessage();
+		}
+	}
+	
+	/**
+	 * Filter to find PDF's
+	 */
+	public File[] pdfFinder(File selectedDirectory) {
+		FilenameFilter fileNameFilter = new FilenameFilter() {
+
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".pdf");
+			}
+
+		};
+
+		return selectedDirectory.listFiles(fileNameFilter);
+	}
+	/**
+	 * Sets the page where are statistics about the processed PDF's
+	 */	
+	public void changeToStatistics(PDF[] pdfsProcessed){
+			Stage stage= (Stage) showStat.getScene().getWindow();
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("../gui/ScientificArticleApp3.fxml"));
+			AnchorPane myApp;
+			
+			try {
+				 myApp = (AnchorPane) loader.load();
+				 StatisticsFXController statisticsCont=loader.<StatisticsFXController>getController();
+				 statisticsCont.initializePage(pdfsProcessed);
+				 Scene scene = new Scene(myApp);
+				 stage.setScene(scene);
+				 stage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	}	
+
+	/**
+	 * Loads a directory of pdf's to decide if it is scientific or not
+	 */
+	@FXML
+	public void loadDirOfPDFs(){
+		if(PDFContainer.dlp != null){
+			Stage stage = (Stage) loadDirPDFs.getScene().getWindow();
+			DirectoryChooser chooser = new DirectoryChooser();
+			chooser.setTitle("Load Directory of PDF's");
+			File selectedDirectory = chooser.showDialog(stage);
+			if(selectedDirectory!=null){
+				
+				File [] pdfs = pdfFinder(selectedDirectory);
+				Scientific sc;
+				sc = Scientific.UNKNOWN;
+				PDF[] pdfsProcessed;
+				pdfsProcessed=new PDF[pdfs.length];
+
+				for(int i=0;i<pdfs.length;i++){
+					String scientificValue="";
+					System.out.println("Processed PDF:" + pdfs[i]);
+					PDF currentPDF=new TextProcessor(pdfs[i],sc).getPDF();
+					pdfsProcessed[i]=currentPDF;
+				}
+				
+				changeToStatistics(pdfsProcessed);
+				
+			}
+		}else{
+			alertMessage();
 		}
 	}
 	

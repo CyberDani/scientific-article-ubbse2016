@@ -2,8 +2,6 @@ package frontend.app;
 
 import java.lang.reflect.Field;
 
-import backend.repository.DAOFactory;
-import backend.repository.PDFDAO;
 import backend.repository.jdbc.ConnectionManager;
 import common.PDFContainer;
 import backend.model.PDF;
@@ -16,8 +14,9 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	public static void main(String[] args) {
-		
-		// PDF osztaly attributimainak nevenek es tipusanak meghatarozasa(reflection-hez)
+		/**
+		 * Define name and type of PDF class attributes
+		 */
 		Field[] fields = PDF.class.getDeclaredFields();
 		PDFContainer.attrNo = fields.length;
 		PDFContainer.PDFAttrNames = new String[PDFContainer.attrNo];
@@ -29,7 +28,9 @@ public class Main extends Application {
 			PDFContainer.PDFAttrTypes[i] = fields[i].getType();
 		}
 		
-		// Alkalmazas bezarasa
+		/**
+		 * Close application
+		 */
 		Runtime.getRuntime().addShutdownHook(new Thread() 
 		{            
 			public void run() {                
