@@ -22,6 +22,7 @@ import backend.repository.PDFDAO;
 import common.PDFContainer;
 import common.Scientific;
 import common.StopWords;
+import common.Tools;
 import backend.model.PDF;
 
 public class TextProcessor {
@@ -42,7 +43,7 @@ public class TextProcessor {
 	private static int averageNumberOfRowsInParagraph;
 	private static int numOfImages;
 
-	private String subTitles[]; 
+	private static String subTitles[]; 
 	private File file;
 	private String path;
 	private PDF pdfObj;
@@ -424,24 +425,57 @@ public class TextProcessor {
 		}	
 	}
 
+	private static void putSubtitleInHashMap(String word) {
+		if(!StopWords.isStopWord(word)){
+			Integer freq = PDFContainer.wordsOccurence.get(word);
+
+			if (freq == null) {
+				if (wordsInserted < PDFContainer.numberOfWordsToInsert) {
+					PDFContainer.wordsOccurence.put(word,0);
+					wordsInserted++;
+				}
+				else if (PDFContainer.numberOfWordsToInsert == 0) {
+					PDFContainer.wordsOccurence.put(word,0);
+				}
+			}
+		}	
+	}
+	
 	private static void countWordOccurence(String line) {
 		String[] words=line.split(" ");
 		String cleanedWord = "";
 
+		// get subtitles
+		subTitles = new String[subtitleFontSizeAndRow.length];
+
+		for (int i = 0; i<subTitles.length;++i) {
+			subTitles[i] = subtitleFontSizeAndRow[i][2];
+		}
+		
+		// firstly we will put the subtitles to the hashmap at the beginning of it
+		for (String subTitle : subTitles){
+			String[] subTitleWords=subTitle.split(" ");
+			for (String subTitleWord : subTitleWords) {
+				
+				subTitleWord = Tools.simplifyWord(subTitleWord);
+				if ( subTitleWord.length() > 0 ) {
+					cleanedWord = subTitleWord.toLowerCase();
+					if (cleanedWord.matches("[a-zA-z?-]{4,}")) { //if it is a word or a world with ? in it, min 4 character words
+						putSubtitleInHashMap(cleanedWord);
+					} else if (cleanedWord.matches("^[a-zA-z?-]{4,}.*")) {  //%if the word has .;*" after it
+						cleanedWord = cleanedWord.replaceAll("([\\.\\,\\;])", "");
+						putSubtitleInHashMap(cleanedWord);
+					}
+				}
+			}
+		}
+		
+		// now we add the rest of the words to the hashmap
 		for (String word : words) {
 
-			int n = word.length();
+			word = Tools.simplifyWord(word);
 
-			//potencialis szo-/mondatvegi jelek eltuntetese
-			while ((n > 0) && (word.charAt(n - 1) == '.' || 
-					word.charAt(n - 1) == '?' || word.charAt(n - 1) == '!' || 
-					word.charAt(n - 1) == ';' || word.charAt(n - 1) == ',' || 
-					word.charAt(n - 1) == ')' || word.charAt(n - 1) == '}' || 
-					word.charAt(n - 1) == ']' || word.charAt(n - 1) == ':')) {
-				word = word.substring(0,--n);
-			}
-
-			if ( n > 0 ) {
+			if ( word.length() > 0 ) {
 				cleanedWord = word.toLowerCase();
 				if (cleanedWord.matches("[a-zA-z?-]{4,}")) { //if it is a word or a world with ? in it, min 4 character words
 					putInHashMap(cleanedWord);
@@ -476,8 +510,8 @@ public class TextProcessor {
 			return false;
 		}
 
-		processWordsByRow(PDFContainer.words);
-		System.out.println(PDFContainer.wordsOccurence);
+		//processWordsByRow(PDFContainer.words);
+		//System.out.println(PDFContainer.wordsOccurence);
 
 		getFontSizeWithNumberOfRows();
 		mostUsedFontSizeInPDF = getTheMostUsedFont();
@@ -487,6 +521,9 @@ public class TextProcessor {
 		avgWordsInRow=numberOfWords();
 		bibliography=bibliographyExistence();
 
+		processWordsByRow(PDFContainer.words);
+		System.out.println(PDFContainer.wordsOccurence);
+		
 		return true;
 	}
 

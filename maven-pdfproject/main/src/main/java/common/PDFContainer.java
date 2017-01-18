@@ -50,6 +50,9 @@ public class PDFContainer {
 	*/
 	public static List<String> unused = Arrays.asList("_id","path","words");
 	
+	/**
+	* List of PDFs gained from the database.
+	*/
 	public static List<PDF> dbData;
 	
 	public static int numberOfWordsToInsert=0;
