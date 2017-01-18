@@ -1,10 +1,8 @@
 package frontend.gui;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import backend.model.PDF;
 import backend.weka.DataLearnerPredictor;
@@ -339,13 +337,12 @@ public class MyFXController {
 				Scientific sc;
 				sc = Scientific.UNKNOWN;
 				PDF[] pdfsProcessed;
-				pdfsProcessed=new PDF[pdfs.length];
+				pdfsProcessed = new PDF[pdfs.length];
 
 				for(int i=0;i<pdfs.length;i++){
-					String scientificValue="";
 					System.out.println("Processed PDF:" + pdfs[i]);
-					PDF currentPDF=new TextProcessor(pdfs[i],sc).getPDF();
-					pdfsProcessed[i]=currentPDF;
+					PDF currentPDF = new TextProcessor(pdfs[i],sc).getPDF();
+					pdfsProcessed[i] = currentPDF;
 				}
 				
 				changeToStatistics(pdfsProcessed);

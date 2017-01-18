@@ -44,7 +44,6 @@ public class TextProcessor {
 	private static int numOfImages;
 
 	private static String subTitles[]; 
-	private File file;
 	private String path;
 	private PDF pdfObj;
 	private PDFDAO pdfDAO;
@@ -64,7 +63,6 @@ public class TextProcessor {
 
 	public TextProcessor(File file, Scientific scientific) {
 		int state;
-		this.file = file;
 		pdfDAO = DAOFactory.getInstance().getPDFDAO();
 
 		state = processText(file);

@@ -17,6 +17,7 @@ public class Controller {
 	private int numberOfCrawlers;
 	private String storageFolder;
 	private String seedsFile;
+	private CrawlController controller;
 
 	/**
 	 * Controller constructor
@@ -67,7 +68,16 @@ public class Controller {
 
 		return list;
 	}
-
+	
+	/**
+	 * 
+	 * Stop crawler
+	 * 
+	 */
+	public void stopCrawler() {
+		controller.shutdown();
+	}
+	
 	/**
 	 * Run crawler
 	 * 
@@ -84,7 +94,7 @@ public class Controller {
 		PageFetcher pageFetcher = new PageFetcher(config);
 		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
 		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+		controller = new CrawlController(config, pageFetcher, robotstxtServer);
 
 		/*
 		 * For each crawl, we need to add some seed urls. These are the first

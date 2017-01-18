@@ -1,28 +1,16 @@
 package frontend.gui;
 
-import java.awt.Component;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.Vector;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import com.drew.metadata.Directory;
-import com.graphbuilder.struc.LinkedList;
 
 import backend.model.PDF;
 import backend.repository.DAOFactory;
@@ -31,15 +19,10 @@ import common.PDFContainer;
 import common.Scientific;
 import common.Settings;
 import common.hashMapSort;
-import edu.uci.ics.crawler4j.crawler.CrawlConfig;
-import edu.uci.ics.crawler4j.crawler.CrawlController;
-import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.main.Controller;
-import edu.uci.ics.crawler4j.main.MyCrawler;
-import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
-import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import frontend.app.Main;
 import frontend.app.TextProcessor;
+import frontend.thread.CrawlerThread;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -89,6 +72,9 @@ public class LearningFXController {
 	private Button runCrawlerButton;
 
 	@FXML 
+	private Button stopCrawlerButton;
+
+	@FXML 
 	private ChoiceBox<String> choiceB;
 
 	@FXML
@@ -105,13 +91,17 @@ public class LearningFXController {
 	private String seedsFile;
 	private Boolean seedsFileSelected = false;
 	private Boolean storageFolderSelected = false;
-	
-	
+	private Controller controller;
+	private CrawlerThread crawlerThread;
+
+
 	/**
 	 * Load the base GUI
-	*/
+	 */
 	@FXML
 	public void initialize(){
+		
+		stopCrawlerButton.setDisable(true);
 		choiceB.getItems().addAll("Crawler", "Learning");
 		choiceB.getSelectionModel().select("Crawler");
 		choiceB.valueProperty().addListener(new ChangeListener<String>() {
@@ -134,10 +124,10 @@ public class LearningFXController {
 		});
 	}
 
-	
+
 	/**
 	 * Sets the storage folder of crawler(the folder where the downloaded PDF's are)
-	*/
+	 */
 	@FXML 
 	public void setStorageFolder() {
 		Stage stage = (Stage) setStorageFolderButton.getScene().getWindow();
@@ -157,10 +147,10 @@ public class LearningFXController {
 		}
 	}
 
-	
+
 	/**
 	 * Sets the file of links for the crawler
-	*/
+	 */
 	@FXML 
 	public void setSeedsFile()  {
 		Stage stage = (Stage) setSeedsFileButton.getScene().getWindow();
@@ -175,32 +165,61 @@ public class LearningFXController {
 			seedsFileSelected = true;
 			if (storageFolderSelected) {
 				runCrawlerButton.setDisable(false);
+				//stopCrawlerButton.setDisable(false);
 			}
 		}
 		else {
 			seedsFileSelected = false;
 			runCrawlerButton.setDisable(true);
+			stopCrawlerButton.setDisable(true);
+
 		}
 	}
 
-	
+
 	/**
 	 * Runs the crawler
 	 */
 	@FXML 
 	public void runCrawler() {
-		String crawlStorageFolder = "/data/crawl/root";
-		int numberOfCrawlers = 7;
-	
-		Controller controller = new Controller(crawlStorageFolder, numberOfCrawlers, storageFolder, seedsFile);
-		try {
-			controller.runCrawler();
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (stopCrawlerButton.isDisabled()) {
+			String crawlStorageFolder = "/data/crawl/root";
+			int numberOfCrawlers = 7;
+			controller = new Controller(crawlStorageFolder, numberOfCrawlers, storageFolder, seedsFile);
+			try {
+				crawlerThread = new CrawlerThread(controller);
+				crawlerThread.startCrawler();
+				setButtonsDisable(true);
+				stopCrawlerButton.setDisable(false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}	
+	public void setButtonsDisable(boolean felt) {
+		setStorageFolderButton.setDisable(felt);
+		setSeedsFileButton.setDisable(felt);
+		choiceB.setDisable(felt);
+		loadOtherSceneButton.setDisable(felt);
+		runCrawlerButton.setDisable(felt);
+	}
 
-	
+	/**
+	 * Stops the crawler
+	 * @throws Exception 
+	 */
+	@FXML 
+	public void stopCrawler() throws Exception {
+		if (!stopCrawlerButton.isDisabled()) {
+			crawlerThread.stop();
+			Thread.sleep(3000);
+			setButtonsDisable(false);
+			stopCrawlerButton.setDisable(true);
+		}
+
+	}	
+
+
 	/**
 	 * Loads the training set from database
 	 */
@@ -208,22 +227,22 @@ public class LearningFXController {
 	public void loadDataFromDB() {
 		PDFContainer.dbData = new ArrayList<PDF>();
 		PDFContainer.dbData = DAOFactory.getInstance().getPDFDAO().getAllPDFs();
-		
+
 		NavigableMap<String, Double> pdfScientificTFIDF = new TreeMap<String, Double>();
 		NavigableMap<String, Double> pdfNotScientificTFIDF = new TreeMap<String, Double>();
-		
+
 		NavigableMap<String, Double> pdfDataOfWords = new TreeMap<String, Double>();
-		
+
 		List<Entry<String,Double>> sortedPDFScientificTFIDF, sortedPDFNotScientificTFIDF;
-		
-		
+
+
 		String key, key2 = null;
 		@SuppressWarnings("unused")
 		Integer numOfWordsInCurrentPDF, contains=0;
 		@SuppressWarnings("unused")
 		double value, value2, TFIDF, hashMapValue;
 		boolean isScientific;
-		
+
 		for(int i=0; i<PDFContainer.dbData.size(); i++) {
 
 			HashMap<String, Integer> words = PDFContainer.dbData.get(i).getWords(); // getting words from 1 PDF
@@ -232,15 +251,15 @@ public class LearningFXController {
 				key = entry.getKey();
 				value = entry.getValue();
 				contains = 0;
-				
+
 				for(int j=0; j<PDFContainer.dbData.size(); j++) {
-					
+
 					// Preventing the different type (scientific, non scientific) pdf analysation.
 					// We only need the same contra same pdf type.
 					if(isScientific != PDFContainer.dbData.get(j).isScientific()){
 						continue;
 					}
-					
+
 					if(j != i){					// searching the word appearance from only other than the current pdf
 						HashMap<String, Integer> words2 = PDFContainer.dbData.get(j).getWords(); // getting words from 1 PDF
 
@@ -253,7 +272,7 @@ public class LearningFXController {
 						}
 					}
 				}
-				
+
 				if(isScientific && (pdfScientificTFIDF.isEmpty() || !pdfScientificTFIDF.containsKey(key2))) {
 					TFIDF = value * Math.log(PDFContainer.dbData.size()  /  (1+contains));	// addig 1 to the divisor will prevent division by zero
 					pdfScientificTFIDF.put(key, TFIDF);
@@ -264,23 +283,20 @@ public class LearningFXController {
 				}
 			}
 		}
-		
+
 		sortedPDFScientificTFIDF = hashMapSort.entriesSortByValues(pdfScientificTFIDF);
 		sortedPDFNotScientificTFIDF = hashMapSort.entriesSortByValues(pdfNotScientificTFIDF);
-		
-		int sc = sortedPDFScientificTFIDF.size()-1;
-		int nonSc = sortedPDFNotScientificTFIDF.size()-1;
-		
+
 		for(int i=0; pdfDataOfWords.size() < Settings.selectedWordsNr; i++) {	
-			
+
 			if(sortedPDFScientificTFIDF.size() > i){
 				key = sortedPDFScientificTFIDF.get(i).getKey();
 				value = sortedPDFScientificTFIDF.get(i).getValue();
 				pdfDataOfWords.put(key, value);
 			}
-			
+
 			if(pdfDataOfWords.size() != Settings.selectedWordsNr){
-				
+
 				if(sortedPDFNotScientificTFIDF.size() > i){
 					key2 = sortedPDFNotScientificTFIDF.get(i).getKey();
 					value2 = sortedPDFNotScientificTFIDF.get(i).getValue();
@@ -288,13 +304,13 @@ public class LearningFXController {
 				}
 			}
 		}
-		
+
 		List<String> pdfWordList = new Vector<String>();
-		
+
 		for(String word: pdfDataOfWords.keySet()){
 			pdfWordList.add(word);
 		}
-		
+
 		PDFContainer.lds = new LearningDataSet(pdfWordList);
 
 		PDFContainer.lds.addAllPDF(PDFContainer.dbData);
@@ -302,7 +318,7 @@ public class LearningFXController {
 		isDataSetLoaded = true;
 	}
 
-	
+
 	/**
 	 * Loads the training set from file
 	 */
@@ -316,7 +332,7 @@ public class LearningFXController {
 		File selectedFile= fileChooser.showOpenDialog(stage);
 		if (selectedFile != null) {
 
-			
+
 			PDFContainer.lds = new LearningDataSet(selectedFile.getAbsolutePath());
 
 			//PDFContainer.lds.buildFromFile(selectedFile.getAbsolutePath());
@@ -325,7 +341,7 @@ public class LearningFXController {
 		}			
 	}
 
-	
+
 	/**
 	 * 
 	 * @param file
@@ -341,7 +357,7 @@ public class LearningFXController {
 		}     
 	}
 
-	
+
 	/**
 	 * Saves the training set to a file
 	 */
@@ -359,7 +375,7 @@ public class LearningFXController {
 		}
 	}
 
-	
+
 	/**
 	 * Changes the scene to the window where you Train an algorithm than decide if a PDF is scientific or not
 	 */
@@ -390,7 +406,6 @@ public class LearningFXController {
 		}
 	}
 
-	
 	/**
 	 * Load PDF to decide if is scientific or not
 	 */
@@ -408,11 +423,12 @@ public class LearningFXController {
 				sc = Scientific.NONSCIENTIFIC;
 			}
 
+			@SuppressWarnings("unused")
 			TextProcessor tp = new TextProcessor(selectedFile, sc);
 		}		
 	}
 
-	
+
 	/**
 	 * Filter to find PDF's
 	 */
@@ -428,7 +444,7 @@ public class LearningFXController {
 		return selectedDirectory.listFiles(fileNameFilter);
 	}
 
-	
+
 	/**
 	 * Load a directory of PDF's
 	 */

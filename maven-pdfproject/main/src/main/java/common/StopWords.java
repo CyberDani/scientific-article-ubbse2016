@@ -11,6 +11,8 @@ public class StopWords {
 	 * improve efficiency
 	 */
 	static private HashMap<String, List<String>> stopWordList = new HashMap<String, List<String>>() {
+		private static final long serialVersionUID = -1257919093281258360L;
+
 		{
 			put("a",Arrays.asList(
 					"a",

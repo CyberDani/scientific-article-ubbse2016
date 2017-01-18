@@ -2,7 +2,6 @@ package backend.weka;
 
 import weka.core.Attribute;
 import weka.core.DenseInstance;
-import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 
@@ -428,64 +427,9 @@ public class LearningDataSet {
 	public String toString(){
 		return data.toString();
 	}
-
-	/**
-	 * Get the subtitles of a single PDF from the training set. The \n \r ' characters 
-	 * will be removed. The spaces from the beginning of a subtitle will be also removed 
-	 * in the response.
-	 * 
-	 * @param index specifies the index of a row(Instance) in the training file.
-	 */
-	public ArrayList<String> getSubtitles(int index) {
-		ArrayList<String> answer = new ArrayList<String>();
-
-		int subTitleAttrInd = 0;
-		while(common.PDFContainer.PDFAttrNames[++subTitleAttrInd].equals("subtitles")){}
-
-		long l = data.size();
-
-		if(index<l && l >= 0)
-		{
-			Instance inst = data.instance(index);
-			Attribute attr = inst.attribute(subTitleAttrInd);
-			String subtitles = inst.stringValue(attr);
-
-			ArrayList<String> arrList = common.Tools.stringToArrList(subtitles);
-			answer = arrList;
-		}
-
-		return answer;
-	}
-
-	/**
-	 * 
-	 * Get the subtitles of all the PDFs from the training set. The \n \r ' characters 
-	 * will be removed. The spaces from the beginning of a subtitle will be also removed 
-	 * in the response.
-	 * 
-	 * The response will contain <b>n</b> piece of <b>m</b> strings where <b>n</b> means 
-	 * the number of rows(Instance) in the training set and <b>m</b> means the number of 
-	 * subtitles in the nth row(Instance).
-	 * 
-	 */
-	public ArrayList<ArrayList<String>> getAllSubtitles() {
-
-		ArrayList<ArrayList<String>> answer = new ArrayList<ArrayList<String>>();
-		long l = data.size();
-
-		for(long i = 0;i<l;++i)
-		{	    	
-			ArrayList<String> arrList = getSubtitles((int)i);
-			answer.add(arrList);
-		}
-
-		return answer;
-	}
-
-	/**
-	 * 
-	 * 	  Get the number of rows(Instances) from the training set.
-	 * 	  
+	
+	/** 
+	 * 	  Get the number of rows(Instances) from the training set.	  
 	 */
 	public int getSize(){
 		return data.size();

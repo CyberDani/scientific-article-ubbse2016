@@ -57,7 +57,7 @@ public class StatisticsFXController {
 	private Button backButton;
 	
 	@FXML
-	private ComboBox pdfCombo;
+	private ComboBox<String> pdfCombo;
 	
 	/**
 	 * Initializes the page

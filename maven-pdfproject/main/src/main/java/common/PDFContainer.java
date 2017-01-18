@@ -20,6 +20,7 @@ public class PDFContainer {
 	/**
 	* Contains the type of the PDF attributes.
 	*/
+	@SuppressWarnings("rawtypes")
 	public static Class PDFAttrTypes[];
 	/**
 	* Contains the number of attributes in the PDF class.
