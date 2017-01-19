@@ -273,9 +273,13 @@ public class MyFXController {
 				if(res!=null){
 					if(res.equals("-1")){
 						scientificLabel.setText("NON-SCIENTIFIC");
-					}else{
+					}else if(res.equals("1")){
 						scientificLabel.setText("SCIENTIFIC");
+					}else{
+						scientificLabel.setText("ERROR 01");
 					}
+				}else{
+					scientificLabel.setText("ERROR 02");
 				}
 				
 				//setLabels(tp);
@@ -342,6 +346,25 @@ public class MyFXController {
 				for(int i=0;i<pdfs.length;i++){
 					System.out.println("Processed PDF:" + pdfs[i]);
 					PDF currentPDF = new TextProcessor(pdfs[i],sc).getPDF();
+					
+					String res = null;
+					try {
+						res = PDFContainer.dlp.predict(currentPDF);
+						if(res!=null){
+							if(res.equals("-1")){
+								currentPDF.setScientific(false);
+							}else if(res.equals("1")){
+								currentPDF.setScientific(true);
+							}else{
+								scientificLabel.setText("ERROR 01");
+								currentPDF.setScientific(null);
+							}
+						}else{
+							scientificLabel.setText("ERROR 02");
+							currentPDF.setScientific(null);
+						}
+					} catch (Exception e) {}
+					
 					pdfsProcessed[i] = currentPDF;
 				}
 				

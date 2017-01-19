@@ -139,12 +139,8 @@ public class DataLearnerPredictor {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-        	//System.out.print((0+1) + " - ");
-        	//System.out.print(data.instance(0).toString(data.classIndex()) + " - ");
         	
-        	System.out.print("prediction: " + insts.classAttribute().value((int) pred));
-        	//System.out.println(Utils.arrayToString(dist));
+        	//System.out.print("prediction: " + insts.classAttribute().value((int) pred));
         	
         	
             return insts.classAttribute().value((int) pred);
