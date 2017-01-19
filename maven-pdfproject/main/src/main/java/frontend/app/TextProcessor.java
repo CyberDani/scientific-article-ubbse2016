@@ -51,7 +51,7 @@ public class TextProcessor {
 	private static List<FontAndRow> pdfData = new ArrayList<FontAndRow>();
 	private static String[] rows;
 
-	private static int wordsInserted = 0;
+	private int wordsInserted = 0;
 
 	public void setPDF(PDF pdf) {
 		this.pdfObj = pdf;
@@ -409,7 +409,7 @@ public class TextProcessor {
 		return avgRowByParagraph;
 	}
 
-	private static void putInHashMap(String word) {
+	private void putInHashMap(String word) {
 		if(!StopWords.isStopWord(word)){
 			Integer freq = PDFContainer.wordsOccurence.get(word);
 
@@ -422,7 +422,7 @@ public class TextProcessor {
 		}	
 	}
 
-	private static void putSubtitleInHashMap(String word) {
+	private void putSubtitleInHashMap(String word) {
 		if(!StopWords.isStopWord(word)){
 			Integer freq = PDFContainer.wordsOccurence.get(word);
 
@@ -433,7 +433,7 @@ public class TextProcessor {
 		}	
 	}
 	
-	private static void countWordOccurence(String line) {
+	private void countWordOccurence(String line) {
 		String[] words=line.split(" ");
 		String cleanedWord = "";
 
@@ -492,14 +492,14 @@ public class TextProcessor {
 	}
 
 
-	private static void processWordsByRow(List<String> lines){
+	private void processWordsByRow(List<String> lines){
 
 		for (String line:PDFContainer.words) {
 			countWordOccurence(line);
 		}
 	}
 
-	public static boolean processTextByRow() {
+	public boolean processTextByRow() {
 		rows = text.split("\n");
 		//printRows(rows);
 		String[] fontData = {};
@@ -583,7 +583,7 @@ public class TextProcessor {
 		return overallNum;
 	}
 
-	public static int processText(File file){
+	public int processText(File file){
 
 		try {
 			File inputFile = new File(file.getAbsolutePath());
