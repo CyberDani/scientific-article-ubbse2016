@@ -62,6 +62,10 @@ public class TextProcessor {
 	}
 
 	public TextProcessor(File file, Scientific scientific) {
+		
+		PDFContainer.wordsOccurence.clear();
+		PDFContainer.words.clear();
+
 		int state;
 		pdfDAO = DAOFactory.getInstance().getPDFDAO();
 
@@ -410,13 +414,8 @@ public class TextProcessor {
 			Integer freq = PDFContainer.wordsOccurence.get(word);
 
 			if (freq == null) {
-				if (wordsInserted < PDFContainer.numberOfWordsToInsert) {
-					PDFContainer.wordsOccurence.put(word,1);
-					wordsInserted++;
-				}
-				else if (PDFContainer.numberOfWordsToInsert == 0) {
-					PDFContainer.wordsOccurence.put(word,1);
-				}
+				PDFContainer.wordsOccurence.put(word,1);
+				wordsInserted++;
 			} else {
 				PDFContainer.wordsOccurence.put(word,freq+1);
 			}
@@ -428,13 +427,8 @@ public class TextProcessor {
 			Integer freq = PDFContainer.wordsOccurence.get(word);
 
 			if (freq == null) {
-				if (wordsInserted < PDFContainer.numberOfWordsToInsert) {
-					PDFContainer.wordsOccurence.put(word,0);
-					wordsInserted++;
-				}
-				else if (PDFContainer.numberOfWordsToInsert == 0) {
-					PDFContainer.wordsOccurence.put(word,0);
-				}
+				wordsInserted++;
+				PDFContainer.wordsOccurence.put(word,0);
 			}
 		}	
 	}
@@ -452,9 +446,15 @@ public class TextProcessor {
 		
 		// firstly we will put the subtitles to the hashmap at the beginning of it
 		for (String subTitle : subTitles){
+			
+			if(PDFContainer.numberOfWordsToInsert > 0){
+				if(wordsInserted >= PDFContainer.numberOfWordsToInsert){
+					break;
+				}
+			}
+			
 			String[] subTitleWords=subTitle.split(" ");
 			for (String subTitleWord : subTitleWords) {
-				
 				subTitleWord = Tools.simplifyWord(subTitleWord);
 				if ( subTitleWord.length() > 0 ) {
 					cleanedWord = subTitleWord.toLowerCase();
@@ -471,6 +471,12 @@ public class TextProcessor {
 		// now we add the rest of the words to the hashmap
 		for (String word : words) {
 
+			if(PDFContainer.numberOfWordsToInsert > 0){
+				if(wordsInserted >= PDFContainer.numberOfWordsToInsert){
+					break;
+				}
+			}
+			
 			word = Tools.simplifyWord(word);
 
 			if ( word.length() > 0 ) {
@@ -482,7 +488,6 @@ public class TextProcessor {
 					putInHashMap(cleanedWord);
 				}
 			}
-
 		}
 	}
 
@@ -520,7 +525,6 @@ public class TextProcessor {
 		bibliography=bibliographyExistence();
 
 		processWordsByRow(PDFContainer.words);
-		System.out.println(PDFContainer.wordsOccurence);
 		
 		return true;
 	}

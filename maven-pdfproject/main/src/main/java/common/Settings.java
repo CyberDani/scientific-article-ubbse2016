@@ -1,5 +1,5 @@
 package common;
 
 public class Settings {
-	public static int selectedWordsNr = 500;
+	public static int selectedWordsNr = 1000;
 }

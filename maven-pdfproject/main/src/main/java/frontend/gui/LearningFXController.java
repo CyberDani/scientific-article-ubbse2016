@@ -303,6 +303,11 @@ public class LearningFXController {
 					pdfDataOfWords.put(key2, value2);
 				}
 			}
+			
+			if(sortedPDFScientificTFIDF.size() > i && sortedPDFNotScientificTFIDF.size() > i){
+				Settings.selectedWordsNr = i+1;
+				break;
+			}
 		}
 
 		List<String> pdfWordList = new Vector<String>();
