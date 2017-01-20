@@ -56,5 +56,5 @@ public class PDFContainer {
 	*/
 	public static List<PDF> dbData;
 	
-	public static int numberOfWordsToInsert = 1400;
+	public static int numberOfWordsToInsert = 2000;
 }

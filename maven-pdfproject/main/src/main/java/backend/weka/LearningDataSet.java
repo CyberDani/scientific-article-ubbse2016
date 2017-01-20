@@ -441,6 +441,17 @@ public class LearningDataSet {
 	 * 
 	 */
 	public List<String> getPdfWords() {
+		if(pdfWords==null){
+			pdfWords = new ArrayList<String>();
+			int i = PDFContainer.attrNo-PDFContainer.unused.size()-1;
+			int nr = 0;
+			
+			while(nr < Settings.selectedWordsNr){
+				pdfWords.add(data.attribute(nr).name());
+				++nr;
+			}
+		}
+		
 		return pdfWords;
 	}
 
