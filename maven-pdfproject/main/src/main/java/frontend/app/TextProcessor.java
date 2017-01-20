@@ -452,11 +452,19 @@ public class TextProcessor {
 	 */
 	private void putInHashMap(String word) {
 		if(!StopWords.isStopWord(word)){
-			Integer freq = PDFContainer.wordsOccurence.get(word);
-
+			Integer freq = PDFContainer.wordsOccurence.get(word);		
+			
 			if (freq == null) {
-				PDFContainer.wordsOccurence.put(word,1);
-				wordsInserted++;
+				if(PDFContainer.numberOfWordsToInsert != 0){
+					if(wordsInserted < PDFContainer.numberOfWordsToInsert){
+						PDFContainer.wordsOccurence.put(word,1);
+						wordsInserted++;
+					}
+				}else{
+					PDFContainer.wordsOccurence.put(word,1);
+					wordsInserted++;
+				}
+				
 			} else {
 				PDFContainer.wordsOccurence.put(word,freq+1);
 			}
@@ -520,13 +528,6 @@ public class TextProcessor {
 		
 		// Now we add the rest of the words to the hashmap.
 		for (String word : words) {
-
-			if(PDFContainer.numberOfWordsToInsert > 0){
-				if(wordsInserted >= PDFContainer.numberOfWordsToInsert){
-					break;
-				}
-			}
-			
 			word = Tools.simplifyWord(word);
 
 			if ( word.length() > 0 ) {
