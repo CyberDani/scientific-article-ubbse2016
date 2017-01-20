@@ -61,6 +61,11 @@ public class TextProcessor {
 		return pdfObj;
 	}
 
+	/**
+	 * Constructor
+	 * @param file: imput file.
+	 * @param scientific: types.
+	 */
 	public TextProcessor(File file, Scientific scientific) {
 		
 		PDFContainer.wordsOccurence.clear();
@@ -108,6 +113,9 @@ public class TextProcessor {
 		}
 	}
 
+	/**
+	 * Printout data
+	 */
 	public static void printStatistics() {
 		System.out.println("Page number:" + pageNumber);
 		System.out.println("Average words/row:" + avgWordsInRow);
@@ -118,7 +126,11 @@ public class TextProcessor {
 		System.out.println("Most used subtitle font-size:"+mostUsedSubTitleFontSize);
 		System.out.println("Average number of rows:"+averageNumberOfRowsInParagraph);
 	}
-
+	
+	/**
+	 * Decide if there is bibliography. 
+	 * @return true if there is.
+	 */
 	public static boolean bibliographyExistence() {
 
 		for (int i = 0; i< rows.length; i++) {
@@ -165,6 +177,10 @@ public class TextProcessor {
 			System.out.println(rows[i]);
 	}
 
+	/**
+	 * Aggregating data in rows by font size and counting the occurrence.
+	 * Output @param: containing the font data, rows data and number of rows data.
+	 */
 	public static void getFontSizeWithNumberOfRows() {
 		int length, iterator, counter, iterHelp, rowCounter;
 		String forSubtitles, replacement, cleanedRow, rowFontSize;
@@ -178,16 +194,18 @@ public class TextProcessor {
 		iterator = 0;
 		counter = 0;
 
-		patternForRegex = Pattern.compile("\\[[a-zA-Z0-9+-]+,[0-9]+\\.+[0-9]+\\]");		// containing one or more font entries
+		// Containing one or more font entries.
+		patternForRegex = Pattern.compile("\\[[a-zA-Z0-9+-]+,[0-9]+\\.+[0-9]+\\]");
 
-		for(int i = 0; i < length; i++) {										// counting the number of rows till another font data entry
+		// Counting the number of rows till another font data entry.
+		for(int i = 0; i < length; i++) {
 			iterator = i;
 			counter = 0;
 			match = patternForRegex.matcher(rows[i].toString());
 			System.out.println(rows[i]);
 
 			if (match.find()) {
-				// checking if the followed row is not starting or containing another font entry => so that row belongs to the previous font entry
+				// Checking if the followed row is not starting or containing another font entry => so that row belongs to the previous font entry.
 				if((i + 1 < length) && (patternForRegex.matcher(rows[i + 1].toString()).find() == false)){
 
 					iterHelp = i + 1;
@@ -199,7 +217,8 @@ public class TextProcessor {
 							/**
 							 *  To store the first 3 row
 							 */
-							cleanedRow = rows[i].replaceAll(patternForRegex.toString(), replacement);	// cleaning the row from font entries
+							// Cleaning the row from font entries.
+							cleanedRow = rows[i].replaceAll(patternForRegex.toString(), replacement);
 							forSubtitles += cleanedRow + " ";
 						}
 
@@ -220,14 +239,17 @@ public class TextProcessor {
 						pdfData.add(fontAndRow);
 					}
 					
-					rowCounter = 0;				// for reusing them
-					if (counter != 0) {			// to get the row before
+					// For reusing them.
+					rowCounter = 0;
+					// To get the row before.
+					if (counter != 0) {			
 						i--;
 					}
 					
 					forSubtitles = "";
 				}
-				else {	// if the row which contains font entry isn't followed by a row without font entry
+				// If the row which contains font entry isn't followed by a row without font entry.
+				else {
 					match = patternForRegex.matcher(rows[iterator].toString());
 					if (match.find()) {
 						rowCounter++;
@@ -255,9 +277,10 @@ public class TextProcessor {
 		}
 		System.out.println("--------------------------------------------------------------------------------------");*/
 	}
+	
 	/**
-	 * 
-	 * @return
+	 * Searching for the most used font.
+	 * @return: the most occurred font size.
 	 */
 	public static float getTheMostUsedFont() {
 
@@ -274,18 +297,21 @@ public class TextProcessor {
 
 		length = pdfData.size();
 
-		temp = new float[pdfData.size()][2];					// we need only two columns for size and number of rows
+		// We need only two columns for size and number of rows.
+		temp = new float[pdfData.size()][2];
 
 		for (FontAndRow fdata: pdfData) {
 
-			for (int i = 0; i < length; i++) {						// if the 2D array contains the new font size
+			// If the 2D array contains the new font size.
+			for (int i = 0; i < length; i++) {
 				if(temp[i][0] == Float.parseFloat(fdata.getFontSize())) {
 					temp[i][1] += fdata.getNumberOfRows();
 					exists = true;
 					break;
 				}
 			}
-			if (!exists) {										// if doesn't contains the font size
+			// If doesn't contains the font size.
+			if (!exists) {
 				for (int i = 0; i < length; i++) {
 					if(temp[i][0] == 0.0){
 						temp[i][0] = Float.parseFloat(fdata.getFontSize());
@@ -301,11 +327,13 @@ public class TextProcessor {
 		pdfFontsWithRows = new float[actualLength][2];
 
 		sum = temp[0][1];
-		for (int i = 0; i < actualLength; i++) {						// saving the data to a global 2D array
+		// Saving the data to a global 2D array.
+		for (int i = 0; i < actualLength; i++) {
 			pdfFontsWithRows[i][0] = temp[i][0];
 			pdfFontsWithRows[i][1] = temp[i][1];
-
-			if ( (i + 1 < actualLength) && (sum < temp[i + 1][1]) ) {	// and searching for the most used font-size
+			
+			// And searching for the most used font-size.
+			if ( (i + 1 < actualLength) && (sum < temp[i + 1][1]) ) {
 				sum = temp[i+1][1];
 				mostUsedF = temp[i+1][0];
 			}
@@ -315,8 +343,8 @@ public class TextProcessor {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Searching for the subtitle's most used font size.
+	 * @return: the most occurred subtitle font size.
 	 */
 	public static float getTheMostUsedSubtitleFontSize() {
 		float sum, mostUsedFontForSubtitles;
@@ -326,21 +354,23 @@ public class TextProcessor {
 		float[][] subTitleFontSizeData;
 
 		length = pdfData.size();
-		temp = new String[length][3];	// [][0] font-size, [][1] number of rows, [][2] rows
+		// [][0] font-size, [][1] number of rows, [][2] rows.
+		temp = new String[length][3];
 
 		exists = false;
 		index = 0;
 		actualLength = 0;
 		mostUsedFontForSubtitles = 0;
-		//numberOfRows = 3;
-		numberOfRows = 1;			// temporary trying to eliminate to much words
+		numberOfRows = 1;
 		numberOfChars = 5;
 
 		for (FontAndRow fData: pdfData){
-
-			if (mostUsedFontSizeInPDF < Float.parseFloat(fData.getFontSize())) {	// the subtitle's font-size must be bigger than the most used font-size
-				if (numberOfRows >= fData.getNumberOfRows()) {					// the subtitle's row's number can be maximum 3	
-					if (numberOfChars <= fData.getSomeRows().length()) {			// the subtitle must be at least 5 character long
+			// The subtitle's font-size must be bigger than the most used font-size.
+			if (mostUsedFontSizeInPDF < Float.parseFloat(fData.getFontSize())) {
+				// The subtitle's row's number can be maximum 1.
+				if (numberOfRows >= fData.getNumberOfRows()) {
+					// The subtitle must be at least 5 character long.
+					if (numberOfChars <= fData.getSomeRows().length()) {
 						temp[index][0] = fData.getFontSize().toString();
 						temp[index][1] = Integer.toString(fData.getNumberOfRows());
 						temp[index][2] = fData.getSomeRows();
@@ -359,14 +389,16 @@ public class TextProcessor {
 			subtitleFontSizeAndRow[i][1] = temp[i][1];
 			subtitleFontSizeAndRow[i][2] = temp[i][2];
 
-			for (int k = 0; k < index; k++) {						// if the 2D array contains the new font size
+			// If the 2D array contains the new font size.
+			for (int k = 0; k < index; k++) {
 				if (subTitleFontSizeData[k][0] == Float.parseFloat(temp[i][0])) {
 					subTitleFontSizeData[k][1] += Float.parseFloat(temp[i][1]);
 					exists = true;
 					break;
 				}
 			}
-			if ( !exists ) {										// if doesn't contains the font size
+			// If doesn't contains the font size.
+			if ( !exists ) {
 				for (int j = 0; j < length; j++) {
 					if (subTitleFontSizeData[j][0] == 0.0) {
 						subTitleFontSizeData[j][0] = Float.parseFloat(temp[i][0]);
@@ -396,11 +428,16 @@ public class TextProcessor {
 		return mostUsedFontForSubtitles;
 	}
 
+	/**
+	 * Calculating the the average row in paragraphs.
+	 * @return: the average row by paragraphs.
+	 */
 	public static int getTheAverageRowFromParagraphs() {
 
 		int avgRowByParagraph;
 		int numberOfRowsInPDF = rows.length;
-		int numberOfSubtitles = subtitleFontSizeAndRow.length  -1;// one of the subTitle is the title so we don't need to count that in
+		// One of the subTitle is the title so we don't need to count that in.
+		int numberOfSubtitles = subtitleFontSizeAndRow.length  -1;
 		int sum = 0;
 
 		sum = numberOfRowsInPDF - subtitleFontSizeAndRow.length;
@@ -408,7 +445,11 @@ public class TextProcessor {
 
 		return avgRowByParagraph;
 	}
-
+	
+	/**
+	 * Inserting the words in HashMap<String, Integer> wordsOccurence.
+	 * @param word: word from the data.
+	 */
 	private void putInHashMap(String word) {
 		if(!StopWords.isStopWord(word)){
 			Integer freq = PDFContainer.wordsOccurence.get(word);
@@ -421,7 +462,10 @@ public class TextProcessor {
 			}
 		}	
 	}
-
+	/**
+	 * Insert subtitle in HashMap<String, Integer> wordsOccurence.
+	 * @param word: word from the data.
+	 */
 	private void putSubtitleInHashMap(String word) {
 		if(!StopWords.isStopWord(word)){
 			Integer freq = PDFContainer.wordsOccurence.get(word);
@@ -433,18 +477,22 @@ public class TextProcessor {
 		}	
 	}
 	
+	/**
+	 * Count word occurrence.
+	 * @param line: a row with words from the extracted data from pdf file.
+	 */
 	private void countWordOccurence(String line) {
 		String[] words=line.split(" ");
 		String cleanedWord = "";
 
-		// get subtitles
+		// Get subtitles.
 		subTitles = new String[subtitleFontSizeAndRow.length];
 
 		for (int i = 0; i<subTitles.length;++i) {
 			subTitles[i] = subtitleFontSizeAndRow[i][2];
 		}
 		
-		// firstly we will put the subtitles to the hashmap at the beginning of it
+		// Firstly we will put the subtitles to the hashmap at the beginning of it.
 		for (String subTitle : subTitles){
 			
 			if(PDFContainer.numberOfWordsToInsert > 0){
@@ -458,9 +506,11 @@ public class TextProcessor {
 				subTitleWord = Tools.simplifyWord(subTitleWord);
 				if ( subTitleWord.length() > 0 ) {
 					cleanedWord = subTitleWord.toLowerCase();
-					if (cleanedWord.matches("[a-zA-z?-]{4,}")) { //if it is a word or a world with ? in it, min 4 character words
+					// If it is a word or a world with ? in it, min 4 character words.
+					if (cleanedWord.matches("[a-zA-z?-]{4,}")) {
 						putSubtitleInHashMap(cleanedWord);
-					} else if (cleanedWord.matches("^[a-zA-z?-]{4,}.*")) {  //%if the word has .;*" after it
+					// If the word has .;*" after it.	
+					} else if (cleanedWord.matches("^[a-zA-z?-]{4,}.*")) {
 						cleanedWord = cleanedWord.replaceAll("([\\.\\,\\;])", "");
 						putSubtitleInHashMap(cleanedWord);
 					}
@@ -468,7 +518,7 @@ public class TextProcessor {
 			}
 		}
 		
-		// now we add the rest of the words to the hashmap
+		// Now we add the rest of the words to the hashmap.
 		for (String word : words) {
 
 			if(PDFContainer.numberOfWordsToInsert > 0){
@@ -481,9 +531,11 @@ public class TextProcessor {
 
 			if ( word.length() > 0 ) {
 				cleanedWord = word.toLowerCase();
-				if (cleanedWord.matches("[a-zA-z?-]{4,}")) { //if it is a word or a world with ? in it, min 4 character words
+				// If it is a word or a world with ? in it, min 4 character words.
+				if (cleanedWord.matches("[a-zA-z?-]{4,}")) {
 					putInHashMap(cleanedWord);
-				} else if (cleanedWord.matches("^[a-zA-z?-]{4,}.*")) {  //%if the word has .;*" after it
+				// If the word has .;*" after it.
+				} else if (cleanedWord.matches("^[a-zA-z?-]{4,}.*")) {
 					cleanedWord = cleanedWord.replaceAll("([\\.\\,\\;])", "");
 					putInHashMap(cleanedWord);
 				}
@@ -491,14 +543,21 @@ public class TextProcessor {
 		}
 	}
 
-
+	/**
+	 * Separating the lines for countWordOccurence.
+	 * @param lines: from extracted pdf data.
+	 */
 	private void processWordsByRow(List<String> lines){
 
 		for (String line:PDFContainer.words) {
 			countWordOccurence(line);
 		}
 	}
-
+	
+	/**
+	 * Process the text by row.
+	 * @return: true if no problem occur else false.
+	 */
 	public boolean processTextByRow() {
 		rows = text.split("\n");
 		//printRows(rows);
@@ -509,7 +568,8 @@ public class TextProcessor {
 			return false;
 		}
 
-		if (fontData[1].equals("0.0")) {				// if the first row doesn't have a font-size, which means it's 0.0
+		// If the first row doesn't have a font-size, which means it's 0.0 .
+		if (fontData[1].equals("0.0")) {
 			return false;
 		}
 
@@ -529,13 +589,17 @@ public class TextProcessor {
 		return true;
 	}
 
+	/**
+	 * Calculate number of rows.
+	 * @return: number of rows occurred in pdf.
+	 */
 	public static float numberOfWords() {
 		char c;
 		int count = 1;
 		float sum = (float) 0.0;
 
 		for (int i = 0; i < rows.length; i++) {
-			//number of words=number of spaces+1
+			// Number of words=number of spaces+1.
 			count=1;
 			for (int j = 0; j < rows[i].length(); j++) {
 				c = rows[i].charAt(j);
@@ -546,13 +610,18 @@ public class TextProcessor {
 
 			sum += count;
 		}
-		//Every page has a number at the end, that don't counts as a row
+		// Every page has a number at the end, that don't counts as a row.
 		sum = sum - pageNumber;
 		int rowNumber = rows.length - pageNumber;
 
 		return sum / rowNumber;
 	}
 
+	/**
+	 * Counting the occurrence of images by page.
+	 * @param resources: a page.
+	 * @return: number of images from a page.
+	 */
 	private static int getImagesFromResources(PDResources resources) {
 
 		int num=0;
@@ -572,6 +641,11 @@ public class TextProcessor {
 		return num;
 	}
 
+	/**
+	 * Count number of images from param doc.
+	 * @param doc: data from given pdf file.
+	 * @return: number of images in given pdf.
+	 */
 	public static int getImageNumberFromPDF(PDDocument doc) {
 
 		int overallNum=0;
@@ -582,7 +656,12 @@ public class TextProcessor {
 
 		return overallNum;
 	}
-
+	
+	/**
+	 * Process the extracted text from pdf.
+	 * @param file: selected pdf file.
+	 * @return: 1 if there are no problems.
+	 */
 	public int processText(File file){
 
 		try {
