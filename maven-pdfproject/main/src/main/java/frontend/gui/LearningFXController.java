@@ -304,7 +304,7 @@ public class LearningFXController {
 				}
 			}
 			
-			if(sortedPDFScientificTFIDF.size() > i && sortedPDFNotScientificTFIDF.size() > i){
+			if(sortedPDFScientificTFIDF.size() < i && sortedPDFNotScientificTFIDF.size() < i){
 				Settings.selectedWordsNr = i+1;
 				break;
 			}
