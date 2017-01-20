@@ -43,7 +43,7 @@ public class LearningDataSet {
 
 	private DateFormat generalDateFormat;
 
-	private List<String> pdfWords;
+	private List<String> pdfWords = null;
 
 	/**
 	 * Initialize required essentials.
@@ -84,9 +84,14 @@ public class LearningDataSet {
 				continue;
 			}
 
-			if(i == PDFContainer.attrNo-1){
-				for(int ii=0;ii<Settings.selectedWordsNr;++ii){
+			if(i == PDFContainer.attrNo - 1){
+				for(int ii = 0;ii < Settings.selectedWordsNr; ++ii){
 					// - numeric
+					if(pdfWords.size() <= ii){
+						Settings.selectedWordsNr = ii;
+						break;
+						
+					}
 					atts.add(new Attribute(pdfWords.get(ii)));
 				}
 			}
@@ -441,6 +446,10 @@ public class LearningDataSet {
 	 * 
 	 */
 	public List<String> getPdfWords() {
+		if(pdfWords == null){
+			System.out.println(data.attribute(PDFContainer.attrNo-
+					PDFContainer.unused.size()));
+		}
 		return pdfWords;
 	}
 
