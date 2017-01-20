@@ -93,19 +93,9 @@ public class StatisticsFXController {
 		  myPDF=pdfs[multiple];
 		}
 		
-		String scientificValue=null;
-		String res = PDFContainer.dlp.predict(myPDF);
-		if(res!=null){
-			if(res.equals("-1")){
-				scientificValue="NON-SCIENTIFIC";
-			}else{
-				scientificValue="SCIENTIFIC";
-			}
-		}
-		
 		String path[]=myPDF.getPath().split("\\\\");
 		String statistics="PDF name:"+path[path.length-1]+System.getProperty("line.separator")
-						+"Is scientific:"+scientificValue+System.getProperty("line.separator")
+						+"Is scientific:"+System.getProperty("line.separator")
 						+"Page number:"+myPDF.getPagesNr()+System.getProperty("line.separator")
 						+"Average words in a row:"+myPDF.getWordsRow()+System.getProperty("line.separator")
 						+"Average row/paragraph:"+myPDF.getAvgRowInParagraph()+System.getProperty("line.separator")
@@ -176,14 +166,14 @@ public class StatisticsFXController {
 		String[] pdfName = myPDF.getPath().split("\\\\");
 		pdfNameValue.setText(pdfName[pdfName.length-1]);
 		
-		String res = PDFContainer.dlp.predict(myPDF);
-		if(res!=null){
-			if(res.equals("-1")){
+		///String res = PDFContainer.dlp.predict(myPDF);
+		//if(res!=null){
+			if(!myPDF.isScientific()){
 				isScientificValue.setText("NON-SCIENTIFIC");
 			}else{
 				isScientificValue.setText("SCIENTIFIC");
 			}
-		}
+		//}
 		
 		pageNumberValue.setText(Integer.toString(myPDF.getPagesNr()));
 		avgWordsValue.setText(Double.toString(myPDF.getWordsRow()));
