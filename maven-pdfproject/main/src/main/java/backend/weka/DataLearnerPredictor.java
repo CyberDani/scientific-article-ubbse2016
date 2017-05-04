@@ -104,6 +104,8 @@ public class DataLearnerPredictor {
         	System.out.println(eval.toSummaryString("\nResults\n\n", false));
         	System.out.println(eval.pctCorrect() + " " +eval.pctIncorrect());
         	
+        	System.out.println(eval.toSummaryString("\nResults\n\n", false));
+        	System.out.println(eval.pctCorrect() + " " +eval.pctIncorrect());
         	return eval.pctCorrect();
         default: //throw Exception
                  break;
@@ -125,7 +127,7 @@ public class DataLearnerPredictor {
         	// output predictions
         	//System.out.println("# - actual - predicted - distribution");
         		
-        	double pred = 0;;
+        	double pred = 0;
         	
 			try {
 				//J48 tree2 = new J48();
@@ -144,7 +146,26 @@ public class DataLearnerPredictor {
         	
         	
             return insts.classAttribute().value((int) pred);
-            
+        case DecisionTreeLinRegression_M5P:
+        	double pred2 = 0;
+        	
+			try {
+				//J48 tree2 = new J48();
+				
+				
+				insts.setClassIndex(insts.numAttributes()-1);
+				//tree2.buildClassifier(insts); // build classifier
+				
+				pred2 = m5ptree.classifyInstance(insts.instance(0));
+				//dist = tree.distributionForInstance(lds.getInstances().instance(0));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        	
+        	//System.out.print("prediction: " + insts.classAttribute().value((int) pred));
+        	
+        	
+			return insts.classAttribute().value((int) pred2);
         default: //throw Exception
                  break;
 		}
