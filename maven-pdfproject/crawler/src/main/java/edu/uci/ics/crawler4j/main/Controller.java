@@ -65,7 +65,6 @@ public class Controller {
 				ex.printStackTrace();
 			}
 		}
-
 		return list;
 	}
 	
