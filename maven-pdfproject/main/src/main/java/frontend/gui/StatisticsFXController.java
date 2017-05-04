@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import backend.model.PDF;
-import common.PDFContainer;
 import frontend.app.Main;
 import frontend.app.TextProcessor;
 import javafx.fxml.FXML;
@@ -166,13 +165,11 @@ public class StatisticsFXController {
 		String[] pdfName = myPDF.getPath().split("\\\\");
 		pdfNameValue.setText(pdfName[pdfName.length-1]);
 		
-<<<<<<< HEAD
 		if(!myPDF.isScientific()){
 			isScientificValue.setText("NON-SCIENTIFIC");
 		}else{
 			isScientificValue.setText("SCIENTIFIC");
 		}
-=======
 		///String res = PDFContainer.dlp.predict(myPDF);
 		//if(res!=null){
 			if(!myPDF.isScientific()){
@@ -181,7 +178,6 @@ public class StatisticsFXController {
 				isScientificValue.setText("SCIENTIFIC");
 			}
 		//}
->>>>>>> refs/remotes/origin/Bemutato
 		
 		pageNumberValue.setText(Integer.toString(myPDF.getPagesNr()));
 		avgWordsValue.setText(Double.toString(myPDF.getWordsRow()));
