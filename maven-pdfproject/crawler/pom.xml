@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.ubb.cs.scientific-article</groupId>
 	<artifactId>scientific-article-crawler</artifactId>
@@ -77,97 +78,76 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.5.3</version>
 				<configuration>
-				  <descriptorRefs>
-					<descriptorRef>jar-with-dependencies</descriptorRef>
-				  </descriptorRefs>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
 				</configuration>
 				<executions>
-				  <execution>
-					<id>make-fat-jar</id>
-					<phase>package</phase>
-					<goals>
-					  <goal>single</goal>
-					</goals>
-					<configuration>
-					  <finalName>crawler4j-${project.version}</finalName>
-					</configuration>
-				  </execution>
-				</executions>
-			</plugin>
-			<!--<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.17</version>
-				<executions>
 					<execution>
-						<id>compile</id>
-						<phase>compile</phase>
-						<configuration>
-							<configLocation>checkstyle.xml</configLocation>
-							<encoding>UTF-8</encoding>
-							<consoleOutput>true</consoleOutput>
-							<failsOnError>true</failsOnError>
-							<includeTestSourceDirectory>true</includeTestSourceDirectory>
-						</configuration>
+						<id>make-fat-jar</id>
+						<phase>package</phase>
 						<goals>
-							<goal>check</goal>
+							<goal>single</goal>
 						</goals>
+						<configuration>
+							<finalName>crawler4j-${project.version}</finalName>
+						</configuration>
 					</execution>
 				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>com.puppycrawl.tools</groupId>
-						<artifactId>checkstyle</artifactId>
-						<version>7.1</version>
-					</dependency>
-				</dependencies>
-			</plugin>-->
-		</plugins> 
+			</plugin>
+			<!--<plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-checkstyle-plugin</artifactId> 
+				<version>2.17</version> <executions> <execution> <id>compile</id> <phase>compile</phase> 
+				<configuration> <configLocation>checkstyle.xml</configLocation> <encoding>UTF-8</encoding> 
+				<consoleOutput>true</consoleOutput> <failsOnError>true</failsOnError> <includeTestSourceDirectory>true</includeTestSourceDirectory> 
+				</configuration> <goals> <goal>check</goal> </goals> </execution> </executions> 
+				<dependencies> <dependency> <groupId>com.puppycrawl.tools</groupId> <artifactId>checkstyle</artifactId> 
+				<version>7.1</version> </dependency> </dependencies> </plugin> -->
+		</plugins>
 	</build>
 
 	<dependencies>
 
-    <!-- Compile time Dependencies -->
+		<!-- Compile time Dependencies -->
 
-    <dependency>
-        <!-- Logging framework -->
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>1.7.21</version>
-    </dependency>
-    <dependency>
-        <!-- Implementation of slf4j -->
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>1.1.7</version>
-        <scope>runtime</scope>
-    </dependency>
-    <dependency>
-        <!-- Google's core Java libraries -->
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>19.0</version>
-    </dependency>
-	<dependency>
-		<groupId>org.apache.httpcomponents</groupId>
-		<artifactId>httpclient</artifactId>
-		<version>4.4</version>
-		<scope>compile</scope>
-	</dependency>
+		<dependency>
+			<!-- Logging framework -->
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+		<dependency>
+			<!-- Implementation of slf4j -->
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.7</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<!-- Google's core Java libraries -->
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>19.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.4</version>
+			<scope>compile</scope>
+		</dependency>
 
-	<dependency>
-		<groupId>com.sleepycat</groupId>
-		<artifactId>je</artifactId>
-		<version>5.0.73</version>
-	</dependency>
+		<dependency>
+			<groupId>com.sleepycat</groupId>
+			<artifactId>je</artifactId>
+			<version>5.0.73</version>
+		</dependency>
 
-	<dependency>
-		<groupId>org.apache.tika</groupId>
-		<artifactId>tika-parsers</artifactId>
-		<version>1.14</version>
-	</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-parsers</artifactId>
+			<version>1.14</version>
+		</dependency>
 
-    <!-- Test Dependencies -->
+		<!-- Test Dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -178,11 +158,6 @@
 			<groupId>com.github.tomakehurst</groupId>
 			<artifactId>wiremock</artifactId>
 			<version>2.4.1</version>
-		</dependency>
-		<dependency>
-    		<groupId>org.hamcrest</groupId>
-    		<artifactId>hamcrest-library</artifactId>
-    		<version>1.3</version>
 		</dependency>
 	</dependencies>
 

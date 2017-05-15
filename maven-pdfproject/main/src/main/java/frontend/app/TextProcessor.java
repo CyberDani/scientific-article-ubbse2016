@@ -60,7 +60,15 @@ public class TextProcessor {
 	public PDF getPDF() {
 		return pdfObj;
 	}
-
+	
+	public TextProcessor(File file)
+	{
+		int state = processText(file);
+	}
+	
+	public  PDDocument getPdDocument(){
+		return pd;
+	}
 	/**
 	 * Constructor
 	 * @param file: imput file.
@@ -489,7 +497,7 @@ public class TextProcessor {
 	 * Count word occurrence.
 	 * @param line: a row with words from the extracted data from pdf file.
 	 */
-	private void countWordOccurence(String line) {
+	public void countWordOccurence(String line) {
 		String[] words=line.split(" ");
 		String cleanedWord = "";
 
@@ -670,8 +678,8 @@ public class TextProcessor {
 			pd = PDDocument.load(inputFile);
 
 			numOfImages=getImageNumberFromPDF(pd);
-
 			pageNumber=pd.getNumberOfPages();
+			
 			PDFTextStripper stripper = new PDFTextStripper() {
 				String prevBaseFont;
 

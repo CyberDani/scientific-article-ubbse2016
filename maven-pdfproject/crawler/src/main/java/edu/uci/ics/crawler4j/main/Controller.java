@@ -39,7 +39,7 @@ public class Controller {
 	 * 
 	 * @return list of seeds
 	 */
-	private List<String> getSeeds() {
+	public List<String> getSeeds() {
 		List<String> list = new ArrayList<String>();
 		BufferedReader br = null;
 		FileReader fr = null;
@@ -65,6 +65,7 @@ public class Controller {
 				ex.printStackTrace();
 			}
 		}
+
 		return list;
 	}
 	
