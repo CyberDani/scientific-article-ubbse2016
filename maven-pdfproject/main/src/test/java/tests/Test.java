@@ -18,8 +18,9 @@ import edu.uci.ics.crawler4j.url.WebURL;
 import frontend.app.TextProcessor;
 
 public class Test {
+	/*
 	@org.junit.Test
-	public void getSeeds_notEmpty_returnsSeeds() {
+	public void getSeeds_seeds_returnsSeeds() {
 		String crawlStorageFolder = "storage";
 		int numberOfCrawlers = 7;
 		String storageFolder = "crawl";
@@ -197,5 +198,5 @@ public class Test {
 		boolean f = (myNumber == 2);
 		assertEquals(f, true);
 	}	
-	
+	*/
 }

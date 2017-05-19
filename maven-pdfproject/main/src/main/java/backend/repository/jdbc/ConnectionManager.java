@@ -46,11 +46,14 @@ public class ConnectionManager {
 	public void createConnection() {
 		mongoClient = null;
 		mongoClient = new MongoClient("localhost", 27017);
+		System.out.println(mongoClient);
 		db = mongoClient.getDatabase("PDFdata");
+		
 		if (db != null) {
 			System.out.println("Connect to database successfully");
 		} else {
-			System.out.println("Connect creating faild.");
+			System.out.println("Connect creating failed.");
+			
 		}
 	}
 	
@@ -63,6 +66,9 @@ public class ConnectionManager {
 		if (mongoClient != null) {
 			mongoClient.close();
 		}
+		INSTANCE = null;
+		//mongoClient.
+		//System.out.println(mongoClient);
 		System.out.println("Connection closed!");
 	}
 	/**
@@ -75,6 +81,9 @@ public class ConnectionManager {
 		return db;
 	}
 	
+	public MongoClient getMongoClient() {
+		return this.mongoClient;
+	}
 	/*
 	public void createUser(String user, String password, String roles){
 		Map<String, Object> commandArguments = new BasicDBObject();

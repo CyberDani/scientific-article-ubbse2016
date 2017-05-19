@@ -11,9 +11,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class Main extends Application {
 
-	public static void main(String[] args) {
+
+public class Main extends Application {
+	
+	public static void initializeData() {
 		/**
 		 * Define name and type of PDF class attributes
 		 */
@@ -27,6 +29,13 @@ public class Main extends Application {
 			PDFContainer.PDFAttrNames[i] = fields[i].getName();
 			PDFContainer.PDFAttrTypes[i] = fields[i].getType();
 		}
+	}
+
+	public static void main(String[] args) {
+		/**
+		 * Define name and type of PDF class attributes
+		 */
+		initializeData();
 		
 		/**
 		 * Close application

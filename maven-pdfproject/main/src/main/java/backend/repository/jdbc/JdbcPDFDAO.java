@@ -42,7 +42,6 @@ public class JdbcPDFDAO implements PDFDAO {
 		 *  Get a collection from database
 		 */
 		MongoCollection<Document> coll = cm.getDatabase().getCollection("LearningData"); 
-
 		MongoCursor<Document> cursor = coll.find().iterator();
 
 		List<PDF> answer = new ArrayList<PDF>();
@@ -147,13 +146,20 @@ public class JdbcPDFDAO implements PDFDAO {
 	 * 
 	 */
 	public void insertPDF(String collection, PDF pdf) throws JsonProcessingException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json = objectMapper.writeValueAsString(pdf);
-		//System.out.println(json);
+		
+		if (pdf.getPagesNr() <= 40) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			String json = objectMapper.writeValueAsString(pdf);
+			//System.out.println(json);
 
-		MongoCollection<Document> coll = cm.getDatabase().getCollection(collection);
-		Document doc = Document.parse(json);
-		coll.insertOne(doc);
+			MongoCollection<Document> coll = cm.getDatabase().getCollection(collection);
+			Document doc = Document.parse(json);
+			coll.insertOne(doc);
+		}
+	}
+	
+	public ConnectionManager getCM() {
+		return this.cm;
 	}
 
 }
